@@ -181,10 +181,10 @@
     <LinearLayout
         android:id="@+id/cc_bottom_sheet_root_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="50dp"
+        app:behavior_peekHeight="55dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
         android:clickable="true">
 
@@ -310,17 +310,6 @@
                         android:textColor="@color/general_blue_color"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/cc_enhanced_tracking_info_button"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="6dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/cc_enhanced_tracking_text"
-                        android:layout_toRightOf="@id/cc_enhanced_tracking_text"
-                        android:contentDescription="@string/cc_enhanced_anti_tracking_info"
-                        app:srcCompat="@drawable/cc_ic_info_gray" />
-
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/cc_enhanced_tracking_switch"
                         android:layout_width="wrap_content"
@@ -382,17 +371,6 @@
                         android:textColor="@color/general_blue_color"
                         android:textSize="16sp" />
 
-                    <ImageView
-                        android:id="@+id/cc_enhanced_blocking_info_button"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="6dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/cc_enhanced_blocking_text"
-                        android:layout_toRightOf="@id/cc_enhanced_blocking_text"
-                        android:contentDescription="@string/cc_enhanced_ad_blocking_info"
-                        app:srcCompat="@drawable/cc_ic_info_gray" />
-
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/cc_enhanced_blocking_switch"
                         android:layout_width="wrap_content"
@@ -453,17 +431,6 @@
                         android:text="@string/cc_smart_blocking"
                         android:textColor="@color/general_blue_color"
                         android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/cc_smart_blocking_info_button"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="6dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@id/cc_smart_blocking_text"
-                        android:layout_toRightOf="@id/cc_smart_blocking_text"
-                        android:contentDescription="@string/cc_smart_blocking_info"
-                        app:srcCompat="@drawable/cc_ic_info_gray" />
 
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/cc_smart_blocking_switch"
