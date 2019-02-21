@@ -80,6 +80,15 @@ def build(Map m){
     return {
         node(nodeLabel){
             getImageName().inside() {
+                stage("Build Freshtab: ${flavorname}") {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd /app/freshtab
+                        npm ci
+                        npm run build
+                    '''
+                }
                 stage("Build APK: ${flavorname}") {
                     withEnv([
                         "ANDROID_TARGET=${androidtarget}",
