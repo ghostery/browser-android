@@ -1,6 +1,6 @@
 import React from 'react';
 import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, } from 'react-native';
-import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
+import SearchUI from 'browser-core/build/modules/mobile-cards-vertical/SearchUI';
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
 
