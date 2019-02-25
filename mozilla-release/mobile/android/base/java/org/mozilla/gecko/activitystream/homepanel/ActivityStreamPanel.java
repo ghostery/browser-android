@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.cliqz.ABManager;
+import com.cliqz.Telemetry;
 
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.BrowserApp;
@@ -44,7 +48,6 @@ import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,6 +87,7 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
     private int tileMargin;
     private final SharedPreferences sharedPreferences;
     private final PreferenceManager preferenceManager;
+    private final ABManager abManager;
 
     /* Cliqz Start */
     private final View customizeNewTabView;
@@ -100,11 +104,12 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
 
         inflate(context, R.layout.as_content, this);
 
-        adapter = new StreamRecyclerAdapter();
-        sharedPreferences = GeckoSharedPrefs.forProfile(context);
-
         /* Cliqz Start */
+        sharedPreferences = GeckoSharedPrefs.forProfile(context);
+        adapter = new StreamRecyclerAdapter(sharedPreferences);
+
         preferenceManager = PreferenceManager.getInstance();
+        abManager = ABManager.getInstance();
         /* Cliqz End */
 
         contentRecyclerView = (RecyclerView) findViewById(R.id.activity_stream_main_recyclerview);
@@ -140,15 +145,17 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
         final View customizeTabLink = customizeNewTabView.findViewById(R.id.customize_tab_link);
-        customizeTabLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = new Intent(context, GeckoPreferences.class);
-                GeckoPreferences.setResourceToOpen(intent, "preferences_general");
-                // We want to know when the Settings activity returns, because
-                // we might need to redisplay based on a locale change.
-                ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
-            }
+        Telemetry.sendHomeSettingsShowTelemetry();
+        if (ABManager.NEWTAB_SETTINGS_TEXT_STYLE.equals(abManager.getHomeSettingsStyle())) {
+            customizeTabLink.setBackgroundColor(Color.argb(0, 0, 0, 0));
+        }
+        customizeTabLink.setOnClickListener(v -> {
+            final Intent intent = new Intent(context, GeckoPreferences.class);
+            Telemetry.sendHomeSettingsClickTelemetry();
+            GeckoPreferences.setResourceToOpen(intent, "preferences_general");
+            // We want to know when the Settings activity returns, because
+            // we might need to redisplay based on a locale change.
+            ((BrowserApp) context).startActivityForResult(intent, BrowserApp.ACTIVITY_REQUEST_PREFERENCES);
         });
 
         final TextView dismiss = (TextView) customizeNewTabViewSnackBar.findViewById(R.id.dismiss);

@@ -105,18 +105,8 @@ class CliqzLoadingSearchHelper {
         return !mStopped;
     }
 
-    @SuppressWarnings("RedundantCast")
-    @SuppressLint("ObsoleteSdkInt")
     private void initView() {
         mLoadingSearchContainer = loadingSearchStub.inflate();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            final Context context = mLoadingSearchContainer.getContext();
-            final ProgressBar progressBar =
-                    (ProgressBar) mLoadingSearchContainer.findViewById(android.R.id.progress);
-            final Drawable drawable = progressBar.getIndeterminateDrawable();
-            drawable.setColorFilter(ContextCompat.getColor(context, android.R.color.white),
-                    PorterDuff.Mode.SRC_IN);
-        }
     }
 
     private class ScheduledShow implements Runnable {

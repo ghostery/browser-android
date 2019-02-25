@@ -95,7 +95,7 @@ node ('kria'){
     def dockerTag = "" 
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"

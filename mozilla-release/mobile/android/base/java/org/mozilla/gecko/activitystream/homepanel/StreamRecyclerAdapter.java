@@ -38,6 +38,7 @@ import org.mozilla.gecko.activitystream.homepanel.stream.WebpageItemRow;
 import org.mozilla.gecko.activitystream.homepanel.topsites.TopSitesContextMenu;
 import org.mozilla.gecko.activitystream.homepanel.topstories.PocketStoriesLoader;
 import org.mozilla.gecko.home.HomePager;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.widget.RecyclerViewClickSupport;
 
@@ -66,6 +67,7 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
     private final RowItemType[] ACTIVITY_STREAM_SECTIONS =
             {RowItemType.TOP_PANEL,/* RowItemType.TOP_STORIES_TITLE, RowItemType.HIGHLIGHTS_TITLE,
                     RowItemType.LEARN_MORE_LINK,*/ RowItemType.TOP_NEWS};
+    private final SharedPreferences preferences;
     /* Cliqz end */
     public static final int MAX_TOP_STORIES = 3;
     private static final String LINK_MORE_POCKET = "https://getpocket.com/explore/trending?src=ff_android&cdn=0";
@@ -107,27 +109,29 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
             }
         };
     }
-
-    public StreamRecyclerAdapter() {
+    /* Cliqz Start */
+    public StreamRecyclerAdapter(SharedPreferences preferences) {
+        this.preferences = preferences;
         setHasStableIds(true);
         recyclerViewModel = new LinkedList<>();
-
         clearAndInit();
     }
 
-    public void clearAndInit() {
+    void clearAndInit() {
         recyclerViewModel.clear();
-        for (RowItemType type : ACTIVITY_STREAM_SECTIONS) {
-            recyclerViewModel.add(makeRowModelFromType(type));
-        }
         topStoriesQueue = Collections.emptyList();
-        /* Cliqz start */
+        if (preferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_TOPSITES_ENABLED,true)) {
+            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_PANEL));
+        }
+        if (preferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED, true)) {
+            recyclerViewModel.add(makeRowModelFromType(RowItemType.TOP_NEWS));
+        }
         // create empty TopNews list at the beginning
         topNews = Collections.emptyList();
         // set topSitesCursor null at the beginning
         topSitesCursor = null;
-        /* Cliqz end */
     }
+    /* Cliqz end */
 
     void setOnUrlOpenListeners(HomePager.OnUrlOpenListener onUrlOpenListener, HomePager.OnUrlOpenInBackgroundListener onUrlOpenInBackgroundListener) {
         this.onUrlOpenListener = onUrlOpenListener;
@@ -518,7 +522,9 @@ public class StreamRecyclerAdapter extends RecyclerView.Adapter<StreamViewHolder
 
     public void swapTopSitesCursor(Cursor cursor) {
         this.topSitesCursor = cursor;
-        notifyItemChanged(0);
+        /* Cliqz Start */
+        notifyDataSetChanged();
+        /* Cliqz End */
     }
 
     @Override

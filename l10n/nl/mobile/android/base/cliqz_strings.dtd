@@ -8,6 +8,9 @@
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
 
+<!-- Top Sites -->
+<!ENTITY activity_stream_empty_topsites "Je meest bezochte websites verschijnen hier">
+
 <!-- News -->
 <!ENTITY activity_stream_top_news "Nieuws">
 <!ENTITY activity_stream_top_news_show "Toon">
@@ -176,12 +179,16 @@
 <!-- General Settings - Search-->
 <!ENTITY pref_search_category "Zoek">
 <!ENTITY pref_search_regional "Zoek resultaten voor">
-<!ENTITY pref_search_regional_germany "Duitsland">
-<!ENTITY pref_search_regional_france "Frankrijk">
-<!ENTITY pref_search_regional_usa "Verenigde Staten">
-<!ENTITY pref_search_regional_spain "Spanje">
-<!ENTITY pref_search_regional_italy "Italië">
-<!ENTITY pref_search_regional_uk "Verenigd Koninkrijk">
+<!ENTITY pref_search_regional_at "Oostenrijk">
+<!ENTITY pref_search_regional_au "Australië">
+<!ENTITY pref_search_regional_ca "Canada">
+<!ENTITY pref_search_regional_de "Duitsland">
+<!ENTITY pref_search_regional_es "Spanje">
+<!ENTITY pref_search_regional_fr "Frankrijk">
+<!ENTITY pref_search_regional_gb "Verenigd Koninkrijk">
+<!ENTITY pref_search_regional_it "Italië">
+<!ENTITY pref_search_regional_ru "Rusland">
+<!ENTITY pref_search_regional_us "Verenigde Staten">
 <!ENTITY pref_search_query_suggestions "Zoekopdracht suggesties">
 <!ENTITY pref_search_block_adult_content "Blokkeer expliciete Inhoud">
 <!ENTITY pref_search_auto_completion "Activeer Automatisch invullen">
@@ -201,6 +208,7 @@
 
 <!-- General Settings - CliqzTab -->
 <!ENTITY pref_category_general_summary4 "Zoek, &pref_new_tab_category;, Browsen, Notificaties, Download, &brandMyOffrz;">
+<!ENTITY pref_cliqz_tab_blue_theme "Blauwe Thema">
 <!ENTITY pref_cliqz_tab_background "Toon achtergrondafbeelding">
 <!ENTITY pref_cliqz_tab_topsites "Toon meest bezochte websites">
 <!ENTITY pref_cliqz_tab_news "Toon Nieuws">
@@ -315,3 +323,11 @@
 <!ENTITY prevent_ghostery_addon_dialog_title "Reeds beschikbaar!">
 <!ENTITY prevent_ghostery_addon_dialog_message
         "Add-on is niet geïnstalleerd omdat &formatS1; al in je browser is geïntegreerd.">
+
+<!-- Change German translations in the 3-dots menu because they were too long -->
+<!ENTITY cliqz_contextmenu_pin_to_top_sites "Pin vast op Top Sites">
+<!ENTITY cliqz_contextmenu_unpin_from_top_sites "Maak los van Top Sites">
+<!ENTITY cliqz_contextmenu_add_page_shortcut "Voeg Pagina Snelkoppeling toe">
+<!-- Change German translation text for snackbar -->
+<!ENTITY cliqz_pinned_page_to_top_sites "Pagina op Top Sites vastgepind">
+<!ENTITY cliqz_unpinned_page_from_top_sites "Pagina van Top Sites losgemaakt">

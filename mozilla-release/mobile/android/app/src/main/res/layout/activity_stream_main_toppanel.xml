@@ -23,47 +23,47 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <TextView
+        <org.mozilla.gecko.widget.themed.ThemedTextView
+            android:id="@+id/empty_topsites_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/activity_stream_empty_topsites"
+            android:maxLines="2"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:text="@string/activity_stream_empty_topsites"
             tools:text="Top sites appear here" />
 
         <LinearLayout
+            android:id="@+id/empty_topsites_placeholders"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ImageView
+            <org.mozilla.gecko.widget.themed.ThemedImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="12dp"
                 android:layout_weight="1"
                 android:src="@drawable/top_sites_placeholder_item" />
 
-            <ImageView
+            <org.mozilla.gecko.widget.themed.ThemedImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="12dp"
                 android:layout_weight="1"
                 android:src="@drawable/top_sites_placeholder_item" />
 
-            <ImageView
+            <org.mozilla.gecko.widget.themed.ThemedImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="12dp"
                 android:layout_weight="1"
                 android:src="@drawable/top_sites_placeholder_item" />
 
-            <ImageView
+            <org.mozilla.gecko.widget.themed.ThemedImageView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="12dp"

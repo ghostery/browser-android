@@ -6519,6 +6519,7 @@ var Cliqz = {
       "Search:Backends",
       "Search:Hide",
       "Search:Search",
+      "SystemAddon:Request",
       "Search:Show",
       "Search:ChangeTheme",
       "Privacy:AdblockToggle",
@@ -6566,8 +6567,9 @@ var Cliqz = {
     if (searchRegional == null) {
       // First start after install we didn't set a default
       this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
-        const ls = Services.prefs.getCharPref("intl.locale.os", "").split("-").map(v => v.toLowerCase());
-        var foundBackend = ls.find(v => countries.hasOwnProperty(v));
+        var [ lang, country ] = Services.prefs.getCharPref("intl.locale.os", "not_found").toLowerCase().split("-");
+        country = country ? country : lang;
+        var foundBackend = Object.keys(countries).find( v => country == v );
         if (foundBackend) {
           Services.prefs.setCharPref("pref.search.regional", foundBackend);
         } else {
@@ -6673,6 +6675,10 @@ var Cliqz = {
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
   },
 
+  startSearch(query) {
+    this.messageExtension({ module: "search", action: "startSearch", args: [query, {}, { contextId: 'mobile-cards' }] });
+  },
+
   _searchExtensionListener(msg) {
     console.log("Dispatching event from the search extension to native", msg.action);
     switch (msg.action) {
@@ -6717,6 +6723,11 @@ var Cliqz = {
       case "ready":
         this.loadCardsUI();
         this._handleExtensionReady("firefox@ghostery.com");
+        if (this.lastQueuedQuery) {
+          this.startSearch(this.lastQueuedQuery);
+          this.lastQueuedQuery = "";
+        }
+        this.searchIsReady = true;
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
@@ -6724,26 +6735,10 @@ var Cliqz = {
         });
         break;
       case "renderReady":
-        if (!this.searchIsReady) {
-          GlobalEventDispatcher.sendRequest({
-            type: "Search:Ready"
-          });
-          this.searchIsReady = true;
-        }
-
-        if (this.lastQueuedQuery) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
-          this.lastQueuedQuery = "";
-        }
+        GlobalEventDispatcher.sendRequest({
+          type: "Search:Ready"
+        });
         break;
-      default:
-        console.log("unexpected message", msg);
-    }
-  },
-
-  _privacyExtensionListener(msg) {
-    console.log("Dispaching event from the privacy extension to native", msg.action);
-    switch (msg.action) {
       case "setIcon":
         var count = Number.parseInt(msg.payload.text);
         count = count ? count : 0;
@@ -6763,7 +6758,7 @@ var Cliqz = {
         // it will be considered ready when any message is sent from extension
         break;
       default:
-        console.log("unexpected message", msg);
+        console.log("unexpected message", msg.action);
     }
   },
 
@@ -6800,7 +6795,7 @@ var Cliqz = {
       let response;
       let sendCallback;
       if (data.recipient.extensionId === "firefox@ghostery.com") {
-        response = this._privacyExtensionListener(msg) || this._searchExtensionListener(msg);
+        response = this._searchExtensionListener(msg);
       }
       if ("requestId" in msg) {
         this.messageExtension({
@@ -6886,14 +6881,24 @@ var Cliqz = {
       case "Search:Hide":
         this.isVisible = false;
         this.Search && this.hidePanel(this.Search.browser);
-        this.messageExtension({ module: "search", action: "stopSearch", args: []});
+        this.messageExtension({ module: "search", action: "stopSearch", args: [{ contextId: 'mobile-cards' }]});
         break;
       case "Search:Search":
         this.lastQueuedQuery = data.q || "";
         if (this.searchIsReady) {
-          this.messageExtension({ module: "search", action: "startSearch", args: [this.lastQueuedQuery]});
+          this.startSearch(this.lastQueuedQuery);
           this.lastQueuedQuery = "";
         }
+        break;
+      case "SystemAddon:Request":
+        this.messageExtension({
+          module: data.module,
+          action: data.action,
+          args: data.args.map(arg => arg.data),
+        }).then(
+          response => callback.onSuccess(response),
+          error => callback.onError(error),
+        );
         break;
       case "Search:Show":
         this.isVisible = true; // save the state before search is initialized

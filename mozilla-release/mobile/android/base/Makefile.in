@@ -61,7 +61,7 @@ gradle-targets: $(generated_resources) $(generated_files)
 
 # Local developers update omni.ja during their builds.  There's a
 # chicken-and-egg problem here.
-gradle-omnijar: $(abspath $(DIST)/$(MOZ_APP_NAME)/$(OMNIJAR_NAME))
+gradle-omnijar: remake_built_in_addons $(abspath $(DIST)/$(MOZ_APP_NAME)/$(OMNIJAR_NAME))
 else
 # In automation, omni.ja is built only during packaging.
 gradle-omnijar:
