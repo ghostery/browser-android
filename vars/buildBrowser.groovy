@@ -9,3 +9,5 @@ def buildBrowser(String target, String channel, String flavor) {
         sh 'bash +xe ../build-system/magic.sh'
     }
 }
+
+return this
