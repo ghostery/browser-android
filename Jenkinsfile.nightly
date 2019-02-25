@@ -75,97 +75,48 @@ def build(Map m){
     def getImageName = m.getImageName
     def nodeLabel = 'kria'
     def getId = m.getId
-    def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
     def apk = ""
     return {
-        node(nodeLabel){
+        node(nodeLabel) {
             getImageName().inside() {
-                stage("Build Cliqz React native: ${flavorname}") {
-                    sh '''#!/bin/bash -l
-                        set -e
-                        set -x
-                        cd /app/cliqz
-                        npm ci
-                        npm run build
-                    '''
-                }
-                stage("Build APK: ${flavorname}") {
-                    withEnv([
-                        "ANDROID_TARGET=${androidtarget}",
-                        "BRAND=${brandname}",
-                        "CLIQZ_CHANNEL=${cliqzchannel}"
-                    ]){
-                        sh """#!/bin/bash -l
-                            set -e
-                            set -x
-                            cd /app/mozilla-release
-                            cp ../mozconfigs/deploy.mozconfig mozconfig
-                            ./mach clobber
-                            ./mach build
-                            rm -f /app/mozilla-release/objdir-frontend-android/${brandname}/dist/bin/defaults/pref/mobile-l10n.js
-                            cp /app/mozilla-release/mobile/android/installer/mobile-l10n.js /app/mozilla-release/objdir-frontend-android/${brandname}/dist/bin/defaults/pref/mobile-l10n.js
-                            export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
-                            for AB_CD in \$MOZ_CHROME_MULTILOCALE; do
-                                ./mach build chrome-\$AB_CD
-                            done
-                            export AB_CD=multi
-                            ./mach package
-                        """
+                try{
+                    stage('Build Cliqz React Native') {
+                        cliqz.buildCliqzReactNative("/app/cliqz")
+                    }
+                    stage("Build APK: ${flavorname}") {
                         withCredentials([
                             file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                             string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
                         ]) {
-                            sh """#!/bin/bash -l
-                                set -e
-                                set -x
-                                cd /app/mozilla-release
-                                export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
-                                export AB_CD=multi
-                                ./gradlew :app:assembleWithGeckoBinariesRelease
-                            """
-                        }
-                        apk = sh(returnStdout: true, script: """cd ${apkPath} && find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                    }
-                }
-                stage("Upload: ${flavorname}") {
-                    withCredentials([
-                        [
-                            $class: 'UsernamePasswordMultiBinding',
-                            credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
-                            passwordVariable: 'AWS_SECRET_ACCESS_KEY',
-                            usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        ]
-                    ]) {
-                        def s3Path = "s3://repository.cliqz.com/dist/android/nightly/${brandname}"
-                        def apkFullPath = "${apkPath}/${apk}"
-                        def fileName = "${brandname}_Nightly-${env.BUILD_NUMBER}_${getId()}"
-                        try {
-                            zip archive: true, dir: "${apkPath}", glob: '', zipFile: "${flavorname}-build.zip"
-                        } catch(e) {
-                            print e
-                        }
-                        if (buildarch=="arm"){
-                            sh """#!/bin/bash -l
-                                set -e
-                                set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}.apk
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest.apk
-                            """
-                        } else {
-                            sh """#!/bin/bash -l
-                                set -e
-                                set -x
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}_${buildarch}.apk
-                                aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest_${buildarch}.apk
-                            """
+                            apk = cliqz.buildBrowser("${androidtarget}", "${brandname}", "nightly", "/app/")
                         }
                     }
-                }
-                stage('Clean Up') {
-                   sh '''#!/bin/bash
-                       rm -f /app/mozilla-release/mozconfig
-                       rm -rf /app/mozilla-release/objdir-frontend-android
-                   '''
+                    stage("Upload: ${flavorname}") {
+                        withCredentials([
+                            [
+                                $class: 'UsernamePasswordMultiBinding',
+                                credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
+                                passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                                usernameVariable: 'AWS_ACCESS_KEY_ID',
+                            ]
+                        ]) {
+                            archiveArtifacts allowEmptyArchive: true, artifacts: "/app/build/${apk}"
+                            utils.s3Copy(
+                                "/app/build/${apk}",
+                                "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}",
+                                "${brandname}_${env.BUILD_NUMBER}_${getId()}",
+                                "${buildarch}",
+                                true
+                            )
+                        }
+                    }
+                } catch(e) {
+                    print e
+                    raise e
+                } finally {
+                    stage('Clean Up') {
+                       utils.cleanUp()
+                    }
                 }
             }
         }
@@ -189,40 +140,18 @@ stage('Build Applications'){
 }
 
 def transitionIssueList
+def passedBuilds
 stage('JIRA'){
     withEnv(['JIRA_SITE=cliqztix']){
-        passedBuilds = []
-        lastSuccessfulBuild(passedBuilds,currentBuild)
-        def issueIds = getIssueList()
-        def transitionInput = [
-                transition: [
-                        id: '121'
-                ]
-        ]
-        for (element in issueIds){
-            try{
-                def issue = jiraGetIssue idOrKey: element
-                if(issue.data.fields.status.name == "Resolved"){
-                    jiraTransitionIssue idOrKey: element, input: transitionInput
-                    echo "Transistioned ${element}"
-                } else{
-                    echo """Element with id ${element} was not transitioned\nIts status is: """+issue.data.fields.status.name
-                }
-            }
-            catch (Error e){
-                echo e
-            }
-        }
-        if (issueIds.size() > 0){
-            transitionIssueList = issueIds.join(", ")
-            echo transitionIssueList
-        }
+        def returnList = jira.transitionIssues()
+        passedBuilds = returnList[0]
+        transitionIssueList = returnList[1]
     }
 }
 
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
-    def changesSinceLastSuccess = getChangeString(passedBuilds)
+    def changesSinceLastSuccess = jira.getChangeString(passedBuilds)
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
@@ -236,55 +165,4 @@ stage('Send email') {
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
         body: bodytxt
     )
-}
-
-def lastSuccessfulBuild(passedBuilds, build) {
-    if ((build != null) && (build.result != 'SUCCESS')) {
-        echo "Finding last succesful build"
-        passedBuilds.add(build)
-        echo "Found a build"
-        lastSuccessfulBuild(passedBuilds, build.getPreviousBuild())
-    }
-}
-
-@NonCPS
-def getChangeString(passedBuilds) {
-    def changeString = ""
-    echo "Gathering Changes Since Last Successful Build"
-    for (int x = 0; x < passedBuilds.size(); x++) {
-        def currentBuild = passedBuilds[x];
-        def buildNumber = currentBuild.number
-        echo "Changes for Build ${buildNumber}"
-        def changeLogSets = currentBuild.rawBuild.changeSets
-        for (int i = 0; i < changeLogSets.size(); i++) {
-            def entries = changeLogSets[i].items
-            for (int j = 0; j < entries.length; j++) {
-                def entry = entries[j]
-                changeString += "* ${entry.msg} \n"
-            }
-        }
-    }
-    if (!changeString) {
-        changeString = " - No new changes"
-    }
-    echo changeString
-    return changeString;
-}
-
-@NonCPS
-def getIssueList(){
-    def list = []
-    def changes = getChangeString(passedBuilds)
-    def re = /AB2-([0-9])*/
-    def y = changes =~ re
-    while (y){
-        list.add(y.group().toString())
-    }
-    if (list.size() > 0) {
-        echo 'Detected JIRA tickets'
-        echo list.toString()
-    } else {
-       echo 'No JIRA tickets detected'
-    }
-    return list
 }
