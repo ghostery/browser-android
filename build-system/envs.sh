@@ -5,6 +5,11 @@ echo ""
 echo ""
 echo "*** Define the required Variables ***"
 echo ""
+if [ "${ANDROID_TARGET}" == "arm-linux-androideabi" ]; then
+    export TARGET_ARCH="arm"
+else
+    export TARGET_ARCH="x86"
+fi
 if [ "${TARGET_ARCH}" == "" ]; then
     export TARGET_ARCH="x86"
 fi
