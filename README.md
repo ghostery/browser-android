@@ -1,4 +1,4 @@
-# Automation scripts branch
+# Automation Branch
 -------------------------
 
 ## Building the Android Browser
@@ -15,3 +15,8 @@ Run the script from the <code>/path/to/repo/android-browser</code> folder.
     -c | --channel  : Provide the required Channel (Default: 'MA99')
     -l | --locale   : 'en-US' or 'multi' (Default: 'en-US')
     -t | --type     : 'nightly', 'release' or '' (Default: CI Build)
+
+
+# Automation Jenkins Pipeline Library
+
+## Import the library in the Jenkins Pipeline

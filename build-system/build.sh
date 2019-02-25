@@ -22,8 +22,8 @@ mkdir -p ${SRC_DIR}/../build/
 echo ""
 if [ "${CERT_PATH}" != "" ] && [ "${CERT_PASS}" != "" ]; then
     echo "Building the Signed Build..."
-    ./gradlew assembleOfficialWithGeckoBinariesNoMinApiPhotonRelease
-    cd ${OBJ_DIR}/gradle/build/mobile/android/app/outputs/apk/officialWithGeckoBinariesNoMinApiPhoton/release
+    ./gradlew :app:assembleWithGeckoBinariesRelease
+    cd ${OBJ_DIR}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release
     FILE_NAME=`find *.apk -name '*-release*' -not -name '*-unsigned-*'`
     cp ${FILE_NAME} ${SRC_DIR}/../build/${TARGET_ARCH}.apk
 else

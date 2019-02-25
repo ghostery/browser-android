@@ -6,8 +6,10 @@ echo ""
 echo "*** Copy the required Mozconfig ***"
 echo ""
 if [ "${BUILD_TYPE}" == "nightly" ]; then
+    export PACK_LOCALE="multi"
     cp ${SRC_DIR}/../mozconfigs/deploy.mozconfig ${SRC_DIR}/mozconfig
 elif [ "${BUILD_TYPE}" == "release" ]; then
+    export PACK_LOCALE="multi"
     cp ${SRC_DIR}/../mozconfigs/deploy.mozconfig ${SRC_DIR}/mozconfig
 else
     cp ${SRC_DIR}/../mozconfigs/jenkins.mozconfig ${SRC_DIR}/mozconfig
