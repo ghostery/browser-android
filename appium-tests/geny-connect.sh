@@ -1,4 +1,3 @@
-#!/bin/bash
 ### This script connects to the Genymotion Instance.
 
 IP=@1

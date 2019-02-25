@@ -1,4 +1,3 @@
-#!/bin/bash
 ### This script is MAGIC !!.
 ## The passed argument decides if a Multilocale is required.
 echo "Starting Build..."

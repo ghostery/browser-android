@@ -1,5 +1,4 @@
-#!/bin/bash
-### This script connects to the Genymotion Instance.
+### This script runs Appium Tests.
 
 SCRIPT_PATH=`dirname $0`
 

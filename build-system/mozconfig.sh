@@ -1,4 +1,3 @@
-#!/bin/bash
 ### This script copies the required mozconfig.
 ## The name/path of the mozconfig can passed as an argument for the script.
 

@@ -1,5 +1,4 @@
-#!/bin/bash
-### This script runs Appium Tests.
+### This script defines the Env Variables for running Appium Tests.
 
 echo ""
 echo ""

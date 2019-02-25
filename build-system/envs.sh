@@ -1,4 +1,3 @@
-#!/bin/bash
 ### This script defines the Variables to build the browser.
 
 echo ""
