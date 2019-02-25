@@ -34,6 +34,8 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.StringUtils;
+import org.mozilla.gecko.widget.ShadowedThemedTextView;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -102,6 +104,7 @@ public class MyOffrzPanel extends HomeFragment {
         closeOnBoarding = (ImageButton) view.findViewById(R.id.onboarding_close_btn);
 
         mPreferenceManager = PreferenceManager.getInstance();
+        setLightTheme(mPreferenceManager.isLightThemeEnabled());
 
         learnMoreOnBoarding.setOnClickListener(v -> {
             closeOnboarding();
@@ -146,6 +149,18 @@ public class MyOffrzPanel extends HomeFragment {
     private void closeOnboarding() {
         onboardingVG.setVisibility(View.GONE);
         mPreferenceManager.setMyOffrzOnboardingEnabled(false);
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        final ShadowedThemedTextView emptyMyOffrzTitle = (ShadowedThemedTextView)
+                emptyOffersOuterContainer.findViewById(R.id.empty_myoffrz_title);
+        emptyMyOffrzTitle.setLightTheme(isLightTheme);
+        final ThemedTextView emptyMyOffrzDescriptionOne = (ThemedTextView)
+                emptyOffersOuterContainer.findViewById(R.id.empty_myoffrz_description_one);
+        emptyMyOffrzDescriptionOne.setLightTheme(isLightTheme);
+        final ThemedTextView emptyMyOffrzDescriptionTwo = (ThemedTextView)
+                emptyOffersOuterContainer.findViewById(R.id.empty_myoffrz_description_two);
+        emptyMyOffrzDescriptionTwo.setLightTheme(isLightTheme);
     }
 
     private class MyOffrzLoaderCallbacks implements

@@ -21,15 +21,15 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp">
 
-        <ImageView
+        <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/icon"
             android:layout_width="@dimen/ghostery_bookmark_folder_size"
             android:layout_height="@dimen/ghostery_bookmark_folder_size"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            gecko:srcCompat="@drawable/folder_closed"
-            android:tint="@android:color/white" />
+            app:drawableTintList="@color/cliqz_start_tab_font_color"
+            app:srcCompat="@drawable/folder_closed" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,7 +45,7 @@
                 style="@style/Widget.TwoLinePageRow.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@color/cliqz_start_tab_font_color"
                 gecko:fadeWidth="90dp"
                 tools:text="This is a long test title" />
 
@@ -60,14 +60,14 @@
 
         </LinearLayout>
 
-        <ImageView
+        <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/indicator"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/arrow"
-            android:tint="@android:color/white" />
+            app:drawableTintList="@color/cliqz_start_tab_font_color"
+            app:srcCompat="@drawable/arrow" />
 
         <View
             android:id="@+id/padding_end"

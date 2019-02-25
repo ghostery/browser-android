@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 
 import org.mozilla.gecko.R;
-import org.mozilla.gecko.widget.themed.ThemedFadedHorizontalScrollView;
 
 /**
  * {@code TabMenuStrip} is the view used to display {@code HomePager} tabs

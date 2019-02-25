@@ -43,6 +43,7 @@ import org.mozilla.gecko.fxa.FirefoxAccounts;
 import org.mozilla.gecko.fxa.FxAccountConstants;
 import org.mozilla.gecko.fxa.SyncStatusListener;
 import org.mozilla.gecko.home.CombinedHistoryPanel.OnPanelLevelChangeListener.PanelLevel;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.restrictions.Restrictions;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
@@ -51,6 +52,8 @@ import org.mozilla.gecko.db.RemoteClient;
 import org.mozilla.gecko.restrictions.Restrictable;
 import org.mozilla.gecko.widget.HistoryDividerItemDecoration;
 import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.widget.ShadowedThemedTextView;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -224,8 +227,11 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         final ImageView historyIcon = (ImageView) mHistoryEmptyView.findViewById(R.id.home_empty_image);
         historyIcon.setVisibility(View.GONE);
 
-        final TextView historyText = (TextView) mHistoryEmptyView.findViewById(R.id.home_empty_text);
+        /* Cliqz Start */
+        final ShadowedThemedTextView historyText = (ShadowedThemedTextView) mHistoryEmptyView.findViewById(R.id.home_empty_text);
         historyText.setText(R.string.home_most_recent_empty);
+        historyText.setLightTheme(PreferenceManager.getInstance().isLightThemeEnabled());
+        /* Cliqz End */
 
         /* Cliqz Start o/
         final TextView historyHint = (TextView) mHistoryEmptyView.findViewById(R.id.home_empty_hint);
@@ -706,4 +712,14 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
             mSyncStatusListener = null;
         }
     }
+
+    /* Cliqz Start */
+    public void setLightTheme(boolean isLightTheme) {
+        final ShadowedThemedTextView historyText = (ShadowedThemedTextView) mHistoryEmptyView.findViewById(R.id.home_empty_text);
+        historyText.setLightTheme(isLightTheme);
+
+        mHistoryAdapter.updateTheme();
+    }
+    /* Cliqz End */
+
 }

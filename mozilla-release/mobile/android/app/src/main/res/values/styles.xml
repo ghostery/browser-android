@@ -155,7 +155,7 @@
 
     <!-- Cliqz start -->
     <style name="Widget.TwoLinePageRow.Text">
-        <item name="android:shadowColor">@android:color/darker_gray</item>
+        <item name="shadowColors">@color/cliqz_start_tab_title_shadow</item>
         <item name="android:shadowRadius">2</item>
         <item name="android:shadowDx">1.2</item>
         <item name="android:shadowDy">1.2</item>
@@ -428,7 +428,7 @@
 
     <style name="TextAppearance.Widget.Home.Header" parent="TextAppearance.Small">
         <!-- Cliqz start -->
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/cliqz_start_tab_font_color</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
         <!-- Cliqz end -->
@@ -1124,7 +1124,7 @@
     <style name="CliqzEmptyLayoutTextTitle">
         <item name="android:layout_margin">10dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/cliqz_start_tab_font_color</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -1133,7 +1133,7 @@
         <item name="android:layout_marginStart">10dp</item>
         <item name="android:layout_marginEnd">10dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/cliqz_start_tab_font_color</item>
         <item name="android:textSize">16sp</item>
     </style>
 

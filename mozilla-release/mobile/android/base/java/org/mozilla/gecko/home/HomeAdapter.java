@@ -6,11 +6,13 @@
 package org.mozilla.gecko.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.view.ViewGroup;
 
 import org.mozilla.gecko.R;
@@ -18,6 +20,7 @@ import org.mozilla.gecko.activitystream.ActivityStream;
 import org.mozilla.gecko.activitystream.homepanel.ActivityStreamHomeFragment;
 import org.mozilla.gecko.home.HomeConfig.PanelConfig;
 import org.mozilla.gecko.home.HomeConfig.PanelType;
+import org.mozilla.gecko.preferences.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -187,19 +190,65 @@ public class HomeAdapter extends FragmentStatePagerAdapter {
     }
 
     /* Cliqz Start */
-    public void updateBgAlpha(float positionOffset) {
+    void updateBgAlpha(float positionOffset) {
         final CombinedHistoryPanel historyPanel = (CombinedHistoryPanel) mPanels.get(HomeConfig.COMBINED_HISTORY_PANEL_ID);
         final ActivityStreamHomeFragment freshTab = (ActivityStreamHomeFragment) mPanels.get(HomeConfig.TOP_SITES_PANEL_ID);
+        final BookmarksPanel bookmarksPanel = (BookmarksPanel) mPanels.get(HomeConfig.BOOKMARKS_PANEL_ID);
+        final MyOffrzPanel myOffrzPanel = (MyOffrzPanel) mPanels.get(HomeConfig.MY_OFFRZ_PANEL_ID);
+
+        final boolean isLightTheme = PreferenceManager.getInstance().isLightThemeEnabled();
+
         final int opacity = (int) (41.1 * positionOffset);
         String desiredHex = Integer.toString(opacity) + "000000";
-        if (historyPanel != null) {
-            historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
+        if (freshTab != null && !isLightTheme) {
+            freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    Integer.parseInt(desiredHex, 16));
         }
-        if (freshTab != null) {
-            freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(Integer.parseInt(desiredHex, 16));
+        if (historyPanel != null) {
+            historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : Integer.parseInt(desiredHex, 16));
+        }
+        final int backgroundOverlayColor = ContextCompat.getColor(mContext, R.color.home_panel_background_overlay);
+
+        if (myOffrzPanel != null) {
+            myOffrzPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
+        }
+
+        if (bookmarksPanel != null) {
+            bookmarksPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
         }
     }
-    /*Cliqz End */
+
+    void setLightTheme(boolean isLightTheme) {
+        final ActivityStreamHomeFragment freshTab = (ActivityStreamHomeFragment) mPanels.get(HomeConfig.TOP_SITES_PANEL_ID);
+        final CombinedHistoryPanel historyPanel = (CombinedHistoryPanel) mPanels.get(HomeConfig.COMBINED_HISTORY_PANEL_ID);
+        final MyOffrzPanel myOffrzPanel = (MyOffrzPanel) mPanels.get(HomeConfig.MY_OFFRZ_PANEL_ID);
+        final BookmarksPanel bookmarksPanel = (BookmarksPanel) mPanels.get(HomeConfig.BOOKMARKS_PANEL_ID);
+
+        if (isLightTheme && freshTab != null) {
+            freshTab.getView().findViewById(R.id.root_view).setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        final int backgroundOverlayColor = ContextCompat.getColor(mContext, R.color.home_panel_background_overlay);
+        if (historyPanel != null) {
+            historyPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
+            historyPanel.setLightTheme(isLightTheme);
+        }
+        if (myOffrzPanel != null) {
+            myOffrzPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
+            myOffrzPanel.setLightTheme(isLightTheme);
+        }
+        if (bookmarksPanel != null) {
+            bookmarksPanel.getView().findViewById(R.id.root_view).setBackgroundColor(
+                    isLightTheme ? Color.TRANSPARENT : backgroundOverlayColor);
+            bookmarksPanel.setLightTheme(isLightTheme);
+        }
+    }
+    /* Cliqz End */
 
     private final class PanelInfo {
         private final PanelConfig mPanelConfig;

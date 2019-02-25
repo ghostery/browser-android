@@ -365,6 +365,8 @@
     <color name="light_theme_ghost_tab_color">#0D0F22</color>
     <color name="light_theme_tab_thumbnail_header">#D5D6D9</color>
     <color name="light_theme_start_tab_font_color">#97A4AE</color>
+
+    <color name="light_theme_url_bar_text_highlight">#154FAF</color>
     <!-- Cliqz end -->
 
 </resources>

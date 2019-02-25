@@ -16,6 +16,8 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.db.RemoteClient;
 import org.mozilla.gecko.db.RemoteTab;
 import org.mozilla.gecko.home.RecentTabsAdapter.ClosedTab;
+import org.mozilla.gecko.preferences.PreferenceManager;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 public abstract class CombinedHistoryItem extends RecyclerView.ViewHolder {
     private static final String LOGTAG = "CombinedHistoryItem";
@@ -47,12 +49,17 @@ public abstract class CombinedHistoryItem extends RecyclerView.ViewHolder {
     }
 
     /* Cliqz start */
-    public static class HeaderItem extends  CombinedHistoryItem {
-        final TextView textView;
+    public static class HeaderItem extends CombinedHistoryItem {
+        final ThemedTextView textView;
 
         public HeaderItem(View view) {
             super(view);
-            textView = (TextView) view.findViewById(R.id.home_header_text);
+            textView = (ThemedTextView) view.findViewById(R.id.home_header_text);
+        }
+
+        void updateTheme() {
+            final PreferenceManager preferenceManager = PreferenceManager.getInstance();
+            textView.setLightTheme(preferenceManager.isLightThemeEnabled());
         }
     }
     /* Cliqz end */
@@ -102,6 +109,13 @@ public abstract class CombinedHistoryItem extends RecyclerView.ViewHolder {
             childPageRow.setShowIcons(false);
             childPageRow.update(closedTab.title, closedTab.url);
         }
+
+        /* Cliqz Start */
+        void updateTheme() {
+            final TwoLinePageRow pageRow = (TwoLinePageRow) this.itemView;
+            pageRow.updateTheme();
+        }
+        /* Cliqz End */
     }
 
     public static class ClientItem extends CombinedHistoryItem {
