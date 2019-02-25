@@ -1496,6 +1496,11 @@ public class GeckoPreferences
             } else {
                 categoryStartTab.removePreference(mShowBackgroundPref);
             }
+
+            final boolean isLightTheme = !((boolean) newValue);
+            final GeckoBundle changeThemeGeckoBundle = new GeckoBundle(1);
+            changeThemeGeckoBundle.putBoolean("isLightTheme", isLightTheme);
+            EventDispatcher.getInstance().dispatch("Search:ChangeTheme", changeThemeGeckoBundle);
         }
         /* Cliqz End */
 

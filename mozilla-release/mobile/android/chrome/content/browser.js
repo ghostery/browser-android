@@ -6521,6 +6521,7 @@ var Cliqz = {
       "Search:Search",
       "SystemAddon:Request",
       "Search:Show",
+      "Search:ChangeTheme",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
       "Privacy:Hide",
@@ -6666,7 +6667,9 @@ var Cliqz = {
 
     const id = 'firefox@ghostery.com';
     const uuid = UUIDMap.get(id);
-    const path = 'cliqz/mobile-cards/cards.html';
+    const theme = Services.prefs.getBoolPref("pref.cliqz.blue.theme", true) ? "blue" : "white";
+    const path = `cliqz/mobile-cards/cards.html?bg=${theme}`;
+
     this.Search = this._createBrowserForExtension(id);
     this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
     this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
@@ -6677,7 +6680,7 @@ var Cliqz = {
   },
 
   _searchExtensionListener(msg) {
-    console.log("Dispaching event from the search extension to native", msg.action);
+    console.log("Dispatching event from the search extension to native", msg.action);
     switch (msg.action) {
       case "openUrl": // args [url as string]
         if (!msg.args[0]) {
@@ -6922,6 +6925,11 @@ var Cliqz = {
           name: 'updateBlocking',
           message: blockingPolicy
         });
+        break;
+      case "Search:ChangeTheme":
+        const theme = data.isLightTheme ? "white" : "blue";
+        Cliqz.messageExtension({ action: "changeBrowserTheme", args: [theme] });
+        break;
     }
   }
 };
