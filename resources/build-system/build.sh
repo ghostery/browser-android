@@ -1,5 +1,4 @@
 ### This script builds the browser.
-## The passed argument decides if a Multilocale is required.
 
 echo ""
 echo ""
