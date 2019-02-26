@@ -1133,6 +1133,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         tabsCounter.setLightTheme(isLightTheme);
         menuButton.setLightTheme(isLightTheme);
         mGhostyButton.setLightTheme(isLightTheme);
+        progressBar.setLightTheme(isLightTheme);
         DrawableCompat.setTint(DrawableCompat.wrap(mEditCancel.getDrawable()),
                 isLightTheme ? Color.WHITE : Color.BLACK);
     }
