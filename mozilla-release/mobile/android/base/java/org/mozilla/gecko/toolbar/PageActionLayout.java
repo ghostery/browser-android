@@ -220,7 +220,7 @@ public class PageActionLayout extends ThemedLinearLayout
     // show OnBoarding after AddToHome screen appears on the url bar
     public void maybeShowPwaOnboarding() {
         // only show pwa at normal mode
-        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+        /*final Tab selectedTab = Tabs.getInstance().getSelectedTab();
         if (!PwaUtils.shouldAddPwaShortcut(selectedTab) || mPageActionList == null) {
             return;
         }
@@ -234,7 +234,7 @@ public class PageActionLayout extends ThemedLinearLayout
                     break;
                 }
             }
-        }
+        }*/
     }
     /* Cliqz end */
 
