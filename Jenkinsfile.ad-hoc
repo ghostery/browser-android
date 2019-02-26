@@ -96,7 +96,10 @@ node ('kria'){
     def dockerTag = ""
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        sh """#!/bin/bash -l
+            rm -rf mozilla-release/objdir-frontend-android
+        """
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     volumeStr = "$WORKSPACE"
@@ -127,7 +130,6 @@ def build(Map m){
                         sh """#!/bin/bash -l
                             set -e
                             set -x
-                            rm -rf /orig/mozilla-release/objdir-frontend-android
                             rsync -r --exclude '.git' --exclude '.idea' --exclude '.tx' /orig/ /app/
                         """
                     }
