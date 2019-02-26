@@ -6,7 +6,8 @@ def buildBrowser(String target, String channel, String flavor) {
         "BRAND=${flavor}",
         "CLIQZ_CHANNEL=${channel}"
         ]){
-        sh "ls && bash +xe ../build-system/magic.sh"
+        def script = libraryResource 'build-system/magic.sh'
+        sh "bash +xe ${script}"
     }
 }
 
