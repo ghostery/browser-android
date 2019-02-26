@@ -4,22 +4,22 @@ echo "Run Appium Tests"
 echo ""
 echo "*** Define the required Variables ***"
 echo ""
-if [ "${platformName}" == "" ]; then
+if [[ "${platformName}" == "" ]]; then
     export platformName="android"
 fi
-if [ "${deviceName}" == "" ]; then
+if [[ "${deviceName}" == "" ]]; then
     export deviceName="127.0.0.1:5556"
 fi
-if [ "${appActivity}" == "" ]; then
+if [[ "${appActivity}" == "" ]]; then
     export appActivity="org.mozilla.gecko.LauncherActivity"
 fi
-if [ "${MODULE}" == "" ]; then
+if [[ "${MODULE}" == "" ]]; then
     export MODULE="testCompleteSuite"
 fi
-if [ "${TEST}" == "" ]; then
+if [[ "${TEST}" == "" ]]; then
     export appActivity="CompleteSuite"
 fi
-if [ "${TEST_TYPE}" == "" ]; then
+if [[ "${TEST_TYPE}" == "" ]]; then
     export TEST_TYPE="smoke"
 fi
 echo ""
