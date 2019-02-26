@@ -57,7 +57,6 @@ public class BridgePackage implements ReactPackage {
     public class Bridge extends ReactContextBaseJavaModule implements BundleEventListener {
         private final ReactApplicationContext mReactContext;
 
-
         public Bridge(ReactApplicationContext reactContext) {
             super(reactContext);
             mReactContext = reactContext;
@@ -92,7 +91,6 @@ public class BridgePackage implements ReactPackage {
                             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                             .emit("search:search", query);
                     break;
-
             }
         }
     }

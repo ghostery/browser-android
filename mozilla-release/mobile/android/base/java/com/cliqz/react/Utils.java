@@ -45,10 +45,10 @@ public class Utils {
     }
 
     static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
-        WritableArray array = new WritableNativeArray();
+        final WritableArray array = new WritableNativeArray();
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Object value = jsonArray.get(i);
+            final Object value = jsonArray.get(i);
             if (value instanceof JSONObject) {
                 array.pushMap(convertJsonToMap((JSONObject) value));
             } else if (value instanceof JSONArray) {
@@ -69,10 +69,10 @@ public class Utils {
     }
 
     static JSONObject convertMapToJson(ReadableMap readableMap) throws JSONException {
-        JSONObject object = new JSONObject();
-        ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
+        final JSONObject object = new JSONObject();
+        final ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
         while (iterator.hasNextKey()) {
-            String key = iterator.nextKey();
+            final String key = iterator.nextKey();
             switch (readableMap.getType(key)) {
                 case Null:
                     object.put(key, JSONObject.NULL);
@@ -98,7 +98,7 @@ public class Utils {
     }
 
     static JSONArray convertArrayToJson(ReadableArray readableArray) throws JSONException {
-        JSONArray array = new JSONArray();
+        final JSONArray array = new JSONArray();
         for (int i = 0; i < readableArray.size(); i++) {
             switch (readableArray.getType(i)) {
                 case Null:

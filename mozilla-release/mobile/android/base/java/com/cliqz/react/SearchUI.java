@@ -22,8 +22,6 @@ import org.mozilla.geckoview.BuildConfig;
  * @author Khaled Tantawy
  */
 public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener {
-
-
     private ReactInstanceManager mReactInstanceManager;
     private ReactRootView mReactRootView;
     private ReactContext mReactContext;
@@ -96,8 +94,7 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
     public void onReactContextInitialized(ReactContext context) {
         mReactContext = context;
     }
-
-
+    
     public void removeFromView(ViewGroup parent) {
         if (mReactRootView != null) {
             parent.removeView(mReactRootView);
