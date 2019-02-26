@@ -50,6 +50,16 @@ def build(Map m){
                 def baseImageName = "browser-f/android:${dockerTag}"
                 docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com') {
                     docker.image("${baseImageName}").inside {
+                        stage('Build Cliqz React Native') {
+                            sh '''#!/bin/bash -l
+                                set -e
+                                set -x
+                                cd cliqz
+                                npm ci
+                                npm run build
+                            '''
+                        }
+
                         stage("Build APK: ${flavorname}") {
                             withEnv([
                                 "ANDROID_TARGET=${androidtarget}",
