@@ -24,6 +24,7 @@ RUN apt-get update && \
     python-pip \
     python-virtualenv \
     sqlite3 \
+    git \
     zlib1g-dev && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -61,7 +62,7 @@ USER jenkins
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
-RUN /sdk/node/bin/npm install --global appium@1.10.0 wd
+RUN npm install --global appium wd npm@6.5.0
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \

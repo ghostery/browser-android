@@ -154,6 +154,7 @@ lextab.py
 !.vscode/extensions.json
 !.vscode/tasks.json
 
+**/index.android.bundle
 # Ignore temp files created by patch command.
 *.orig
 *.rej
