@@ -343,13 +343,16 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
         } else if (viewType == VIEW_TYPE_BOOKMARK_ITEM) {
             final TwoLinePageRow row = (TwoLinePageRow) view;
             row.updateFromCursor(cursor);
+            row.updateTheme();
         } else {
             /* Cliqz Start */
             if (cursor == null) {
                 final BookmarkFolderTitleView row = (BookmarkFolderTitleView) view;
+                row.updateTheme();
                 row.setTitle(mParentStack.get(0).title);
             } else {
                 final BookmarkFolderView row = (BookmarkFolderView) view;
+                row.updateTheme();
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(Bookmarks._ID));
 
                 row.update(getFolderTitle(context, cursor), id);
@@ -363,4 +366,10 @@ class BookmarksListAdapter extends MultiTypeCursorAdapter {
             /* Cliqz End */
         }
     }
+
+    /* Cliqz Start */
+    void updateTheme() {
+        notifyDataSetChanged();
+    }
+    /* Cliqz End */
 }

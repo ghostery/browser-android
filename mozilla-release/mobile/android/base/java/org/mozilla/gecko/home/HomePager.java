@@ -209,6 +209,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         // get appSharedPreference
         preferenceManager = PreferenceManager.getInstance();
         setLightTheme(preferenceManager.isLightThemeEnabled());
+        setPrivateMode(Tabs.getInstance().getSelectedTab().isPrivate());
         /*Cliqz End*/
     }
 
@@ -605,8 +606,7 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             /* Cliqz Start */
             if (position == 0) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(positionOffset);
-            }
-            if (position == 1) {
+            } else if (position == 1) {
                 ((HomeAdapter) getAdapter()).updateBgAlpha(1.0f);
             }
             /* Cliqz End */
@@ -680,10 +680,10 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
-        } /* else if (TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)) {
+        } else if (TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)) {
             setLightTheme(preferenceManager.isLightThemeEnabled());
             reloadBackground();
-        } */
+        }
     }
 
     private void reloadBackground() {
@@ -712,6 +712,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         super.setLightTheme(isLightTheme);
         if (mTabStrip != null) {
             ((TabMenuStrip) mTabStrip).setLightTheme(isLightTheme);
+        }
+        if (getAdapter() != null) {
+            ((HomeAdapter) getAdapter()).setLightTheme(isLightTheme);
         }
     }
 

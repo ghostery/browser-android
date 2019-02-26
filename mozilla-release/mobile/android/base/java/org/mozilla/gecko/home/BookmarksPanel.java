@@ -25,6 +25,9 @@ import org.mozilla.gecko.home.BookmarksListAdapter.RefreshType;
 import org.mozilla.gecko.home.HomeContextMenuInfo.RemoveItemType;
 import org.mozilla.gecko.home.HomePager.OnUrlOpenListener;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.preferences.PreferenceManager;
+import org.mozilla.gecko.widget.ShadowedThemedTextView;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -254,8 +257,9 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
             emptyIcon.setImageResource(R.drawable.icon_bookmarks_empty);
             /o Cliqz End */
 
-            final TextView emptyText = (TextView) mEmptyView.findViewById(R.id.home_empty_text);
+            final ShadowedThemedTextView emptyText = (ShadowedThemedTextView) mEmptyView.findViewById(R.id.home_empty_text);
             emptyText.setText(R.string.home_bookmarks_empty);
+            emptyText.setLightTheme(PreferenceManager.getInstance().isLightThemeEnabled());
 
             mList.setEmptyView(mEmptyView);
         }
@@ -396,4 +400,15 @@ public class BookmarksPanel extends HomeFragment implements BookmarkEditFragment
             }
         }
     }
+
+    void setLightTheme(boolean isLightTheme) {
+        final ShadowedThemedTextView emptyText = (ShadowedThemedTextView) getView().findViewById(R.id.home_empty_text);
+        if (emptyText != null) {
+            emptyText.setLightTheme(isLightTheme);
+        }
+        if (mListAdapter != null) {
+            mListAdapter.updateTheme();
+        }
+    }
+
 }

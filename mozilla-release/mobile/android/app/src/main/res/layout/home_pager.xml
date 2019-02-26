@@ -19,7 +19,8 @@
         android:background="@android:color/transparent"
         gecko:strip="@drawable/home_tab_menu_strip"
         gecko:stripColor="@color/cliqz_tab_items_color"
-        gecko:inactiveTextColor="@android:color/transparent"/>
+        gecko:activeTextColor="@color/cliqz_tab_items_color"
+        gecko:inactiveTextColor="@color/tab_menu_inactive_text_color" />
 
 </org.mozilla.gecko.home.HomePager>
 <!-- Cliqz End -->

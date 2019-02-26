@@ -1635,7 +1635,7 @@ public final class HomeConfig {
     private static final String RECENT_TABS_PANEL_ID = "5c2601a5-eedc-4477-b297-ce4cef52adf8";
     private static final String REMOTE_TABS_PANEL_ID = "72429afd-8d8b-43d8-9189-14b779c563d0";
     private static final String DEPRECATED_READING_LIST_PANEL_ID = "20f4549a-64ad-4c32-93e4-1dcef792733b";
-    private static final String MY_OFFRZ_PANEL_ID = "4b3eded8-02ce-e304-9b54-6e5e21121633";
+    public static final String MY_OFFRZ_PANEL_ID = "4b3eded8-02ce-e304-9b54-6e5e21121633";
     /* Cliqz end */
 
     private final HomeConfigBackend mBackend;

@@ -39,13 +39,16 @@
         android:src="@android:color/transparent"
         android:visibility="invisible"/>
 
+    <!-- Cliqz Start -->
     <org.mozilla.gecko.toolbar.ToolbarRoundButton
         android:id="@+id/menu"
         style="@style/UrlBar.Menu"
         android:background="@drawable/url_bar_action_button"
         android:contentDescription="@string/menu"
         android:src="@drawable/ic_overflow"
-        gecko:showLWTBackground="true"/>
+        gecko:drawableTintList="@color/cliqz_tab_items_color"
+        gecko:showLWTBackground="true" />
+    <!-- Cliqz End -->
 
     <!-- Cliqz start -->
     <!-- add Ghosty Icon -->
