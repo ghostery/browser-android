@@ -6,7 +6,7 @@
 ### build-system/magic.sh
 Run the script from the <code>/path/to/repo/android-browser</code> folder.
 
-    sh /path/to/automation-branch/build-system/magic.sh
+    sh /path/to/automation-branch/resources/magic.sh
 
 
 #### Arguments for magic.sh:

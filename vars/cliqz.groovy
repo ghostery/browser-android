@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def buildBrowser(String buildType, String target, String channel, String flavor) {
+def buildBrowser(String target, String channel, String flavor, String buildType="ci") {
     withEnv([
         "BUILD_TYPE=${buildType}",
         "ANDROID_TARGET=${target}",
