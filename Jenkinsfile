@@ -54,7 +54,7 @@ def build(Map m){
                             sh '''#!/bin/bash -l
                                 set -e
                                 set -x
-                                cd /app/cliqz
+                                cd cliqz
                                 npm ci
                                 npm run build
                             '''
