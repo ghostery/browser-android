@@ -1,3 +1,4 @@
+#!/bin/bash
 ### This script connects to the Genymotion Instance.
 
 chmod 400 $FILE

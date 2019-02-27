@@ -1,3 +1,4 @@
+#!/bin/bash
 ### This script runs Appium Tests.
 
 echo "Run Appium Tests"
