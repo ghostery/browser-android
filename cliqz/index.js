@@ -6,6 +6,7 @@ import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-car
 
 class Cliqz {
   constructor(app) {
+    this.app = app;
     this.mobileCards = app.modules['mobile-cards'].background.actions;
     this.geolocation = app.modules['geolocation'].background.actions;
     this.search = app.modules['search'].background.actions;
@@ -19,11 +20,20 @@ class BrowserCoreApp extends React.Component {
     this.state = { results: [], cliqz: null };
   }
 
+  onAction = async ({ module, action, args }) => {
+    await this.loadingPromise;
+    return this.state.cliqz.app[module].action(action, ...args);
+  }
+
+  onQuery = async (query) => {
+    await this.loadingPromise;
+    this.state.cliqz.search.startSearch(query);
+  }
+
   componentWillMount() {
     const app = new App();
     let cliqz;
-    const start = Date.now();
-    const loadingPromise = app.start().then(async () => {
+    this.loadingPromise = app.start().then(async () => {
       await app.ready();
       cliqz = new Cliqz(app);
       this.setState({
@@ -34,10 +44,8 @@ class BrowserCoreApp extends React.Component {
       })
     });
 
-    DeviceEventEmitter.addListener(
-      'search:search',
-      (query) => loadingPromise.then(() => cliqz.search.startSearch(query)),
-    );
+    DeviceEventEmitter.addListener('search:search', this.onQuery);
+    DeviceEventEmitter.addListener('action', this.onAction);
   }
 
   render() {
