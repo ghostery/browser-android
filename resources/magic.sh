@@ -36,26 +36,26 @@ echo ""
 echo ""
 echo "*** Define the required Variables ***"
 echo ""
-if [[ "${ANDROID_TARGET}" == "arm-linux-androideabi" ]]; then
+if [[ S"${ANDROID_TARGET}" == S"arm-linux-androideabi" ]]; then
     export TARGET_ARCH="arm"
 else
     export TARGET_ARCH="x86"
 fi
-if [[ "${TARGET_ARCH}" == "" ]]; then
+if [[ S"${TARGET_ARCH}" == S"" ]]; then
     export TARGET_ARCH="x86"
 fi
-if [[ "${BRAND}" == "" ]]; then
+if [[ S"${BRAND}" == S"" ]]; then
     export BRAND="ghostery"
 fi
-if [[ "${TARGET_ARCH}" == "x86" ]]; then
+if [[ S"${TARGET_ARCH}" == S"x86" ]]; then
     export ANDROID_TARGET="i686-linux-android"
-elif [[ "${TARGET_ARCH}" == "arm" ]]; then
+elif [[ S"${TARGET_ARCH}" == S"arm" ]]; then
     export ANDROID_TARGET="arm-linux-androideabi"
 fi
-if [[ "${CLIQZ_CHANNEL}" == "" ]]; then
+if [[ S"${CLIQZ_CHANNEL}" == S"" ]]; then
     export CLIQZ_CHANNEL="MA99"
 fi
-if [[ "${PACK_LOCALE}" == "" ]]; then
+if [[ S"${PACK_LOCALE}" == S"" ]]; then
     export PACK_LOCALE="en-US"
 fi
 echo "Building ${BRAND} branded browser for ${TARGET_ARCH} with ${PACK_LOCALE} language pack."
@@ -67,13 +67,13 @@ echo ""
 echo ""
 echo "*** Copy the required Mozconfig ***"
 echo ""
-if [[ "${BUILD_TYPE}" == "nightly" ]]; then
+if [[ S"${BUILD_TYPE}" == S"nightly" ]]; then
     export PACK_LOCALE="multi"
     cp ${SRC_DIR}/../mozconfigs/deploy.mozconfig ${SRC_DIR}/mozconfig
-elif [[ "${BUILD_TYPE}" == "release" ]]; then
+elif [[ S"${BUILD_TYPE}" == S"release" ]]; then
     export PACK_LOCALE="multi"
     cp ${SRC_DIR}/../mozconfigs/deploy.mozconfig ${SRC_DIR}/mozconfig
-elif [[ "${BUILD_TYPE}" == "artifact" ]]; then
+elif [[ S"${BUILD_TYPE}" == S"artifact" ]]; then
     cp ${SRC_DIR}/../mozconfigs/artifact.mozconfig ${SRC_DIR}/mozconfig
 else
     cp ${SRC_DIR}/../mozconfigs/jenkins.mozconfig ${SRC_DIR}/mozconfig
@@ -91,7 +91,7 @@ echo ""
 cd ${SRC_DIR}
 ./mach clobber
 ./mach build
-if [[ "${PACK_LOCALE}" == "multi" ]]; then
+if [[ S"${PACK_LOCALE}" == S"multi" ]]; then
     rm -f ${OBJ_DIR}/dist/bin/defaults/pref/mobile-l10n.js
     cp ${SRC_DIR}/mobile/android/installer/mobile-l10n.js ${OBJ_DIR}/dist/bin/defaults/pref/mobile-l10n.js
     export MOZ_CHROME_MULTILOCALE=`ls -1 "${l10n}"|paste -s -d " "`
@@ -103,7 +103,7 @@ fi
 ./mach package
 mkdir -p ${SRC_DIR}/../build/
 echo ""
-if [[ "${CERT_PATH}" != "" ]] && [[ "${CERT_PASS}" != "" ]]; then
+if [[ S"${CERT_PATH}" != S"" ]] && [[ S"${CERT_PASS}" != S"" ]]; then
     echo "Building the Signed Build..."
     ./gradlew :app:assembleWithGeckoBinariesRelease
     cd ${OBJ_DIR}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release
