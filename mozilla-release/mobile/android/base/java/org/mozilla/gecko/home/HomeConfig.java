@@ -440,7 +440,7 @@ public final class HomeConfig {
                 case HISTORY_PANEL_ID:
                     return R.drawable.ic_history_white;
                 case MY_OFFRZ_PANEL_ID:
-                    return R.drawable.ic_offrz;
+                    return R.drawable.ic_offrz_white;
                 case BOOKMARKS_PANEL_ID:
                     return R.drawable.ic_star_white;
                 default:

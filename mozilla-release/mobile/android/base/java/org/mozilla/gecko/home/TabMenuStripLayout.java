@@ -13,6 +13,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.LoaderManager;
@@ -35,6 +36,7 @@ import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.myoffrz.MyOffrzLoader;
 import org.mozilla.gecko.preferences.GeckoPreferences;
+import org.mozilla.gecko.util.ViewUtil;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 
 /**
@@ -128,7 +130,7 @@ class TabMenuStripLayout extends ThemedLinearLayout
         // The following is an hack, I do not particularly like it but I can't find a better way
         // that does not contemplate rewriting the HomePager with a more suitable one.
         final Context context = getContext();
-        if (iconId == R.drawable.ic_offrz && context instanceof BrowserApp) {
+        if (iconId == R.drawable.ic_offrz_white && context instanceof BrowserApp) {
             ((BrowserApp) context).getSupportLoaderManager()
                     .initLoader(R.id.offrz_loader_id, null, new MyOffrzLoaderCallbacks(imageView));
         }
@@ -137,19 +139,12 @@ class TabMenuStripLayout extends ThemedLinearLayout
 
     void onPageSelected(final int position) {
         /*Cliqz Start*/
-        final int activeTabTintColor = activeTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
-        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
-        // Tint all tabs drawable.
-        for (int i = 0; i < getChildCount(); i++) {
-            final boolean isTabSelected = this.getChildAt(i).isSelected();
-            DrawableCompat.setTint(DrawableCompat.wrap(((ImageView) this.getChildAt(i)).getDrawable()),
-                    isTabSelected ? activeTabTintColor : inactiveTabTintColor);
-        }
-
         selectedView = (ImageView) getChildAt(position);
 
-        // Tint the selected tabs drawable.
-        DrawableCompat.setTint(DrawableCompat.wrap(selectedView.getDrawable()), activeTabTintColor);
+        // Tint all tabs drawable.
+        final int activeTabTintColor = activeTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+        final int inactiveTabTintColor = inactiveTabDrawableColor.getColorForState(getDrawableState(), Color.TRANSPARENT);
+        tintTabDrawables(getContext(), activeTabTintColor, inactiveTabTintColor);
 
         // Just to remove the badge from the Offrz page
         selectedView.setSelected(false);
@@ -369,6 +364,8 @@ class TabMenuStripLayout extends ThemedLinearLayout
             final String offerId = data.optString("offer_id", "");
             if (!offerId.equals(signature)) {
                 imageView.setSelected(true);
+                final int activeTabTintColor = activeTabDrawableColor.getColorForState(getDrawableState(), Color.WHITE);
+                TabMenuStripLayout.setOffrzTabBadgeIcon(getContext(), imageView, activeTabTintColor);
             }
             preferences.edit().putString(GeckoPreferences.PREFS_OFFRZ_LAST_SIGNATURE, offerId).apply();
         }
@@ -376,6 +373,52 @@ class TabMenuStripLayout extends ThemedLinearLayout
         @Override
         public void onLoaderReset(Loader<JSONObject> loader) {
 
+        }
+    }
+
+    private static void setOffrzTabBadgeIcon(Context context, ImageView imageView, int tintColor) {
+        final Drawable offrzDrawable = ContextCompat.getDrawable(context, R.drawable.ic_offrz_white);
+        DrawableCompat.setTint(offrzDrawable, tintColor);
+        final Drawable[] layers = {
+                offrzDrawable,
+                ContextCompat.getDrawable(context, R.drawable.badge_shape)
+        };
+        LayerDrawable layerDrawable = new LayerDrawable(layers);
+        final int badgeIconInset = context.getResources().getDimensionPixelSize(R.dimen.padding_16);
+        layerDrawable.setLayerInset(1, badgeIconInset, 0, 0, badgeIconInset);
+        imageView.setImageDrawable(layerDrawable);
+    }
+
+    private static void removeOffrzTabBadgeIcon(Context context, ImageView imageView, int tintColor) {
+        final Drawable offrzDrawable = ContextCompat.getDrawable(context, R.drawable.ic_offrz_white);
+        DrawableCompat.setTint(offrzDrawable, tintColor);
+        imageView.setImageDrawable(offrzDrawable);
+    }
+
+    private void tintTabDrawables(Context context, int activeTabTintColor, int inactiveTabTintColor) {
+        for (int i = 0; i < getChildCount(); i++) {
+            final ImageView currentView = (ImageView) this.getChildAt(i);
+            if (currentView.getId() == R.drawable.ic_offrz_white) {
+                if (currentView.isSelected()) {
+                    setOffrzTabBadgeIcon(context, currentView, inactiveTabTintColor);
+                } else {
+                    removeOffrzTabBadgeIcon(context, currentView, inactiveTabTintColor);
+                }
+            } else {
+                DrawableCompat.setTint(DrawableCompat.wrap((currentView).getDrawable()), inactiveTabTintColor);
+            }
+        }
+        // Tint the selected tabs drawable.
+        if (selectedView != null) {
+            if (selectedView.getId() == R.drawable.ic_offrz_white) {
+                if (selectedView.isSelected()) {
+                    setOffrzTabBadgeIcon(context, selectedView, activeTabTintColor);
+                } else {
+                    removeOffrzTabBadgeIcon(context, selectedView, activeTabTintColor);
+                }
+            } else {
+                DrawableCompat.setTint(DrawableCompat.wrap(selectedView.getDrawable()), activeTabTintColor);
+            }
         }
     }
 
@@ -389,15 +432,7 @@ class TabMenuStripLayout extends ThemedLinearLayout
             strip = DrawableCompat.wrap(strip);
             DrawableCompat.setTint(strip, backgroundTintColor);
             // Tint all tabs drawable.
-            for (int i = 0; i < getChildCount(); i++) {
-                final boolean isTabSelected = this.getChildAt(i).isSelected();
-                DrawableCompat.setTint(DrawableCompat.wrap(((ImageView) this.getChildAt(i)).getDrawable()),
-                        isTabSelected ? activeTabTintColor : inactiveTabTintColor);
-            }
-            // Tint the selected tabs drawable.
-            if (selectedView != null) {
-                DrawableCompat.setTint(DrawableCompat.wrap(selectedView.getDrawable()), activeTabTintColor);
-            }
+            tintTabDrawables(getContext(), activeTabTintColor, inactiveTabTintColor);
         }
     }
     /* Cliqz End */
