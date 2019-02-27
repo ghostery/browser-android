@@ -26,8 +26,8 @@ fi
 echo ""
 echo "Starting Tests"
 echo ""
-export app=$PWD/build/$APP
-$ANDROID_HOME/platform-tools/adb install $app
+export app="$PWD/build/$APP"
+$ANDROID_HOME/platform-tools/adb install "$app"
 cd $TESTS_FOLDER
 appium --log $FLAVOR-appium.log &
 echo $! > appium.pid

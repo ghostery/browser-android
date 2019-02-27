@@ -77,7 +77,7 @@ def genyInstanceStatus() {
 
 def connectGenyInstance() {
     def script = libraryResource 'geny-connect.sh'
-    sh "bash +xe ${script}"
+    sh """${script}"""
 }
 
 return this

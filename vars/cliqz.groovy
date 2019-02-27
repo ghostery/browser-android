@@ -8,7 +8,7 @@ def buildBrowser(String target, String channel, String flavor, String buildType=
         "CLIQZ_CHANNEL=${channel}"
         ]){
         def script = libraryResource 'magic.sh'
-        sh "bash +xe ${script}"
+        sh """${script}"""
     }
 }
 
@@ -17,7 +17,7 @@ def runAppiumTests(String testsFolder) {
         "TESTS_FOLDER=${testsFolder}"
         ]){
         def script = libraryResource 'run-tests.sh'
-        sh "bash +xe ${script}"
+        sh """${script}"""
     }
 }
 
