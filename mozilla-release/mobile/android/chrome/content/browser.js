@@ -6516,7 +6516,6 @@ this.extensionsReady = {
 };
 
 GlobalEventDispatcher.registerListener(this, [
-      "Search:Backends",
       "SystemAddon:Request",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
@@ -6894,9 +6893,6 @@ GlobalEventDispatcher.registerListener(this, [
           action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
-        break;
-      case "Search:Backends":
-        this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => callback.onSuccess(countries));
         break;
       case "Search:Hide":
         this.isVisible = false;

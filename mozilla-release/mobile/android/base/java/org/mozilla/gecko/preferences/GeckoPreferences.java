@@ -61,6 +61,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cliqz.react.SearchBackground;
+import com.facebook.react.bridge.ReadableMap;
+
 import org.json.JSONArray;
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.AdjustConstants;
@@ -1949,7 +1952,7 @@ public class GeckoPreferences
         public void prefValue(String pref, String value) {
             // 2. Only when we get the value, we ask the extension to give us the backends list
             mSelectedBackEnd = value;
-            EventDispatcher.getInstance().dispatch("Search:Backends", null, this);
+            SearchBackground.getBackendCountries(this);
         }
 
         private String getNameFor(String backendName) {
@@ -1964,12 +1967,13 @@ public class GeckoPreferences
 
         @Override
         public void sendSuccess(Object response) {
-            if (!(response instanceof GeckoBundle)) {
+            if (!(response instanceof ReadableMap)) {
                 return;
             }
             // 3. we parse the results and get the backends name translations
-            final GeckoBundle data = (GeckoBundle) response;
-            final String[] backends = data.keys();
+            final ReadableMap data = (ReadableMap) response;
+            final Map<String, Object> backendsMap = data.toHashMap();
+            final String[] backends = backendsMap.keySet().toArray(new String[backendsMap.size()]);
             final ArrayList<String> names = new ArrayList<>(backends.length);
             String value = null;
             String summary = null;

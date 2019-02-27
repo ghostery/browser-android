@@ -1,8 +1,9 @@
 import React from 'react';
-import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, } from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, DeviceEventEmitter, NativeModules } from 'react-native';
 import SearchUI from 'browser-core/build/modules/mobile-cards-vertical/SearchUI';
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
+import console from 'browser-core/build/modules/core/console';
 
 class Cliqz {
   constructor(app) {
@@ -20,19 +21,19 @@ class BrowserCoreApp extends React.Component {
     this.state = { results: [], cliqz: null };
   }
 
-  onAction = async ({ module, action, args }) => {
-    await this.loadingPromise;
-    return this.state.cliqz.app[module].action(action, ...args);
-  }
-
-  onQuery = async (query) => {
-    await this.loadingPromise;
-    this.state.cliqz.search.startSearch(query);
+  onAction = ({ module, action, args, id }) => {
+    return this.loadingPromise.then(() => {
+      return this.state.cliqz.app.modules[module].action(action, ...args).then((response) => {
+        if (typeof id !== 'undefined') {
+          NativeModules.Bridge.replyToAction(id, response);
+        }
+        return response;
+      });
+    });
   }
 
   componentWillMount() {
     const app = new App();
-    let cliqz;
     this.loadingPromise = app.start().then(async () => {
       await app.ready();
       cliqz = new Cliqz(app);
@@ -43,8 +44,6 @@ class BrowserCoreApp extends React.Component {
         this.setState({ results })
       })
     });
-
-    DeviceEventEmitter.addListener('search:search', this.onQuery);
     DeviceEventEmitter.addListener('action', this.onAction);
   }
 

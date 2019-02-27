@@ -87,11 +87,14 @@ public class BridgePackage implements ReactPackage {
             switch (event) {
                 case "Search:Search":
                     final String query = GeckoBundleUtils.safeGetString(message, "q");
-                    mReactContext
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("search:search", query);
+                    SearchBackground.startSearch(query);
                     break;
             }
+        }
+
+        @ReactMethod
+        public void replyToAction(int hash, ReadableMap response) {
+            SearchBackground.replyToAction(hash, response);
         }
     }
 }
