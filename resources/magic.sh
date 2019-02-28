@@ -60,7 +60,7 @@ if [[ S"${PACK_LOCALE}" == S"" ]]; then
     export PACK_LOCALE="en-US"
 fi
 echo "Building ${BRAND} branded browser for ${TARGET_ARCH} with ${PACK_LOCALE} language pack."
-export SRC_DIR="${PWD}/mozilla-release"
+export SRC_DIR="`pwd`/mozilla-release"
 export OBJ_DIR="${SRC_DIR}/objdir-frontend-android/${BRAND}"
 export l10n="${SRC_DIR}/l10n"
 echo ""
