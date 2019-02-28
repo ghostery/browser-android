@@ -10,7 +10,6 @@ import SearchUI from 'browser-core/build/modules/mobile-cards-vertical/SearchUI'
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
 import { Provider as ThemeProvider } from 'browser-core/build/modules/mobile-cards-vertical/withTheme';
-import console from 'browser-core/build/modules/core/console';
 
 class Cliqz {
   constructor(app) {
