@@ -75,9 +75,20 @@ def genyInstanceStatus() {
     }
 }
 
-def connectGenyInstance() {
-    def script = libraryResource 'geny-connect.sh'
-    sh """${script}"""
+def connectGenyInstance(String credentialsId) {
+    withCredentials([file(credentialsId: credentialsId, variable: 'FILE' )]) {
+        sh '''#!/bin/bash -l
+            set -x
+            set -e
+            echo "*** Connecting to Genymotion Instance ***"
+            chmod 400 $FILE
+            ssh -v -o StrictHostKeyChecking=no -i $FILE shell@$IP "setprop persist.sys.usb.config adb"
+            ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 shell@$IP &
+            $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
+            $ANDROID_HOME/platform-tools/adb wait-for-device
+            echo "*** DONE ***"
+        '''
+    }
 }
 
 return this

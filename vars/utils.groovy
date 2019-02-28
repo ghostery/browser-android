@@ -10,10 +10,30 @@ def archiveTestResults(String flavorName, String testsFolder='cliqz-mobile-tests
     }
 }
 
+def fastlaneRelease(
+    String certPathCredId,
+    String certPassCredId,
+    String playStoreCertCredId
+    ) {
+    withCredentials([
+        file(credentialsId: certPathCredId, variable: 'CERT_PATH'),
+        string(credentialsId: certPassCredId, variable: 'CERT_PASS'),
+        file(credentialsId: playStoreCertCredId, variable: 'PLAY_STORE_CERT')]) {
+        sh """#!/bin/bash -l
+            set -e
+            set -x
+            cd mozilla-release/mobile/android
+            mv fastlane/Appfile.${brand} fastlane/Appfile
+            fastlane alpha
+        """
+    }
+}
+
 def cleanUp(String testsFolder="") {
     sh """#!/bin/bash
         rm -f mozilla-release/mozconfig
         rm -rf mozilla-release/objdir-frontend-android
+        rm -rf build
     """
     if (testsFolder != ""){
         sh """#!/bin/bash
@@ -22,20 +42,22 @@ def cleanUp(String testsFolder="") {
     }
 }
 
-def s3copy(String apkFullPath, String s3Path, String fileName, String buildArch="") {
-    if (buildArch=="x86"){
+def s3copy(String apkFullPath, String s3Path, String fileName, String buildArch, Boolean latestLink) {
+    if (buildarch != ""){
+        buildArch = buildarch.equals("arm") ? "" : "_${buildarch}"
+    }
+    if (latestLink){
         sh """#!/bin/bash -l
             set -e
             set -x
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}_${buildarch}.apk
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest_${buildarch}.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildarch}.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest${buildarch}.apk
         """
     } else {
         sh """#!/bin/bash -l
             set -e
             set -x
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}.apk
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildarch}.apk
         """
     }
 }
