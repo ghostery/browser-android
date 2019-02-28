@@ -9,7 +9,6 @@ import {
 import SearchUI from 'browser-core/build/modules/mobile-cards-vertical/SearchUI';
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
-import { Provider as ThemeProvider } from 'browser-core/build/modules/mobile-cards-vertical/withTheme';
 
 class Cliqz {
   constructor(app) {
@@ -68,9 +67,7 @@ class BrowserCoreApp extends React.Component {
           ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
-              <ThemeProvider value={"light"}>
-                <SearchUI results={results} meta={meta} theme="light" />
-              </ThemeProvider>
+              <SearchUI results={results} meta={meta} theme="light" />
             </CliqzProvider>
           )
         }
