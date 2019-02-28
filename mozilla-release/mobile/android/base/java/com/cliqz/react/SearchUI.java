@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 
+import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
@@ -27,7 +28,6 @@ public class SearchUI {
         mReactInstanceManager = mSearchBackground.mReactInstanceManager;
 
         mReactRootView = new ReactRootView(context);
-
         mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
 
 
