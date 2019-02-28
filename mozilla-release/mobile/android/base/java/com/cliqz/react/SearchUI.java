@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.shell.MainReactPackage;
 
+import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
@@ -37,7 +38,7 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
                 .setJSMainModulePath("index")
                 .addPackage(new BridgePackage())
                 .addPackage(new MainReactPackage())
-                .setUseDeveloperSupport(BuildConfig.DEBUG)
+                .setUseDeveloperSupport(BuildConfig.DEBUG && !AppConstants.MOZILLA_OFFICIAL)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
 
