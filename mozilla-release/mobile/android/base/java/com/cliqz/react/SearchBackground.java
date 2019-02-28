@@ -1,5 +1,8 @@
 package com.cliqz.react;
 
+import android.app.Application;
+import android.util.SparseArray;
+
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -14,16 +17,16 @@ import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.EventCallback;
 
-import android.app.Application;
-import android.util.SparseArray;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class SearchBackground implements ReactInstanceManager.ReactInstanceEventListener {
     private static SearchBackground ourInstance;
     public final ReactInstanceManager mReactInstanceManager;
     private ReactContext mReactContext;
-    private SparseArray<EventCallback> callbacks = new SparseArray<>();
+    private final SparseArray<EventCallback> callbacks = new SparseArray<>();
     AtomicInteger idGenerator = new AtomicInteger(1);
 
     public static SearchBackground getInstance() {
@@ -94,16 +97,15 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
     }
 
     public static void startSearch(String query) {
-        getInstance().callAction("search", "startSearch", new Object[] { query });
+        getInstance().callAction("search", "startSearch", query);
     }
-
 
     public static void getBackendCountries(EventCallback callback) {
         getInstance().callAction("search", "getBackendCountries", new Object[] { }, callback);
     }
 
     public static void setBackendCountry(String code) {
-        getInstance().callAction("search", "setBackendCountry", new Object[] { code });
+        getInstance().callAction("search", "setBackendCountry", code);
     }
 
     @Override

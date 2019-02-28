@@ -18,7 +18,7 @@ import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.util.GeckoBundle;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class BrowserActions extends ReactContextBaseJavaModule {
 
