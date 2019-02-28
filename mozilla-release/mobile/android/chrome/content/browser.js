@@ -6558,23 +6558,7 @@ GlobalEventDispatcher.registerListener(this, [
       });
     });
 
-    var searchRegional = Services.prefs.getCharPref("pref.search.regional", null);
-    if (searchRegional == null) {
-      // First start after install we didn't set a default
-      this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
-        var [ lang, country ] = Services.prefs.getCharPref("intl.locale.os", "not_found").toLowerCase().split("-");
-        country = country ? country : lang;
-        var foundBackend = Object.keys(countries).find( v => country == v );
-        if (foundBackend) {
-          Services.prefs.setCharPref("pref.search.regional", foundBackend);
-        } else {
-          Services.prefs.setCharPref("pref.search.regional", "us");
-        }
-        Cliqz._syncSearchPrefs();
-      });
-    } else {
-      this._syncSearchPrefs();
-    }
+    this._syncSearchPrefs();
   },
 
   READY_STATUS: {
@@ -6853,7 +6837,6 @@ GlobalEventDispatcher.registerListener(this, [
 
   _syncSearchPrefs() {
     const messages = [];
-    messages.push(["setBackendCountry", Services.prefs.getCharPref("pref.search.regional")]);
     messages.push(["setAdultFilter", Services.prefs.getBoolPref("pref.search.block.adult.content") ? "conservative" : "liberal" ]);
     messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 

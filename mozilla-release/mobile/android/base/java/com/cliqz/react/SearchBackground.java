@@ -10,26 +10,14 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.shell.MainReactPackage;
 
 import org.mozilla.gecko.BuildConfig;
+import org.mozilla.gecko.PrefsHelper;
+import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.EventCallback;
 
 import android.app.Application;
 import android.util.SparseArray;
 
 import java.util.concurrent.atomic.AtomicInteger;
-
-/*
-class ActionNotAvailable extends Exception {
-    ActionNotAvailable(String actionName) {
-        super("action not registered: "+ actionName);
-    }
-}
-
-class EmptyResponseException extends Exception {
-    EmptyResponseException(String actionName) {
-        super("action timed out or gave null response: "+ actionName);
-    }
-}
-*/
 
 public class SearchBackground implements ReactInstanceManager.ReactInstanceEventListener {
     private static SearchBackground ourInstance;
@@ -58,13 +46,28 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .build();
         mReactInstanceManager.addReactInstanceEventListener(this);
         mReactInstanceManager.createReactContextInBackground();
+        migrate();
+    }
+
+    private void migrate() {
+        // Let Search handle search lanaguge
+        PrefsHelper.getPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, new PrefsHelper.PrefHandlerBase() {
+            @Override
+            public void prefValue(String prefName, String countryCode) {
+                if (!(countryCode instanceof String) || countryCode.equals("")) {
+                    return;
+                }
+                PrefsHelper.setPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, "");
+                setBackendCountry(countryCode);
+            }
+        });
     }
 
     public void showDevOptionsDialog() {
         mReactInstanceManager.showDevOptionsDialog();
     }
 
-    private void callAction(String module, String action, Object... args) /* throws ActionNotAvailable, EmptyResponseException */ {
+    private void callAction(String module, String action, Object... args) {
         final WritableMap eventBody = Arguments.createMap();
         eventBody.putString("module", module);
         eventBody.putString("action", action);
@@ -72,7 +75,7 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
         mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("action", eventBody);
     }
 
-    private void callAction(String module, String action, Object[] args, EventCallback callback) /* throws ActionNotAvailable, EmptyResponseException */ {
+    private void callAction(String module, String action, Object[] args, EventCallback callback) {
         final int id = idGenerator.getAndIncrement();
         callbacks.append(id, callback);
         final WritableMap eventBody = Arguments.createMap();
@@ -97,6 +100,10 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
 
     public static void getBackendCountries(EventCallback callback) {
         getInstance().callAction("search", "getBackendCountries", new Object[] { }, callback);
+    }
+
+    public static void setBackendCountry(String code) {
+        getInstance().callAction("search", "setBackendCountry", new Object[] { code });
     }
 
     @Override
