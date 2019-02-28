@@ -50,6 +50,9 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.cliqz.ThemeManager;
+import com.cliqz.react.SearchBackground;
+
 
 public class Tabs implements BundleEventListener {
     private static final String LOGTAG = "GeckoTabs";
@@ -348,6 +351,9 @@ public class Tabs implements BundleEventListener {
         if (oldTab != null && mTabs.containsKey(oldTab.getId())) {
             data.putInt("previousTabId", oldTab.getId());
         }
+
+        final String theme = tab.isPrivate() ? ThemeManager.THEME_DARK : ThemeManager.THEME_LIGHT;
+        ThemeManager.getInstance().changeTheme(theme);
         mEventDispatcher.dispatch("Tab:Selected", data);
         EventDispatcher.getInstance().dispatch("Tab:Selected", data);
         return tab;
