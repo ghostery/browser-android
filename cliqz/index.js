@@ -41,7 +41,7 @@ class BrowserCoreApp extends React.Component {
     const app = new App();
     this.loadingPromise = app.start().then(async () => {
       await app.ready();
-      cliqz = new Cliqz(app);
+      const cliqz = new Cliqz(app);
       this.setState({
         cliqz,
       });
