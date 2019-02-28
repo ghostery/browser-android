@@ -79,7 +79,7 @@ public class BridgePackage implements ReactPackage {
 
         @Override
         public void onCatalystInstanceDestroy() {
-            EventDispatcher.getInstance().unregisterGeckoThreadListener(this, "Search:Search");
+            EventDispatcher.getInstance().unregisterUiThreadListener(this, "Search:Search");
         }
 
         @Override

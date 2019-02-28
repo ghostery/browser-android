@@ -9,6 +9,8 @@ import {
 import SearchUI from 'browser-core/build/modules/mobile-cards-vertical/SearchUI';
 import App from 'browser-core/build/modules/core/app';
 import { Provider as CliqzProvider } from 'browser-core/build/modules/mobile-cards/cliqz';
+import { Provider as ThemeProvider } from 'browser-core/build/modules/mobile-cards-vertical/withTheme';
+import console from 'browser-core/build/modules/core/console';
 
 class Cliqz {
   constructor(app) {
@@ -52,6 +54,10 @@ class BrowserCoreApp extends React.Component {
     DeviceEventEmitter.addListener('action', this.onAction);
   }
 
+  componentWillUnmount() {
+    DeviceEventEmitter.removeAllListeners();
+  }
+
   render() {
     const results = this.state.results.results || [];
     const meta = this.state.results.meta || {};
@@ -63,7 +69,9 @@ class BrowserCoreApp extends React.Component {
           ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
-              <SearchUI results={results} meta={meta} theme="light" />
+              <ThemeProvider value={"light"}>
+                <SearchUI results={results} meta={meta} theme="light" />
+              </ThemeProvider>
             </CliqzProvider>
           )
         }

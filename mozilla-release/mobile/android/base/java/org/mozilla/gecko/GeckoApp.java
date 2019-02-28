@@ -1780,14 +1780,17 @@ public abstract class GeckoApp extends GeckoActivity
         final int prefsVersionCode = prefs.getInt(PREFS_VERSION_CODE, 0);
         // New users should have the background image disabled by default, old users should have
         // the background image enabled if they didn't explicitly disable it.
-        switch (prefsVersionCode){
-            case GHOSTERY_VERSION_2_2_1:
-                prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
-                prefs.edit()
-                    .putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)
-                    .apply();
-            case GHOSTERY_VERSION_2_3;
+        if (prefsVersionCode > 0) {
+            if (prefsVersionCode <= GHOSTERY_VERSION_2_2_1) {
+                if (prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
+                    prefs.edit()
+                        .putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)
+                        .apply();
+                }
+            }
+            if (prefsVersionCode <= GHOSTERY_VERSION_2_3) {
                 SearchBackground.getInstance().migrateBackendCountryLanguage();
+            }
         }
         /* Cliqz End */
         if (getSessionRestoreResumeOnce(prefs)) {
