@@ -91,6 +91,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cliqz.react.SearchBackground;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,6 +178,7 @@ public abstract class GeckoApp extends GeckoActivity
     private static final int STARTUP_PHASE_DURATION_MS = 30 * 1000;
     /* Cliqz Start */
     private static final int GHOSTERY_VERSION_2_2_1 = 12255;
+    private static final int GHOSTERY_VERSION_2_3 = 12555;
     /* Cliqz End */
 
     private static boolean sAlreadyLoaded;
@@ -1777,11 +1780,14 @@ public abstract class GeckoApp extends GeckoActivity
         final int prefsVersionCode = prefs.getInt(PREFS_VERSION_CODE, 0);
         // New users should have the background image disabled by default, old users should have
         // the background image enabled if they didn't explicitly disable it.
-        if (prefsVersionCode > 0 && prefsVersionCode <= GHOSTERY_VERSION_2_2_1 &&
-            prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
-            prefs.edit()
+        switch (prefsVersionCode){
+            case GHOSTERY_VERSION_2_2_1:
+                prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
+                prefs.edit()
                     .putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)
                     .apply();
+            case GHOSTERY_VERSION_2_3;
+                SearchBackground.getInstance().migrateBackendCountryLanguage();
         }
         /* Cliqz End */
         if (getSessionRestoreResumeOnce(prefs)) {

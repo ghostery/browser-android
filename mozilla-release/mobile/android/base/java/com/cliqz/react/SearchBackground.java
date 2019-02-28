@@ -49,11 +49,12 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .build();
         mReactInstanceManager.addReactInstanceEventListener(this);
         mReactInstanceManager.createReactContextInBackground();
-        migrate();
     }
 
-    private void migrate() {
-        // Let Search handle search lanaguge
+    /**
+     * Let Search handle search language
+     */
+    public void migrateBackendCountryLanguage() {
         PrefsHelper.getPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, new PrefsHelper.PrefHandlerBase() {
             @Override
             public void prefValue(String prefName, String countryCode) {
