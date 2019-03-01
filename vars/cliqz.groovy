@@ -34,7 +34,7 @@ def buildBrowser(
     }
     channel = brand.contains('alpha') ? "MA99" : channel
     withEnv([
-        "TARGET=${target}",
+        "ANDROID_TARGET=${target}",
         "BRAND=${brand}",
         "CLIQZ_CHANNEL=${channel}"
         ]){
