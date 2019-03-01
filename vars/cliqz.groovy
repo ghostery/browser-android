@@ -58,22 +58,24 @@ def buildBrowser(
             ./mach build
         """
         if(packLocale == "multi"){
-            sh """#!/bin/bash -l
-                set -x
-                set -e
-                echo '*** Build Language Packs ***'
-                cd ${workspace}
-                export MOZ_CHROME_MULTILOCALE=`ls -1 l10n|paste -s -d " "`
-                cd mozilla-release
-                rm -f objdir-frontend-android/${brand}/dist/bin/defaults/pref/mobile-l10n.js
-                cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/${brand}/dist/bin/defaults/pref/mobile-l10n.js
-                for AB_CD in $MOZ_CHROME_MULTILOCALE; do
-                    ./mach build chrome-$AB_CD
-                done
-                export AB_CD=multi
-                ./mach package
-                echo '*** DONE ***'
-            """
+            withEnv(["WORKSPACE=${workspace}", "BRAND=${brand}"]){
+                sh '''#!/bin/bash -l
+                    set -x
+                    set -e
+                    echo "*** Build Language Packs ***"
+                    cd ${WORKSPACE}
+                    export MOZ_CHROME_MULTILOCALE=`ls -1 l10n|paste -s -d " "`
+                    cd mozilla-release
+                    rm -f objdir-frontend-android/${BRAND}/dist/bin/defaults/pref/mobile-l10n.js
+                    cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/${BRAND}/dist/bin/defaults/pref/mobile-l10n.js
+                    for AB_CD in $MOZ_CHROME_MULTILOCALE; do
+                        ./mach build chrome-$AB_CD
+                    done
+                    export AB_CD=multi
+                    ./mach package
+                    echo "*** DONE ***"
+                '''
+            }
         } else {
             sh """#!/bin/bash -l
                 set -x
