@@ -3,7 +3,8 @@
 def buildBrowser(
         String target,
         String brand,
-        String buildType="ci"
+        String buildType="ci",
+        String workspace=""
     ) {
     def arch = target.contains('arm') ? "arm" : "x86"
     def packLocale = ""
@@ -41,6 +42,7 @@ def buildBrowser(
             set -x
             set -e
             echo '*** Copy the required Mozconfig ***'
+            cd ${workspace}
             cp mozconfigs/${mozconfigFile} mozilla-release/mozconfig
             cat mozilla-release/mozconfig
             echo '*** DONE ***'
@@ -49,6 +51,7 @@ def buildBrowser(
             set -x
             set -e
             echo '*** Build and Package the Browser ***'
+            cd ${workspace}
             cd mozilla-release
             rm -rf objdir-frontend-android
             ./mach clobber
@@ -59,6 +62,7 @@ def buildBrowser(
                 set -x
                 set -e
                 echo '*** Build Language Packs ***'
+                cd ${workspace}
                 export MOZ_CHROME_MULTILOCALE=`ls -1 l10n|paste -s -d " "`
                 cd mozilla-release
                 rm -f objdir-frontend-android/${brand}/dist/bin/defaults/pref/mobile-l10n.js
@@ -74,6 +78,7 @@ def buildBrowser(
             sh """#!/bin/bash -l
                 set -x
                 set -e
+                cd ${workspace}
                 cd mozilla-release
                 ./mach package
                 echo '*** DONE ***'
@@ -88,6 +93,7 @@ def buildBrowser(
                 set -x
                 set -e
                 echo '*** Repackage using Gradle ***'
+                cd ${workspace}
                 cd mozilla-release
                 ./gradlew :app:assembleWithGeckoBinariesRelease
                 echo '*** DONE ***'
@@ -101,6 +107,7 @@ def buildBrowser(
             set -x
             set -e
             echo '*** Copy APK File to Build folder ***'
+            cd ${workspace}
             mkdir -p build
             cp ${apkFulllink} build/${brand}_${arch}.apk
             echo '*** DONE !! Build: build/${brand}_${arch}.apk ***'
