@@ -116,6 +116,17 @@ def buildBrowser(
     }
 }
 
+def buildFreshTab(String workspace=".") {
+    sh """#!/bin/bash -l
+        set -e
+        set -x
+        cd ${workspace}
+        rm -rf node_modules
+        npm ci
+        npm run build
+    """
+}
+
 def runAppiumTests(String testsFolder, String apk) {
     withEnv([
         "TESTS_FOLDER=${testsFolder}",
