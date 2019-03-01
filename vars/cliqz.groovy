@@ -4,7 +4,7 @@ def buildBrowser(
         String target,
         String brand,
         String buildType="ci",
-        String workspace=""
+        String workspace="."
     ) {
     def arch = target.contains('arm') ? "arm" : "x86"
     def packLocale = ""
