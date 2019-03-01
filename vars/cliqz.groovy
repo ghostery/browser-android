@@ -118,6 +118,14 @@ def buildBrowser(
     }
 }
 
+def rSyncRepo(String orig, String copy) {
+    sh """#!/bin/bash -l
+        set -e
+        set -x
+        rsync -r --exclude '.git' --exclude '.idea' --exclude '.tx' ${orig} ${copy}
+    """
+}
+
 def buildFreshTab(String workspace=".") {
     sh """#!/bin/bash -l
         set -e
