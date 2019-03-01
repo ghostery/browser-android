@@ -1,7 +1,6 @@
 package com.cliqz.react;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -9,47 +8,36 @@ import android.view.ViewGroup;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.common.LifecycleState;
-import com.facebook.react.shell.MainReactPackage;
 
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
-import org.mozilla.geckoview.BuildConfig;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
-public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener {
-    private ReactInstanceManager mReactInstanceManager;
+public class SearchUI {
     private ReactRootView mReactRootView;
-    private ReactContext mReactContext;
-    public boolean isReady = false;
+    private ReactInstanceManager mReactInstanceManager;
 
     public SearchUI() {}
 
-    public void initialize(Context context, Application application) {
-        mReactRootView = new ReactRootView(context);
-        mReactInstanceManager = ReactInstanceManager.builder()
-                .setApplication(application)
-                .setBundleAssetName("index.android.bundle")
-                .setJSMainModulePath("index")
-                .addPackage(new BridgePackage())
-                .addPackage(new MainReactPackage())
-                .setUseDeveloperSupport(BuildConfig.DEBUG && !AppConstants.MOZILLA_OFFICIAL)
-                .setInitialLifecycleState(LifecycleState.RESUMED)
-                .build();
+    public void onCreate(Context context) {
+        final SearchBackground mSearchBackground = SearchBackground.getInstance();
+        mReactInstanceManager = mSearchBackground.mReactInstanceManager;
 
+        mReactRootView = new ReactRootView(context);
         mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
+
+
+        // TODO: move this logic to AppBackgroundManager
         final AppBackgroundManager backgroundManager = AppBackgroundManager.getInstance(context);
         if (PreferenceManager.getInstance().isBackgroundEnabled()) {
             backgroundManager.setViewBackground(mReactRootView, ContextCompat.getColor(context, R.color.general_blue_color));
         } else {
             backgroundManager.setViewBackgroundDefaultColor(mReactRootView);
         }
-        isReady = true;
     }
 
     public void show() {
@@ -58,12 +46,10 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
         }
     }
 
-    public void showDevOptionsDialog() {
-        mReactInstanceManager.showDevOptionsDialog();
-    }
-
     public void hide() {
-        mReactRootView.setVisibility(View.INVISIBLE);
+        if (mReactRootView != null) {
+            mReactRootView.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void addToView(ViewGroup parent) {
@@ -76,29 +62,9 @@ public class SearchUI implements ReactInstanceManager.ReactInstanceEventListener
         mReactInstanceManager.onHostResume(activity);
     }
 
-    public void onPause(Activity activity) {
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostPause(activity);
-        }
-    }
-
-    public void onDestroy(Activity activity) {
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostDestroy(activity);
-        }
+    public void onDestroy() {
         if (mReactRootView != null) {
             mReactRootView.unmountReactApplication();
-        }
-    }
-
-    @Override
-    public void onReactContextInitialized(ReactContext context) {
-        mReactContext = context;
-    }
-    
-    public void removeFromView(ViewGroup parent) {
-        if (mReactRootView != null) {
-            parent.removeView(mReactRootView);
         }
     }
 }

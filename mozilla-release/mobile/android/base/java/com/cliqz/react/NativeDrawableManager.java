@@ -14,6 +14,9 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 
 import javax.annotation.Nullable;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class NativeDrawableManager extends SimpleViewManager<ImageView> {
 
     private static final String REACT_CLASS = "NativeDrawable";

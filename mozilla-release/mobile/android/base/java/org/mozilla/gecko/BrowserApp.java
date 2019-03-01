@@ -195,6 +195,7 @@ import org.mozilla.geckoview.DynamicToolbarAnimator;
 import org.mozilla.geckoview.GeckoSession;
 
 /* Cliqz start */
+import com.cliqz.react.SearchBackground;
 import com.cliqz.react.SearchUI;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 /* Cliqz end */
@@ -683,7 +684,7 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (keyCode == KeyEvent.KEYCODE_MENU && mSearchUI != null) {
-            mSearchUI.showDevOptionsDialog();
+            SearchBackground.getInstance().showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -826,6 +827,9 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
+        mSearchUI.onCreate(this);
+        mSearchUI.addToView(mHomeScreenContainer);
+
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
         if (mBrowserSearch == null) {
@@ -1225,17 +1229,13 @@ public class BrowserApp extends GeckoApp
     public void onResume() {
         super.onResume();
 
-        /* Cliqz start */
-        if (mSearchUI.isReady != true) {
-            initializeSearch();
-        }
-        mSearchUI.onResume(this);
-
-        /* Cliqz end */
-
         if (mIsAbortingAppLaunch) {
             return;
         }
+
+        /* Cliqz start */
+        mSearchUI.onResume(this);
+        /* Cliqz end */
 
         if (!mHasResumed) {
             getAppEventDispatcher().unregisterUiThreadListener(this, "Prompt:ShowTop");
@@ -1255,10 +1255,6 @@ public class BrowserApp extends GeckoApp
         dismissTabHistoryFragment();
 
         super.onPause();
-
-        /* Cliqz start */
-        mSearchUI.onPause(this);
-        /* Cliqz end */
 
         if (mIsAbortingAppLaunch) {
             return;
@@ -1689,7 +1685,7 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        mSearchUI.onDestroy(this);
+        mSearchUI.onDestroy();
         /* Cliqz end */
 
         if (mProgressView != null) {
@@ -4049,7 +4045,7 @@ public class BrowserApp extends GeckoApp
 
         /* Cliqz start */
         if (itemId == R.id.react) {
-            mSearchUI.showDevOptionsDialog();
+            SearchBackground.getInstance().showDevOptionsDialog();
             return true;
         }
         /* Cliqz end */
@@ -4830,11 +4826,6 @@ public class BrowserApp extends GeckoApp
 
     private boolean isAlphaBuild() {
         return BuildConfig.APPLICATION_ID.contains("alpha");
-    }
-
-    private void initializeSearch() {
-        mSearchUI.initialize(this, getApplication());
-        mSearchUI.addToView(mHomeScreenContainer);
     }
 
     @Override

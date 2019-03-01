@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class Utils {
     static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {

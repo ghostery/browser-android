@@ -18,7 +18,7 @@ import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.util.GeckoBundle;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class BrowserActions extends ReactContextBaseJavaModule {
 
@@ -58,7 +58,7 @@ public class BrowserActions extends ReactContextBaseJavaModule {
     public void searchHistory(String query, Promise promise) {
         final int limit = 5;
         final BrowserDB sdb = BrowserDB.from(GeckoThread.getActiveProfile());
-        final Context context = getCurrentActivity().getApplicationContext();
+        final Context context = getReactApplicationContext();
         final Cursor cursor = sdb.getRankedHistoryForQuery(context.getContentResolver(), query, limit);
 
         final WritableArray wArray = Arguments.createArray();
