@@ -87,9 +87,9 @@ def buildBrowser(
             """
         }
         apkName = sh(returnStdout: true,
-            script: """cd mozilla-release/objdir-frontend-android/${brand}/dist && \
+            script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist && \
             find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
-        apkFulllink = "mozilla-release/objdir-frontend-android/${brand}/dist/${apkName}"
+        apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist/${apkName}"
         if ((buildType == "nightly") || (buildType == "release")){
             sh """#!/bin/bash -l
                 set -x
@@ -101,9 +101,9 @@ def buildBrowser(
                 echo '*** DONE ***'
             """
             apkName = sh(returnStdout: true,
-                script: """cd mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release && \
+                script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release && \
                 find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
-            apkFulllink = "mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release/${apkName}"
+            apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release/${apkName}"
         }
         sh """#!/bin/bash -l
             set -x
