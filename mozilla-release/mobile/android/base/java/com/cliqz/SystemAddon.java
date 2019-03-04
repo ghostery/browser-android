@@ -1,13 +1,12 @@
-/**
- * Copyright © Cliqz 2019
- */
-
 package com.cliqz;
 
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class SystemAddon {
 
     private static final String KEY_MODULE = "module";

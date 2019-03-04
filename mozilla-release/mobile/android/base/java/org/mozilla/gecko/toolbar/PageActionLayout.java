@@ -295,11 +295,14 @@ public class PageActionLayout extends ThemedLinearLayout
             } else {
                 colorId = R.color.general_blue_color;
             }
-            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(), colorId));
         } else {
-            DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(),
-                    R.color.inactive_icon_color));
+            if (PreferenceManager.getInstance().isLightThemeEnabled()) {
+                colorId = R.color.url_bar_dark_blue_color;
+            } else {
+                colorId = R.color.inactive_icon_color;
+            }
         }
+        DrawableCompat.setTint(icon, ContextCompat.getColor(getContext(), colorId));
         return drawable;
     }
     /* Cliqz End */

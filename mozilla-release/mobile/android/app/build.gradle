@@ -36,6 +36,10 @@ android {
 
         /* Cliqz start */
         versionCode getVersionCode(125)
+
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
         testApplicationId 'org.mozilla.roboexample.test'
@@ -107,7 +111,7 @@ android {
 
         def isDebuggable = (!mozconfig.substs.MOZILLA_OFFICIAL) || (mozconfig.substs.NIGHTLY_BUILD && mozconfig.substs.MOZ_DEBUG)
         debug {
-            debuggable isDebuggable 
+            debuggable isDebuggable
             multiDexKeepProguard file("${topsrcdir}/mobile/android/config/proguard/debug-robocop-keeps.cfg")
         }
         release {
@@ -116,6 +120,7 @@ android {
                 signingConfig signingConfigs.release
             }
         }
+
     }
     project.configureProductFlavors.delegate = it
     project.configureProductFlavors()
@@ -238,6 +243,9 @@ dependencies {
     implementation "com.android.support:design:$support_library_version"
     implementation "com.android.support:customtabs:$support_library_version"
     implementation "com.android.support:palette-v7:$support_library_version"
+    // cliqz-start
+    implementation "com.facebook.react:react-native:0.56.1"
+    // cliqz-end
 
     // We always include support for multidexing even when we don't enable it at runtime.
     // We could conditionally include support, but we'd need
@@ -459,7 +467,7 @@ android.applicationVariants.all { variant ->
         effort = "max"         // Using more memory and time to find issues is acceptable in automation
         reportLevel = "high"   // For now we only care about high priority bugs. After we have fixed
                                // the issues with medium/low priority we can lower the report level here.
-        
+
         classes = files("$project.buildDir/intermediates/classes")
         source = variant.javaCompile.source
         classpath = variant.javaCompile.classpath
@@ -493,6 +501,13 @@ import groovy.xml.XmlUtil
 configurations.all {
     resolutionStrategy {
         eachDependency { DependencyResolveDetails details ->
+
+            /* Cliqz start */
+            if (details.requested.name == 'android-jsc') {
+                details.useTarget group: details.requested.group, name: 'android-jsc-intl', version: 'r236355'
+            }
+            /* Cliqz end */
+
             if (details.requested.group == 'com.google.android.gms') {
                 details.useVersion "$google_play_services_version"
             }
