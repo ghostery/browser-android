@@ -3,6 +3,7 @@ package com.cliqz.react.modules;
 import android.content.SharedPreferences;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -13,14 +14,39 @@ import com.facebook.react.bridge.WritableMap;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.PrefsHelper;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class PrefsModule extends ReactContextBaseJavaModule {
     private static final String PREF_PREFIX = "searchui.";
     private static final String SEARCHUI_PREF_NAMES = "searchui.prefNames";
-
     private final SharedPreferences mPreferences;
+    private final ArrayList<Callback> mCallbacks = new ArrayList<>();
+    private final PrefsHelper.PrefHandler mPrefHandler = new PrefsHelper.PrefHandler() {
+        @Override
+        public void prefValue(String pref, boolean value) {
+            notifyPrefChange(pref, value);
+        }
+
+        @Override
+        public void prefValue(String pref, int value) {
+            notifyPrefChange(pref, value);
+        }
+
+        @Override
+        public void prefValue(String pref, String value) {
+            notifyPrefChange(pref, value);
+        }
+
+        @Override
+        public void finish() {
+
+        }
+    };
 
     public PrefsModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -66,9 +92,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getAllPrefs(Promise promise) {
         WritableMap prefs = Arguments.createMap();
-        final Set<String> prefNames = getPrefNames();
-
-        PrefsHelper.getPrefs(prefNames.toArray(new String[] { }), new PrefsHelper.PrefHandler() {
+        PrefsHelper.getPrefs(getPrefNamesArray(), new PrefsHelper.PrefHandler() {
             @Override
             public void prefValue(String pref, boolean value) {
                 prefs.putBoolean(removePrefix(pref), value);
@@ -87,8 +111,14 @@ public class PrefsModule extends ReactContextBaseJavaModule {
             @Override
             public void finish() {
                 promise.resolve(prefs);
+                startPrefsListener();
             }
         });
+    }
+
+    @ReactMethod
+    public void onPrefChange(Callback callback) {
+        mCallbacks.add(callback);
     }
 
     private void recordPrefName(String prefName) {
@@ -112,5 +142,24 @@ public class PrefsModule extends ReactContextBaseJavaModule {
         prefNames.add(addPrefix("suggestionChoice"));
         prefNames.add(addPrefix("suggestionsEnabled"));
         return prefNames;
+    }
+
+    private String[] getPrefNamesArray() {
+        return getPrefNames().toArray(new String[] { });
+    }
+
+    private void startPrefsListener() {
+        PrefsHelper.removeObserver(mPrefHandler);
+        PrefsHelper.addObserver(getPrefNamesArray(), mPrefHandler);
+    }
+
+    private void notifyPrefChange(String prefName, Object value) {
+        for (Callback callback : mCallbacks) {
+            try {
+                callback.invoke(prefName, value);
+            } catch (Throwable t) {
+                // done for safety
+            }
+        }
     }
 }

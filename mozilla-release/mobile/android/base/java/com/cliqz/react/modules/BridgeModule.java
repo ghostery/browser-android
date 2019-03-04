@@ -16,6 +16,9 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.GeckoBundleUtils;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class BridgeModule extends ReactContextBaseJavaModule implements BundleEventListener {
 
     private final ReactApplicationContext mReactContext;
