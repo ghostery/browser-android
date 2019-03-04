@@ -3,7 +3,7 @@
 <!ENTITY action_ok "好的">
 <!ENTITY action_exit "退出">
 <!ENTITY contextmenu_delete "删除">
-<!ENTITY search_loading_message "We are powering up Ghost search for your fully private experience">
+<!ENTITY search_loading_message "我们正在加强 Ghost 搜索，为您打造完全私密的体验">
 
 <!-- Onboarding -->
 <!ENTITY firstrun_urlbar_subtext3 "&firstrun_urlbar_subtext;">
@@ -13,8 +13,8 @@
 
 <!-- News -->
 <!ENTITY activity_stream_top_news "新闻">
-<!ENTITY activity_stream_top_news_show "Show">
-<!ENTITY activity_stream_top_news_hide "Hide">
+<!ENTITY activity_stream_top_news_show "显示">
+<!ENTITY activity_stream_top_news_hide "隐藏">
 
 <!-- Favorites -->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
@@ -46,11 +46,11 @@
 <!ENTITY helper_triple_readerview_open_button2 "添加到收藏夹">
 
 <!-- Customize Start Tab Link/Snackbar -->
-<!ENTITY customize_new_tab_link_description "Want to customize this tab?">
-<!ENTITY customize_new_tab_link "Go to Settings">
-<!ENTITY customize_new_tab_snackbar_negative_btn "No, Thanks">
-<!ENTITY customize_new_tab_snackbar_positive_btn "Customize">
-<!ENTITY customize_new_tab_snackbar_description "Adapt this space to your needs: Show/hide TopSites, News and background image.">
+<!ENTITY customize_new_tab_link_description "想要自定义此标签页？">
+<!ENTITY customize_new_tab_link "转到“设置”">
+<!ENTITY customize_new_tab_snackbar_negative_btn "不用，谢谢">
+<!ENTITY customize_new_tab_snackbar_positive_btn "自定义">
+<!ENTITY customize_new_tab_snackbar_description "根据您的需求调整此空间：显示/隐藏 TopSite、新闻和背景图片。">
 
 <!-- Default Browser Dialog -->
 <!ENTITY default_browser_title "&brandShortName;作为默认浏览器">
@@ -60,12 +60,12 @@
 
 <!-- Settings -->
 <!-- Telemetry -->
-<!ENTITY datareporting_telemetry_title2 "Send usage data">
-<!ENTITY datareporting_telemetry_summary2 "Help us improve your browsing experience. We collect strictly anonymous usage data. At no occasion is any personal information collected.">
+<!ENTITY datareporting_telemetry_title2 "发送使用数据">
+<!ENTITY datareporting_telemetry_summary2 "帮助我们提升浏览体验。 我们收集严格匿名的使用数据。 任何情况下均不会收集个人身份信息。">
 
 <!-- Human Web -->
 <!ENTITY pref_category_human_web "Human Web">
-<!ENTITY pref_category_human_web_summary "Contribute anonymous information related to trackers, websites, and search queries to improve our private quick-search, anti-tracking, anti-phishing technologies.">
+<!ENTITY pref_category_human_web_summary "提供与跟踪器、网站和搜索查询相关的匿名信息，以改进我们的私密快速搜索、反跟踪、反网络钓鱼技术。">
 <!ENTITY pref_what_is_human_web "什么是 Human Web？">
 <!ENTITY pref_enable_human_web "开启 Human Web">
 <!ENTITY human_web_info_url "https://www.ghostery.com/faqs/human-web-data-collected/">
@@ -73,8 +73,8 @@
 <!-- MyOffrz -->
 <!ENTITY myoffrz_title "&brandMyOffrz;">
 <!ENTITY myoffrz_no_offers_title "看起来我们没有任何邀请">
-<!ENTITY myoffrz_no_offers_msg_line1 "But we add them here ">
-<!ENTITY myoffrz_no_offers_msg_line2 "as soon as we have one">
+<!ENTITY myoffrz_no_offers_msg_line1 "但我们在此处添加它们 ">
+<!ENTITY myoffrz_no_offers_msg_line2 "只要我们有一个">
 <!ENTITY myoffrz_onboarding_description "通过  &brandMyOffrz; 享受诱人的折扣和特价。">
 <!ENTITY myoffrz_order_now_label "立即订购！">
 <!ENTITY myoffrz_tap_code_to_copy_label "点按代码以复制">
@@ -87,7 +87,7 @@
 <!ENTITY pref_block_ads "拦截广告">
 <!ENTITY pref_block_ads_fair "公平拦截">
 <!ENTITY pref_block_ads_what_fair "什么是\'fair\'">
-<!ENTITY pref_block_ads_fair_description "Ad Blocking is in beta at the moment. The final version will provide the following options: Allow Fair Ads (default setting), Block All Ads, Allow All Ads. More\nhttps://cliqz.com/whycliqz/adblocking">
+<!ENTITY pref_block_ads_fair_description "广告拦截功能目前处于测试阶段。 最终版本将提供以下选项：允许合理的广告（默认设置），屏蔽所有广告，允许所有广告。 更多\nhttps://cliqz.com/whycliqz/adblocking">
 <!ENTITY pref_block_ads_data "请注意：要使在广告拦截程序高效运行，浏览器首先需要下载一些数据包。为此，应用程序必须连接 Wi-Fi。">
 
 <!-- Rate Us -->
@@ -97,12 +97,12 @@
 <!ENTITY cc_title_overview "概述">
 <!ENTITY cc_title_site_trackers "网站跟踪器">
 <!ENTITY cc_title_global_trackers "所有跟踪器">
-<!ENTITY cc_zero_trackers_found "Trackers found">
-<!ENTITY cc_one_trackers_found "Tracker found">
-<!ENTITY cc_two_trackers_found "Trackers found">
-<!ENTITY cc_few_trackers_found "Trackers found">
-<!ENTITY cc_many_trackers_found "Trackers found">
-<!ENTITY cc_other_trackers_found "Trackers found">
+<!ENTITY cc_zero_trackers_found "已找到跟踪器">
+<!ENTITY cc_one_trackers_found "已找到跟踪器">
+<!ENTITY cc_two_trackers_found "已找到跟踪器">
+<!ENTITY cc_few_trackers_found "已找到跟踪器">
+<!ENTITY cc_many_trackers_found "已找到跟踪器">
+<!ENTITY cc_other_trackers_found "已找到跟踪器">
 <!ENTITY cc_zero_trackers_blocked "&formatD; 已拦截跟踪器">
 <!ENTITY cc_one_trackers_blocked "&formatD; 已拦截跟踪器">
 <!ENTITY cc_two_trackers_blocked "&formatD; 已拦截跟踪器">
@@ -119,19 +119,19 @@
 <!ENTITY cc_restrict_site "限制网站">
 <!ENTITY cc_pause_ghostery "暂停 Ghostery">
 <!ENTITY cc_resume_ghostery "恢复 Ghostery">
-<!ENTITY cc_enhanced_options "Options">
+<!ENTITY cc_enhanced_options "选项">
 <!ENTITY cc_enhanced_anti_tracking "反跟踪功能">
-<!ENTITY cc_enhanced_ad_blocking "Ad Blocking">
+<!ENTITY cc_enhanced_ad_blocking "广告拦截">
 <!ENTITY cc_smart_blocking "智能拦截">
-<!ENTITY cc_enhanced_anti_tracking_info "Anti tracking information">
-<!ENTITY cc_enhanced_ad_blocking_info "Ad blocking information">
-<!ENTITY cc_smart_blocking_info "Anti tracking information">
-<!ENTITY cc_zero_anti_tracking_blocked "Personal data anonymized">
-<!ENTITY cc_one_anti_tracking_blocked "Personal data anonymized">
-<!ENTITY cc_two_anti_tracking_blocked "Personal data anonymized">
-<!ENTITY cc_few_anti_tracking_blocked "Personal data anonymized">
-<!ENTITY cc_many_anti_tracking_blocked "Personal data anonymized">
-<!ENTITY cc_other_anti_tracking_blocked "Personal data anonymized">
+<!ENTITY cc_enhanced_anti_tracking_info "反跟踪信息">
+<!ENTITY cc_enhanced_ad_blocking_info "广告拦截信息">
+<!ENTITY cc_smart_blocking_info "反跟踪信息">
+<!ENTITY cc_zero_anti_tracking_blocked "个人数据已匿名化">
+<!ENTITY cc_one_anti_tracking_blocked "个人数据已匿名化">
+<!ENTITY cc_two_anti_tracking_blocked "个人数据已匿名化">
+<!ENTITY cc_few_anti_tracking_blocked "个人数据已匿名化">
+<!ENTITY cc_many_anti_tracking_blocked "个人数据已匿名化">
+<!ENTITY cc_other_anti_tracking_blocked "个人数据已匿名化">
 <!ENTITY cc_zero_ad_blocking_blocked "已拦截广告">
 <!ENTITY cc_one_ad_blocking_blocked "已拦截广告">
 <!ENTITY cc_two_ad_blocking_blocked "已拦截广告">
@@ -145,7 +145,7 @@
 <!ENTITY cc_many_smart_blocking_blocked "已调整跟踪器">
 <!ENTITY cc_other_smart_blocking_blocked "已调整跟踪器">
 <!ENTITY cc_anti_tracking_about "对未拦截和未知的跟踪器保持匿名，获得更好的浏览保护。">
-<!ENTITY cc_ad_blocking_about "Block ads on websites you visit">
+<!ENTITY cc_ad_blocking_about "拦截您访问的网站上的广告">
 <!ENTITY cc_smart_blocking_about "已调整跟踪器拦截功能以优化页面性能">
 <!ENTITY cc_site_trackers_list_title "此网站上的追踪器">
 <!ENTITY cc_global_trackers_list_title "网站上的跟踪器">
@@ -172,8 +172,8 @@
 <!ENTITY cc_reset_changes_dialog_title "重设所有改变？">
 <!ENTITY cc_reset_changes_dialog_message "之前对网站的全部改动和全球追踪器将被重设。">
 <!ENTITY cc_reset "重设">
-<!ENTITY cc_ad_block_off_domain "Turn off for this domain">
-<!ENTITY cc_ad_block_off_global "Turn off for all websites">
+<!ENTITY cc_ad_block_off_domain "为此域名关闭">
+<!ENTITY cc_ad_block_off_global "为所有网站关闭">
 <!ENTITY cc_reload_page_snackbar_text "页面会刷新以应用变化">
 
 <!-- General Settings - Search-->
@@ -282,19 +282,19 @@
 <!ENTITY firstrun_urlbar_subtext2_ghostery "Ghostery-让您的浏览体验更纯粹、快速和安全。">
 
 <!-- Ghostery onboarding -->
-<!ENTITY ghostery_onboarding_new_users_title "Welcome">
+<!ENTITY ghostery_onboarding_new_users_title "欢迎">
 <!ENTITY ghostery_onboarding_new_users_text "通过 &brandShortName;, 随时随地获得更纯粹、迅速和安全的浏览体验，现在已为移动版本优化！">
-<!ENTITY ghostery_onboarding_new_users_checkbox "Improve &brandShortName;\'s performance by sharing anonymous analytics and Human Web data. \u003Ca href=\u0022&human_web_info_url;\u0022&gt;Learn more\u003C/a\u003E">
+<!ENTITY ghostery_onboarding_new_users_checkbox "通过共享匿名分析和 Human Web 数据来改善 &brandShortName; 的性能。 \u003Ca href=\u0022&human_web_info_url;\u0022&gt;了解详情\u003C/a\u003E">
 <!ENTITY ghostery_onboarding_tracking_protection_title "广告与跟踪器拦截">
-<!ENTITY ghostery_onboarding_tracking_protection_text "What should &brandShortName; block for you? You can change your selection any time in the Privacy Control Center.">
+<!ENTITY ghostery_onboarding_tracking_protection_text "&brandShortName; 应该为您拦截什么？ 您可以随时在隐私控制中心更改您的选择。">
 <!ENTITY ghostery_onboarding_tracking_protection_radio1 "不拦截">
 <!ENTITY ghostery_onboarding_tracking_protection_radio2 "建议拦截">
-<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "Ads and Adult Ads">
+<!ENTITY ghostery_onboarding_tracking_protection_radio2_subtext "广告和成人广告">
 <!ENTITY ghostery_onboarding_tracking_protection_radio3 "拦截全部">
 <!ENTITY ghostery_onboarding_quick_search_title "幽灵搜索">
-<!ENTITY ghostery_onboarding_quick_search_text "Stay anonymous with private search and save time with instantaneous results as you type.">
+<!ENTITY ghostery_onboarding_quick_search_text "通过私密搜索保持匿名，并在您键入时立即获得结果，从而节省时间。">
 <!ENTITY ghostery_onboarding_new_tab_title "&pref_new_tab_category;">
-<!ENTITY ghostery_onboarding_new_tab_text "Customize the start page of tabs to your liking.">
+<!ENTITY ghostery_onboarding_new_tab_text "根据自己的喜好自定义标签页的起始页面。">
 <!ENTITY ghostery_onboarding_action_button "开始浏览">
 <!ENTITY ghostery_onboarding_contextual_title "开启追踪保护">
 <!ENTITY ghostery_onboarding_contextual_item1_title "反跟踪功能">
