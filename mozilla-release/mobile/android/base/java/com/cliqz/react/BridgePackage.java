@@ -1,11 +1,11 @@
 package com.cliqz.react;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.cliqz.ThemeManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,11 +24,9 @@ import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.GeckoBundleUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 
 /**
  * Copyright © Cliqz 2019
@@ -115,35 +113,34 @@ public class BridgePackage implements ReactPackage {
         @ReactMethod
         public void clearPref(String prefName) {
             // TODO: there is no way to clear pref from JAVA - need to send message to browser.js
-            PrefsHelper.setPref(prefName, null);
+            // PrefsHelper.setPref(prefName, null);
         }
 
         @ReactMethod
-        public void setPref(String prefName, String value) {
+        public void setPref(String prefName, Dynamic value) {
             recordPrefName(prefName);
-            Log.d("xxxxxx", "22222:::" +  prefName +":::" + value+ "   - "+addPrefix(prefName));
-            PrefsHelper.setPref(addPrefix(prefName), value);
-        }
-
-        @ReactMethod
-        public void setPref(String prefName, int value) {
-            recordPrefName(prefName);
-            Log.d("xxxxxx", "22222:::" +  prefName +":::" + value+ "   - "+addPrefix(prefName));
-            PrefsHelper.setPref(addPrefix(prefName), value);
-        }
-
-        @ReactMethod
-        public void setPref(String prefName, Boolean value) {
-            recordPrefName(prefName);
-            Log.d("xxxxxx", "22222:::" +  prefName +":::" + value+ "   - "+addPrefix(prefName));
-            PrefsHelper.setPref(addPrefix(prefName), value);
+            Object val = null;
+            switch (value.getType()) {
+                case String:
+                    val = value.asString();
+                    break;
+                case Boolean:
+                    val = value.asBoolean();
+                    break;
+                case Number:
+                    val = value.asInt();
+                    break;
+                default:
+                    return;
+            }
+            PrefsHelper.setPref(addPrefix(prefName), val);
         }
 
         @ReactMethod
         public void getAllPrefs(Promise promise) {
             WritableMap prefs = Arguments.createMap();
-            final Set<String> prefNames = xPreferences.getStringSet(SEARCHUI_PREF_NAMES, Collections.emptySet());
-            prefNames.add(addPrefix("suggestionChoice"));
+            final Set<String> prefNames = getPrefNames();
+
             PrefsHelper.getPrefs(prefNames.toArray(new String[] { }), new PrefsHelper.PrefHandler() {
                 @Override
                 public void prefValue(String pref, boolean value) {
@@ -162,14 +159,13 @@ public class BridgePackage implements ReactPackage {
 
                 @Override
                 public void finish() {
-                    Log.d("xxxxxx", "alll prefs" +  prefs.toString());
                     promise.resolve(prefs);
                 }
             });
         }
 
         private void recordPrefName(String prefName) {
-            final Set<String> prefNames = xPreferences.getStringSet(SEARCHUI_PREF_NAMES, Collections.emptySet());
+            final Set<String> prefNames = getPrefNames();
 
             if (prefNames.add(addPrefix(prefName))) {
                 xPreferences.edit().putStringSet(SEARCHUI_PREF_NAMES, prefNames).apply();
@@ -182,6 +178,13 @@ public class BridgePackage implements ReactPackage {
 
         private String addPrefix(String prefName) {
             return PREF_PREFIX + prefName;
+        }
+
+        private Set<String> getPrefNames() {
+            final Set<String> prefNames = xPreferences.getStringSet(SEARCHUI_PREF_NAMES, new HashSet<>());
+            prefNames.add(addPrefix("suggestionChoice"));
+            prefNames.add(addPrefix("suggestionsEnabled"));
+            return prefNames;
         }
     }
 }
