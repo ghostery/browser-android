@@ -1060,7 +1060,7 @@ public class GeckoPreferences
                     pref.setSummary(MOZ_APP_VERSION);
                 } else if (PREFS_ABOUT_SEARCH_VERSION.equals(key)) {
                     // set extension version
-                    pref.setSummary(AppConstants.CLIQZ_SEARCH_VERSION);
+                    pref.setSummary(AppConstants.CLIQZ_PRIVACY_VERSION);
                 } else if (PREFS_ABOUT_ARN.equals(key) && !BuildConfig.DEBUG) {
                     // remove arn on production @TODO getARN from GCM Endpoint and set as a summary
                     preferences.removePreference(pref);
