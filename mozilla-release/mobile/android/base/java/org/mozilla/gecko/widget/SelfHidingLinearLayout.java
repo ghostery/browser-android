@@ -2,6 +2,7 @@ package org.mozilla.gecko.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -58,10 +59,19 @@ public class SelfHidingLinearLayout extends LinearLayout {
         super.onLayout(changed, l, t, r, b);
         getLocationInWindow(mLocation);
         LayoutParams params = (LayoutParams) getLayoutParams();
-        if (mLocation[1] < WindowUtils.getLargestDimension(getContext()) - getHeight() - mNavBarHeight - params.bottomMargin) {
-            setVisibility(INVISIBLE);
-        } else {
-            setVisibility(VISIBLE);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (mLocation[1] < WindowUtils.getHeight(getContext()) - getHeight() - mNavBarHeight - params.bottomMargin) {
+                setVisibility(INVISIBLE);
+            } else {
+                setVisibility(VISIBLE);
+            }
+        }
+        else {
+            if (mLocation[1] < WindowUtils.getLargestDimension(getContext()) - getHeight() - mNavBarHeight - params.bottomMargin) {
+                setVisibility(INVISIBLE);
+            } else {
+                setVisibility(VISIBLE);
+            }
         }
     }
 }

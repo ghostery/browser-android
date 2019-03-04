@@ -621,6 +621,10 @@ public class ToolbarDisplayLayout extends ThemedLinearLayout {
         super.setLightTheme(isLightTheme);
         mTitle.setLightTheme(isLightTheme);
         mPageActionLayout.setLightTheme(isLightTheme);
+        if (Tabs.getInstance() != null && Tabs.getInstance().getSelectedTab() != null) {
+            // To update the 'https' span text color in the urbar.
+            updateTitle(Tabs.getInstance().getSelectedTab());
+        }
         DrawableCompat.setTint(DrawableCompat.wrap(mSiteSecurity.getDrawable()),
                 isLightTheme ? Color.WHITE : ContextCompat.getColor(getContext(), R.color.general_blue_color));
     }
