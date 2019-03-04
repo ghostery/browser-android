@@ -23,7 +23,7 @@ public class MigrationManager {
                 return;
             }
             PrefsHelper.setPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, "");
-            SearchBackground.getInstance().setBackendCountry(countryCode);
+            SearchBackground.setBackendCountry(countryCode);
             }
         });
     }

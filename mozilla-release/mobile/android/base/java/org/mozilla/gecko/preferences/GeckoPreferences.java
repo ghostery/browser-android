@@ -62,6 +62,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cliqz.react.SearchBackground;
+import com.cliqz.react.modules.PrefsModule;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
@@ -166,6 +167,7 @@ public class GeckoPreferences
     // public static final String PREFS_VOICE_INPUT_ENABLED = NON_PREF_PREFIX + "voice_input_enabled";
     public static final String PREFS_QRCODE_ENABLED = NON_PREF_PREFIX + "qrcode_enabled";
     public static final String PREFS_AUTO_COMPLETE = "pref.search.auto.completion";
+    public static final String PREFS_SEARCH_ADULT_RESULTS = "pref.search.block.adult.content";
     public static final String PREFS_OFFRZ_LAST_SIGNATURE = NON_PREF_PREFIX + "offrz.last.signature";
     private static final String PREFS_CLEAR_PRIVATE_DATA = NON_PREF_PREFIX + "privacy.clear";
 
@@ -1419,6 +1421,11 @@ public class GeckoPreferences
 
 
         /* Cliqz Start */
+        if (PREFS_SEARCH_ADULT_RESULTS.equals((prefName))) {
+            PrefsHelper.setPref(PrefsModule.PREFS_SEARCH_ADULT_RESULTS, (boolean) newValue ? "conservative" : "liberal");
+            PrefsHelper.setPref(PREFS_SEARCH_ADULT_RESULTS, newValue);
+            return true;
+        }
         if (PREFS_TELEMETRY_ENABLED.equals(prefName)) {
             PrefsHelper.setPref(PREFS_TELEMETRY_ENABLED, (Boolean) newValue);
             return true;

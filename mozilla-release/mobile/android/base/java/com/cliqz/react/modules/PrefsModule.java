@@ -3,18 +3,18 @@ package com.cliqz.react.modules;
 import android.content.SharedPreferences;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.PrefsHelper;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,8 +25,10 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     private static final String PREF_PREFIX = "searchui.";
     private static final String SEARCHUI_PREF_NAMES = "searchui.prefNames";
     public static String PREFS_SEARCH_QUERY_SUGGESTIONS = PREF_PREFIX + "suggestionsEnabled";
+    public static String PREFS_SEARCH_ADULT_RESULTS = PREF_PREFIX + "adultContentFilter";
+    private final Set<String> mPrefIgnoreList = new HashSet<>();
+
     private final SharedPreferences mPreferences;
-    private final ArrayList<Callback> mCallbacks = new ArrayList<>();
     private final PrefsHelper.PrefHandler mPrefHandler = new PrefsHelper.PrefHandler() {
         @Override
         public void prefValue(String pref, boolean value) {
@@ -48,9 +50,11 @@ public class PrefsModule extends ReactContextBaseJavaModule {
 
         }
     };
+    private final ReactApplicationContext mReactContext;
 
     public PrefsModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        mReactContext = reactContext;
         mPreferences = GeckoSharedPrefs.forProfile(reactContext);
     }
 
@@ -74,6 +78,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     public void setPref(String prefName, Dynamic value) {
         recordPrefName(prefName);
         Object val = null;
+        mPrefIgnoreList.add(prefName);
         switch (value.getType()) {
             case String:
                 val = value.asString();
@@ -117,11 +122,6 @@ public class PrefsModule extends ReactContextBaseJavaModule {
         });
     }
 
-    @ReactMethod
-    public void onPrefChange(Callback callback) {
-        mCallbacks.add(callback);
-    }
-
     private void recordPrefName(String prefName) {
         final Set<String> prefNames = getPrefNames();
 
@@ -131,7 +131,10 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     }
 
     private String removePrefix(String prefName) {
-        return prefName.substring(PREF_PREFIX.length());
+        if (prefName.startsWith(PREF_PREFIX)) {
+            return prefName.substring(PREF_PREFIX.length());
+        }
+        return prefName;
     }
 
     private String addPrefix(String prefName) {
@@ -142,6 +145,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
         final Set<String> prefNames = mPreferences.getStringSet(SEARCHUI_PREF_NAMES, new HashSet<>());
         prefNames.add(addPrefix("suggestionChoice"));
         prefNames.add(PREFS_SEARCH_QUERY_SUGGESTIONS);
+        prefNames.add(PREFS_SEARCH_ADULT_RESULTS);
         return prefNames;
     }
 
@@ -155,12 +159,15 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     }
 
     private void notifyPrefChange(String prefName, Object value) {
-        for (Callback callback : mCallbacks) {
-            try {
-                callback.invoke(prefName, value);
-            } catch (Throwable t) {
-                // done for safety
-            }
+        final String key = removePrefix(prefName);
+        if (mPrefIgnoreList.contains(key)) {
+            mPrefIgnoreList.remove(key);
+            return;
         }
+        final WritableArray keyValue = Arguments.fromJavaArgs(new Object[]{ key, value });
+
+        mReactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+            .emit("prefchange", keyValue);
     }
 }

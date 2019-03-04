@@ -6526,27 +6526,6 @@ GlobalEventDispatcher.registerListener(this, [
 
     Services.cpmm.addMessageListener("MessageChannel:Messages",
       this._extensionListener.bind(this));
-
-    Services.prefs.addObserver('pref.search.regional', () => {
-      const value = Services.prefs.getCharPref('pref.search.regional');
-      this.messageExtension({
-        module: "search",
-        action: "setBackendCountry",
-        args: [value]
-      });
-    });
-
-    Services.prefs.addObserver("pref.search.block.adult.content", () => {
-      const value = Services.prefs.getBoolPref("pref.search.block.adult.content");
-      const key = value ? "conservative" : "liberal";
-      this.messageExtension({
-        module: "search",
-        action: "setAdultFilter",
-        args: [key]
-      });
-    });
-
-    this._syncSearchPrefs();
   },
 
   READY_STATUS: {
@@ -6821,19 +6800,6 @@ GlobalEventDispatcher.registerListener(this, [
     delete BrowserApp.deck.backPanel;
 
     return true;
-  },
-
-  _syncSearchPrefs() {
-    const messages = [];
-    messages.push(["setAdultFilter", Services.prefs.getBoolPref("pref.search.block.adult.content") ? "conservative" : "liberal" ]);
-
-    messages.forEach((msg) => {
-      this.messageExtension({
-        module: "search",
-        action: msg[0],
-        args: [ msg[1] ]
-      });
-    });
   },
 
   onEvent: function(event, data, callbacks) {
