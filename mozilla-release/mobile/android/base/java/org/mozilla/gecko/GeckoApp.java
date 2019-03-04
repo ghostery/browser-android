@@ -91,6 +91,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cliqz.react.MigrationManager;
 import com.cliqz.react.SearchBackground;
 
 import org.json.JSONArray;
@@ -1789,7 +1790,9 @@ public abstract class GeckoApp extends GeckoActivity
                 }
             }
             if (prefsVersionCode <= GHOSTERY_VERSION_2_3) {
-                SearchBackground.getInstance().migrateBackendCountryLanguage();
+                final MigrationManager migrationManager = MigrationManager.getInstance();
+                migrationManager.migrateBackendCountryLanguage();
+                migrationManager.migrateQuerySuggestionsPref();
             }
         }
         /* Cliqz End */

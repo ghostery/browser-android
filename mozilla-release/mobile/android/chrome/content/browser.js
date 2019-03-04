@@ -6546,15 +6546,6 @@ GlobalEventDispatcher.registerListener(this, [
       });
     });
 
-    Services.prefs.addObserver("pref.search.query.suggestions", () => {
-      const value = Services.prefs.getBoolPref("pref.search.query.suggestions");
-      this.messageExtension({
-        module: "search",
-        action: "setQuerySuggestions",
-        args: [value]
-      });
-    });
-
     this._syncSearchPrefs();
   },
 
@@ -6835,7 +6826,6 @@ GlobalEventDispatcher.registerListener(this, [
   _syncSearchPrefs() {
     const messages = [];
     messages.push(["setAdultFilter", Services.prefs.getBoolPref("pref.search.block.adult.content") ? "conservative" : "liberal" ]);
-    messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 
     messages.forEach((msg) => {
       this.messageExtension({

@@ -24,6 +24,7 @@ import java.util.Set;
 public class PrefsModule extends ReactContextBaseJavaModule {
     private static final String PREF_PREFIX = "searchui.";
     private static final String SEARCHUI_PREF_NAMES = "searchui.prefNames";
+    public static String PREFS_SEARCH_QUERY_SUGGESTIONS = PREF_PREFIX + "suggestionsEnabled";
     private final SharedPreferences mPreferences;
     private final ArrayList<Callback> mCallbacks = new ArrayList<>();
     private final PrefsHelper.PrefHandler mPrefHandler = new PrefsHelper.PrefHandler() {
@@ -140,7 +141,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     private Set<String> getPrefNames() {
         final Set<String> prefNames = mPreferences.getStringSet(SEARCHUI_PREF_NAMES, new HashSet<>());
         prefNames.add(addPrefix("suggestionChoice"));
-        prefNames.add(addPrefix("suggestionsEnabled"));
+        prefNames.add(PREFS_SEARCH_QUERY_SUGGESTIONS);
         return prefNames;
     }
 

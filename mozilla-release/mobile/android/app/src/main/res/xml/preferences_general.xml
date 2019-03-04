@@ -80,7 +80,7 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:checked="true"
-            android:key="cb_query_suggestion"
+            android:key="searchui.suggestionsEnabled"
             android:title="@string/pref_search_query_suggestions" />
 
         <CheckBoxPreference
