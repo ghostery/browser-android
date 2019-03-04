@@ -33,10 +33,8 @@
 <!ENTITY pref_dialog_activitystream_recentFavorites "Neue Favoriten">
 <!ENTITY favorite_edit_title "Favoriten bearbeiten">
 <!ENTITY home_favorites_empty "Gespeicherte Favoriten erscheinen hier.">
-<!ENTITY favoritehistory_import_both "Favoriten und Verlauf importieren
-                                      von Android">
-<!ENTITY favoritehistory_import_favorites "Favoriten importieren
-                                           von Android">
+<!ENTITY favoritehistory_import_both "Favoriten und Verlauf importieren von Android">
+<!ENTITY favoritehistory_import_favorites "Favoriten importieren von Android">
 <!ENTITY searchable_description2 "Favoriten und Verlauf">
 <!ENTITY new_guest_session_text3 "Der Benutzer kann keine deiner persönlichen Browsingdaten sehen (z.B. gespeicherte Logins,Verlauf oder Favoriten).\n\nWenn dein Gast fertig ist, werden seine Browsingdaten gelöscht und deine Sitzung wiederhergestellt.">
 <!ENTITY restrictable_feature_advanced_settings_description2 "Mit Favoritenimport, Tab-Wiederherstellung, Auto-Updates. Abschalten für einfache Einstellungen für die ganze Familie.">
@@ -261,8 +259,7 @@
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Über uns">
-<!ENTITY pref_category_about_us_summary
-    "App-Version, Erweiterungsversion, Richtlinien und Zulassungen, Imprint">
+<!ENTITY pref_category_about_us_summary "App-Version, Erweiterungsversion, Richtlinien und Zulassungen, Imprint">
 <!ENTITY pref_app_version "Anwendungsversion">
 <!ENTITY pref_about_arn "Gerät ARN">
 <!ENTITY pref_extension_version "Erweiterungsversion">
@@ -321,8 +318,7 @@
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Bereits vorhanden!">
-<!ENTITY prevent_ghostery_addon_dialog_message
-        "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
+<!ENTITY prevent_ghostery_addon_dialog_message "Add-on wurde nicht installiert, da &formatS1; bereits in deinem Browser integriert ist.">
 
 <!-- Change German translations in the 3-dots menu because they were too long -->
 <!ENTITY cliqz_contextmenu_pin_to_top_sites "Seite anheften">
