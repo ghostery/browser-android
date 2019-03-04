@@ -6,11 +6,11 @@ node('master') {
     
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
     }
     def baseImageName = "browser-f/android:${dockerTag}"
     baseImage = stage('Build base image') {
-        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
+        docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
     baseImage.inside() {
         try {

@@ -24,17 +24,19 @@ RUN apt-get update && \
     python-pip \
     python-virtualenv \
     sqlite3 \
+    git \
     zlib1g-dev && \
     apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ARG UID
 ARG GID
+ARG USER
 ENV SHELL=/bin/bash
 ENV NPM_CONFIG_PREFIX=/home/jenkins/.npm-global
 ENV PATH=/sdk/android-sdk/platform-tools:/sdk/android-sdk/platform-tools/bin:/sdk/android-sdk/tools:/sdk/android-sdk/tools/bin:${NPM_CONFIG_PREFIX}/bin:${PATH}
-RUN getent group $GID || groupadd jenkins --gid $GID && \
-    useradd --create-home --shell /bin/bash jenkins --uid $UID --gid $GID
+RUN getent group $GID || groupadd $USER --gid $GID && \
+    useradd --create-home --shell /bin/bash $USER --uid $UID --gid $GID
 
 # Add extra dependencies to the maven cache
 RUN mvn dependency:get \
@@ -57,11 +59,13 @@ RUN mvn dependency:get \
     -Dpackaging=aar \
     -DremoteRepositories=https://maven.google.com
 
-USER jenkins
+RUN mkdir -p /app && chown $UID:$GID /app
+
+USER $USER
 SHELL ["/bin/bash", "-l", "-c"]
 
 #Installation of 'appium' & 'wd' for Integration Tests
-RUN /sdk/node/bin/npm install --global appium@1.10.0 wd
+RUN npm install --global appium wd npm@6.5.0
 
 #Install Ruby and Fastlane
 RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
@@ -74,7 +78,7 @@ RUN for key in 409B6B1796C275462A1703113804BB82D39DC0E3 \
         done; \
     done
 RUN curl -sSL https://get.rvm.io | bash -s stable --ruby=2.4.3 --autolibs=read-fail && \
-    source /home/jenkins/.rvm/scripts/rvm \
+    source /home/$USER/.rvm/scripts/rvm \
     rvm reload && \
     gem install fastlane --version 2.111.0
 

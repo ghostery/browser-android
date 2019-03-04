@@ -10,8 +10,8 @@ import java.util.concurrent.Future;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -22,7 +22,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,11 +32,14 @@ import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 import org.mozilla.gecko.db.BrowserContract.Combined;
 import org.mozilla.gecko.db.BrowserContract.URLColumns;
 import org.mozilla.gecko.icons.IconResponse;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.reader.ReaderModeUtils;
 import org.mozilla.gecko.reader.SavedReaderViewHelper;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
 import org.mozilla.gecko.sync.net.Resource;
+import org.mozilla.gecko.util.DrawableUtil;
 import org.mozilla.gecko.widget.FaviconView;
+import org.mozilla.gecko.widget.themed.ThemedImageView;
 import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
 
@@ -50,7 +52,7 @@ public class TwoLinePageRow extends ThemedLinearLayout
 
     private final ThemedTextView mTitle;
     private final ThemedTextView mUrl;
-    private final ImageView mStatusIcon;
+    private final ThemedImageView mStatusIcon;
 
     /* Cliqz Start */
     private Drawable mSwitchToTabIcon;
@@ -79,7 +81,7 @@ public class TwoLinePageRow extends ThemedLinearLayout
 
         mTitle = (ThemedTextView) findViewById(R.id.title);
         mUrl = (ThemedTextView) findViewById(R.id.url);
-        mStatusIcon = (ImageView) findViewById(R.id.status_icon_bookmark);
+        mStatusIcon = (ThemedImageView) findViewById(R.id.status_icon_bookmark);
 
         /* Cliqz Start */
         mSwitchToTabIcon = NO_ICON;
@@ -230,10 +232,11 @@ public class TwoLinePageRow extends ThemedLinearLayout
         } else {
             setUrl(R.string.switch_to_tab);
             /* Cliqz Start */
-            Drawable wrappedDrawable = DrawableCompat.wrap(
-                    getResources().getDrawable(R.drawable.ic_url_bar_tab));
-            DrawableCompat.setTint(wrappedDrawable, getResources().getColor(android.R.color.white));
-            setSwitchToTabIcon(wrappedDrawable);
+            final int tintColor = PreferenceManager.getInstance().isLightThemeEnabled() ?
+                    ContextCompat.getColor(getContext(),
+                    R.color.light_theme_start_tab_font_color) : Color.WHITE;
+            setSwitchToTabIcon(DrawableUtil.tintDrawable(getContext(),
+                    R.drawable.ic_url_bar_tab, tintColor));
             /* Cliqz End */
         }
     }
@@ -332,6 +335,22 @@ public class TwoLinePageRow extends ThemedLinearLayout
         mTitle.setPrivateMode(isPrivate);
         mUrl.setPrivateMode(isPrivate);
     }
+
+    /* Cliqz Start */
+    public void updateTheme() {
+        setLightTheme(PreferenceManager.getInstance().isLightThemeEnabled());
+    }
+
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+        mTitle.setLightTheme(isLightTheme);
+        mUrl.setLightTheme(isLightTheme);
+
+        mStatusIcon.setLightTheme(isLightTheme);
+        updateDisplayedUrl();
+    }
+    /* Cliqz End */
 
     /**
      * @return true if this view is shown inside a private tab, independent of whether

@@ -32,7 +32,8 @@
                 style="@style/TabsTray.AddTab"
                 android:background="@drawable/action_bar_button_inverse"
                 android:contentDescription="@string/new_tab"
-                android:src="@drawable/tab_new"/>
+                android:src="@drawable/tab_new"
+                gecko:drawableTintList="@color/cliqz_tab_items_color" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -62,7 +63,8 @@
                 style="@style/TabsTray.Menu"
                 android:background="@drawable/action_bar_button_inverse"
                 android:contentDescription="@string/menu"
-                android:src="@drawable/ic_overflow"/>
+                android:src="@drawable/ic_overflow"
+                gecko:drawableTintList="@color/cliqz_tab_items_color" />
         </view>
     </org.mozilla.gecko.widget.themed.ThemedLinearLayout>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Copyright © Cliqz 2018 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -13,21 +13,24 @@
         android:layout_height="0dip"
         android:layout_weight="1"/>
 
-    <TextView
+    <org.mozilla.gecko.widget.ShadowedThemedTextView
+        android:id="@+id/empty_myoffrz_title"
         style="@style/CliqzEmptyLayoutTextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/myoffrz_no_offers_title"
         tools:text="Seems like we do not have any offers" />
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
+        android:id="@+id/empty_myoffrz_description_one"
         style="@style/CliqzEmptyLayoutTextDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/myoffrz_no_offers_msg_line1"
         tools:text="But we'll keep looking for you and add" />
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
+        android:id="@+id/empty_myoffrz_description_two"
         style="@style/CliqzEmptyLayoutTextDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

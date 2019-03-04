@@ -305,6 +305,7 @@ public class BrowserContract {
         public static final String TYPE = "type";
         public static final String PARENT = "parent";
         public static final String POSITION = "position";
+        public static final String MODIFIED = "modified";
         public static final String TAGS = "tags";
         public static final String DESCRIPTION = "description";
         public static final String KEYWORD = "keyword";
@@ -344,6 +345,7 @@ public class BrowserContract {
     // Combined bookmarks and history
     @RobocopTarget
     public static final class Combined implements CommonColumns, URLColumns, HistoryColumns, FaviconColumns  {
+
         private Combined() {}
 
         public static final String VIEW_NAME = "combined";

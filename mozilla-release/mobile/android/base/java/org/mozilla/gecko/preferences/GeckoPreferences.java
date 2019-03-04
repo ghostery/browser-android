@@ -61,6 +61,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cliqz.react.SearchBackground;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
+
 import org.json.JSONArray;
 import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.AdjustConstants;
@@ -100,14 +104,17 @@ import org.mozilla.gecko.util.HardwareUtils;
 import org.mozilla.gecko.util.InputOptionsUtils;
 import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.gecko.util.ViewUtil;
+import org.mozilla.mozstumbler.service.Prefs;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static org.mozilla.gecko.AppConstants.MOZ_APP_VERSION;
 
@@ -1086,7 +1093,7 @@ public class GeckoPreferences
                          }
                      });
                 } else if(PREFS_SEARCH_REGIONAL.equals(key)) {
-                    SearchBackendPrefInitializer.init(getApplicationContext(), (ListPreference) pref);
+                    SearchBackendPrefInitializer.init((ListPreference) pref);
                 } else if (PREFS_DEFAULT_BROWSER.equals(key)) {
                     if (!AppConstants.Versions.feature24Plus) {
                         preferences.removePreference(pref);
@@ -1118,20 +1125,16 @@ public class GeckoPreferences
                     preferences.removePreference(pref);
                     i--;
                     continue;
-                } /* else if(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
-                    mShowBackgroundPref = (CheckBoxPreference)pref;
-                    if(mPreferenceManager.isLightThemeEnabled()) {
-                        preferences.removePreference(pref);
-                        i--;
-                    }
-                } else if(PREFS_BLUE_THEME.equals(key)) {
-                    if (!BuildConfig.DEBUG && !BuildConfig.APPLICATION_ID.contains("alpha")) {
+                } else if (PREFS_CLIQZ_TAB_BACKGROUND_ENABLED.equals(key)) {
+                    mShowBackgroundPref = (CheckBoxPreference) pref;
+                    if (mPreferenceManager.isLightThemeEnabled()) {
                         preferences.removePreference(pref);
                         i--;
                         continue;
                     }
+                } else if (PREFS_BLUE_THEME.equals(key)) {
                     pref.setOnPreferenceChangeListener(this);
-                } */
+                }
                 /* Cliqz end */
 
                 // Some Preference UI elements are not actually preferences,
@@ -1492,10 +1495,17 @@ public class GeckoPreferences
                     ((PreferenceFragment) mCurrentPreferenceFragment)
                             .findPreference(PREF_CATEGORY_START_TAB);
             if ((boolean) newValue) {
-                categoryStartTab.addPreference(mShowBackgroundPref);
+                if (categoryStartTab.findPreference(PREFS_CLIQZ_TAB_BACKGROUND_ENABLED) == null) {
+                    categoryStartTab.addPreference(mShowBackgroundPref);
+                }
             } else {
                 categoryStartTab.removePreference(mShowBackgroundPref);
             }
+
+            final boolean isLightTheme = !((boolean) newValue);
+            final GeckoBundle changeThemeGeckoBundle = new GeckoBundle(1);
+            changeThemeGeckoBundle.putBoolean("isLightTheme", isLightTheme);
+            EventDispatcher.getInstance().dispatch("Search:ChangeTheme", changeThemeGeckoBundle);
         }
         /* Cliqz End */
 
@@ -1922,75 +1932,58 @@ public class GeckoPreferences
         this.mCurrentPreferenceFragment = fragment;
     }
 
-    private static class SearchBackendPrefInitializer extends PrefsHelper.PrefHandlerBase
-                                                    implements EventCallback {
+    private static class SearchBackendPrefInitializer implements EventCallback {
         private final ListPreference pref;
-        private final Resources resources;
-        private final String packageName;
-        private String mSelectedBackEnd;
 
-        private SearchBackendPrefInitializer(Context context, ListPreference pref) {
-            this.resources = context.getResources();
-            this.packageName = context.getPackageName();
+        private SearchBackendPrefInitializer(ListPreference pref) {
             this.pref = pref;
         }
 
-        static void init(Context context, ListPreference pref) {
-            final SearchBackendPrefInitializer initializer =
-                    new SearchBackendPrefInitializer(context, pref);
-            // 1. We start asking for the currently selected backend
-            PrefsHelper.getPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, initializer);
+        static void init(ListPreference pref) {
+            final SearchBackendPrefInitializer initializer = new SearchBackendPrefInitializer(pref);
+            SearchBackground.getBackendCountries(initializer);
         }
-
-        @Override
-        public void prefValue(String pref, String value) {
-            // 2. Only when we get the value, we ask the extension to give us the backends list
-            mSelectedBackEnd = value;
-            EventDispatcher.getInstance().dispatch("Search:Backends", null, this);
-        }
-
-        private String getNameFor(String backendName) {
-            final int resId = resources
-                    .getIdentifier( "pref_search_regional_" + backendName,
-                            "string", packageName);
-            // In case we do not have a translation we just display the backend name (i.e. us, it,
-            // at, au, etc.)
-            return resId > 0 ? resources.getString(resId) : backendName;
-        }
-
 
         @Override
         public void sendSuccess(Object response) {
-            if (!(response instanceof GeckoBundle)) {
+            if (!(response instanceof ReadableMap)) {
                 return;
             }
-            // 3. we parse the results and get the backends name translations
-            final GeckoBundle data = (GeckoBundle) response;
-            final String[] backends = data.keys();
-            final ArrayList<String> names = new ArrayList<>(backends.length);
-            String value = null;
-            String summary = null;
-            for (String be: backends) {
-                final String name = getNameFor(be);
-                names.add(name);
-                if (mSelectedBackEnd.equals(be)) {
-                    value = be;
-                    summary = name;
+            final ReadableMap data = (ReadableMap) response;
+
+            final Map<String, String> countries = new TreeMap<>();
+            String selectedCountryCode = null;
+            String selectedCountryName = null;
+
+            final ReadableMapKeySetIterator it = data.keySetIterator();
+            while (it.hasNextKey()) {
+                final String key = it.nextKey();
+                final ReadableMap country = data.getMap(key);
+                final String countryName = country.getString("name");
+                countries.put(key, countryName);
+                if (country.getBoolean("selected")) {
+                    selectedCountryCode = key;
+                    selectedCountryName = countryName;
                 }
             }
-            final String[] entries = new String[names.size()];
-            names.toArray(entries);
 
-            // Must convert value and summary variables to final versions of themselves
-            final String fValue = value != null ? value : "us";
-            final String fSummary = summary != null ? summary : getNameFor("us");
+            final String fSelectedCountryName = selectedCountryName;
+            final String fSelectedCountryCode = selectedCountryCode;
+            final String[] countryCodes = countries.keySet().toArray(new String[] {});
+            final String[] countryNames = countries.values().toArray(new String[] {});
+
             ThreadUtils.postToUiThread(() -> {
-                // 4. Finally we set the ListPreference properties and we enable it
-                pref.setEntries(entries);
-                pref.setEntryValues(backends);
-                pref.setValue(fValue);
-                pref.setSummary(fSummary);
+                pref.setEntries(countryNames);
+                pref.setEntryValues(countryCodes);
+                pref.setValue(fSelectedCountryCode);
+                pref.setSummary(fSelectedCountryName);
                 pref.setEnabled(true);
+                pref.setOnPreferenceChangeListener((Preference preference, Object newValue) -> {
+                    final String code = (String) newValue;
+                    preference.setSummary(countries.get(code));
+                    SearchBackground.setBackendCountry(code);
+                    return true;
+                });
             });
         }
 

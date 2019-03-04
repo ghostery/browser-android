@@ -24,7 +24,7 @@
                android:gravity="top|center"
                android:scaleType="fitCenter"/>
 
-    <TextView
+    <org.mozilla.gecko.widget.ShadowedThemedTextView
         android:id="@+id/home_empty_text"
         style="@style/CliqzEmptyLayoutTextTitle"
         android:layout_width="wrap_content"

@@ -68,13 +68,13 @@
 
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatImageView
+        <org.mozilla.gecko.widget.themed.ThemedImageView
             android:id="@+id/status_icon_bookmark"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:tint="@android:color/white"
             android:visibility="gone"
+            gecko:drawableTintList="@color/cliqz_start_tab_font_color"
             gecko:srcCompat="@drawable/ic_menu_bookmark_remove"
             tools:visibility="visible" />
 

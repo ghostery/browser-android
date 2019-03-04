@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/customize_new_tab_link_description"
-            android:textColor="@color/history_list_divider_color"
+            android:textColor="@color/light_theme_start_tab_font_color"
             tools:text="Want to customize this tab?" />
 
         <TextView

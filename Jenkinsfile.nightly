@@ -42,16 +42,16 @@ def baseImage
 def codeImage
 def id
 node ('kria'){
-    def dockerTag = "" 
+    def dockerTag = ""
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
     baseImageName ="browser-f/android:${dockerTag}"
     codeImageName ="browser-f/android:nightlycode"
     baseImage = stage('Build base image') {
-        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
+        docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
     stage('Build code image') {
         writeFile file: 'Dockerfile.code', text: """
@@ -80,6 +80,15 @@ def build(Map m){
     return {
         node(nodeLabel){
             getImageName().inside() {
+                stage("Build Cliqz React native: ${flavorname}") {
+                    sh '''#!/bin/bash -l
+                        set -e
+                        set -x
+                        cd /app/cliqz
+                        npm ci
+                        npm run build
+                    '''
+                }
                 stage("Build APK: ${flavorname}") {
                     withEnv([
                         "ANDROID_TARGET=${androidtarget}",

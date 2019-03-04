@@ -6,14 +6,14 @@ node('us-east-1 && ubuntu && docker && !gpu') {
 
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
     }
 
     def baseImageName = "browser-f/android:${dockerTag}"
     
     stage('Build Create Docker Image') {
         docker.withRegistry('https://141047255820.dkr.ecr.us-east-1.amazonaws.com'){
-            def baseImage  = docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` .')
+            def baseImage  = docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` .')
             baseImage.push dockerTag
         }
     }

@@ -11,15 +11,15 @@
     tools:background="@android:color/black"
     tools:parentTag="LinearLayout">
 
-    <ImageView
+    <org.mozilla.gecko.widget.themed.ThemedImageView
         android:id="@+id/icon"
         android:layout_width="@dimen/ghostery_bookmark_current_folder_size"
         android:layout_height="@dimen/ghostery_bookmark_current_folder_size"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        android:src="@drawable/ic_menu_back"
-        android:tint="@android:color/white"/>
+        gecko:drawableTintList="@color/cliqz_start_tab_font_color"
+        gecko:srcCompat="@drawable/ic_menu_back" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -35,7 +35,7 @@
             style="@style/Widget.TwoLinePageRow.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/cliqz_start_tab_font_color"
             gecko:fadeWidth="90dp"
             tools:text="This is a long test title"/>
 

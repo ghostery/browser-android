@@ -27,6 +27,14 @@ allprojects {
     }
 
     repositories {
+        maven {
+            url "$rootDir/../cliqz/node_modules/react-native/android"
+        }
+        maven {
+            // Local Maven repo containing AARs with JSC library built for Android
+            url "$rootDir/../cliqz/node_modules/jsc-android/dist"
+        }
+        mavenCentral()
         gradle.mozconfig.substs.GRADLE_MAVEN_REPOSITORIES.each { repository ->
             maven {
                 url repository

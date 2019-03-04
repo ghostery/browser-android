@@ -289,6 +289,7 @@
     <color name="general_light_blue_color">#4dc6f4</color>
     <color name="general_dark_blue_color">#0080b3</color>
     <color name="general_dark_color">#424242</color>
+    <color name="url_bar_dark_blue_color">#154FAF</color>
     <color name="inactive_tab_color">#E2F0FC</color>
     <color name="home_panel_background_overlay">#40000000</color>
     <color name="history_list_divider_color">#97A4AE</color>
@@ -365,6 +366,8 @@
     <color name="light_theme_ghost_tab_color">#0D0F22</color>
     <color name="light_theme_tab_thumbnail_header">#D5D6D9</color>
     <color name="light_theme_start_tab_font_color">#97A4AE</color>
+
+    <color name="light_theme_url_bar_text_highlight">@color/url_bar_dark_blue_color</color>
     <!-- Cliqz end -->
 
 </resources>
