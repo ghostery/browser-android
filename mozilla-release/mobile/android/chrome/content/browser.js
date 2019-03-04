@@ -1995,9 +1995,6 @@ break;
 
 case "Tab:Selected":
 this._handleTabSelected(this.getTabForId(data.id));
-let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(this.selectedTab.browser);
-const theme = isPrivate ? 'dark' : 'light';
-Cliqz.messageExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
 break;
 
 case "Tab:Closed": {
@@ -6516,7 +6513,6 @@ this.extensionsReady = {
 };
 
 GlobalEventDispatcher.registerListener(this, [
-      "Search:Backends",
       "SystemAddon:Request",
       "Privacy:AdblockToggle",
       "Privacy:GetInfo",
@@ -6559,23 +6555,7 @@ GlobalEventDispatcher.registerListener(this, [
       });
     });
 
-    var searchRegional = Services.prefs.getCharPref("pref.search.regional", null);
-    if (searchRegional == null) {
-      // First start after install we didn't set a default
-      this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => {
-        var [ lang, country ] = Services.prefs.getCharPref("intl.locale.os", "not_found").toLowerCase().split("-");
-        country = country ? country : lang;
-        var foundBackend = Object.keys(countries).find( v => country == v );
-        if (foundBackend) {
-          Services.prefs.setCharPref("pref.search.regional", foundBackend);
-        } else {
-          Services.prefs.setCharPref("pref.search.regional", "us");
-        }
-        Cliqz._syncSearchPrefs();
-      });
-    } else {
-      this._syncSearchPrefs();
-    }
+    this._syncSearchPrefs();
   },
 
   READY_STATUS: {
@@ -6854,7 +6834,6 @@ GlobalEventDispatcher.registerListener(this, [
 
   _syncSearchPrefs() {
     const messages = [];
-    messages.push(["setBackendCountry", Services.prefs.getCharPref("pref.search.regional")]);
     messages.push(["setAdultFilter", Services.prefs.getBoolPref("pref.search.block.adult.content") ? "conservative" : "liberal" ]);
     messages.push(["setQuerySuggestions", Services.prefs.getBoolPref("pref.search.query.suggestions")]);
 
@@ -6894,9 +6873,6 @@ GlobalEventDispatcher.registerListener(this, [
           action: "handleTelemetrySignal",
           args: [msg, immediate, schema]
         });
-        break;
-      case "Search:Backends":
-        this.messageExtension({ module: "search", action: "getBackendCountries" }).then(countries => callback.onSuccess(countries));
         break;
       case "Search:Hide":
         this.isVisible = false;

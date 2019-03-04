@@ -8,7 +8,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class SearchEnginesModule extends ReactContextBaseJavaModule {
     public SearchEnginesModule(ReactApplicationContext reactContext) {

@@ -90,30 +90,22 @@ def matrix = [
     ],
 ]
 def baseImage
-def codeImage
 def id
+def volumeStr
 node ('kria'){
     def dockerTag = ""
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        sh """#!/bin/bash -l
+            rm -rf mozilla-release/objdir-frontend-android
+        """
     }
     id = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+    volumeStr = "$WORKSPACE"
     baseImageName ="browser-f/android:${dockerTag}"
-    codeImageName ="browser-f/android:code"
     baseImage = stage('Build base image') {
-        docker.build(baseImageName, '--build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
-    }
-    stage('Build code image') {
-        writeFile file: 'Dockerfile.code', text: """
-            FROM ${baseImageName}
-            COPY --chown=jenkins:jenkins . /app/
-        """
-
-        codeImage = docker.build(
-            codeImageName,
-            '-f Dockerfile.code .',
-        )
+        docker.build(baseImageName, '--build-arg USER=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` -f Dockerfile .')
     }
 }
 
@@ -129,11 +121,18 @@ def build(Map m){
     def getId = m.getId
     def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
     def apk = ""
+    def volumeStr = m.volumeStr
     return {
         if (buildParam) {
             node(nodeLabel) {
-                getImageName().inside() {
-
+                getImageName().inside("-v ${volumeStr()}:/orig") {
+                    stage('Add Repo') {
+                        sh """#!/bin/bash -l
+                            set -e
+                            set -x
+                            rsync -r --exclude '.git' --exclude '.idea' --exclude '.tx' /orig/ /app/
+                        """
+                    }
                     stage('Build Cliqz React Native') {
                         sh '''#!/bin/bash -l
                             set -e
@@ -143,7 +142,6 @@ def build(Map m){
                             npm run build
                         '''
                     }
-
                     stage("Build APK: ${flavorname}") {
                         withEnv([
                             "ANDROID_TARGET=${androidtarget}",
@@ -235,9 +233,10 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
             brand: it[1]['brand'],
             channel: it[1]['channel'],
             target: it[1]['target'],
-            getImageName: {codeImage},
+            getImageName: {baseImage},
             getId: {id},
-            buildParam: it[1]['buildParam']
+            buildParam: it[1]['buildParam'],
+            volumeStr: {volumeStr}
     )]
 }
 

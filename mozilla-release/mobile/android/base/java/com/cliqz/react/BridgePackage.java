@@ -2,6 +2,7 @@ package com.cliqz.react;
 
 import android.util.Log;
 
+import com.cliqz.ThemeManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.NativeModule;
@@ -32,7 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class BridgePackage implements ReactPackage {
     @Override
@@ -79,7 +80,7 @@ public class BridgePackage implements ReactPackage {
 
         @Override
         public void onCatalystInstanceDestroy() {
-            EventDispatcher.getInstance().unregisterGeckoThreadListener(this, "Search:Search");
+            EventDispatcher.getInstance().unregisterUiThreadListener(this, "Search:Search");
         }
 
         @Override
@@ -87,11 +88,24 @@ public class BridgePackage implements ReactPackage {
             switch (event) {
                 case "Search:Search":
                     final String query = GeckoBundleUtils.safeGetString(message, "q");
-                    mReactContext
-                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                            .emit("search:search", query);
+                    SearchBackground.startSearch(query);
                     break;
             }
+        }
+
+        @ReactMethod
+        public void replyToAction(int hash, ReadableMap response) {
+            SearchBackground.replyToAction(hash, response);
+        }
+
+        //TODO create private methods for getTheme and getCardStyle
+
+        @ReactMethod
+        public void getConfig(final Promise promise) {
+            final WritableMap outData = Arguments.createMap();
+            outData.putString("theme", ThemeManager.THEME_LIGHT);
+            outData.putString("cardStyle", "vertical");
+            promise.resolve(outData);
         }
     }
 }

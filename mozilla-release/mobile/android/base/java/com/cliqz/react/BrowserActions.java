@@ -2,10 +2,12 @@ package com.cliqz.react;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.view.inputmethod.InputMethodManager;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -18,12 +20,15 @@ import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.util.GeckoBundle;
 
 /**
- * @author Khaled Tantawy
+ * Copyright © Cliqz 2019
  */
 public class BrowserActions extends ReactContextBaseJavaModule {
 
+    final private ReactContext mReactContext;
+
     public BrowserActions(ReactApplicationContext reactContext) {
         super(reactContext);
+        mReactContext = reactContext;
     }
 
     @Override
@@ -32,6 +37,7 @@ public class BrowserActions extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    @SuppressWarnings("unused")
     public void openLink(String uri) {
         final GeckoBundle bundle = new GeckoBundle(1);
         bundle.putString("uri", uri);
@@ -39,6 +45,7 @@ public class BrowserActions extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    @SuppressWarnings("unused")
     public void autocomplete(String data) {
         final GeckoBundle bundle = new GeckoBundle(1);
         bundle.putString("data", data);
@@ -46,19 +53,21 @@ public class BrowserActions extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    @SuppressWarnings("unused")
     public void suggest(String query, ReadableArray suggestions) {
-        String[] suggestionsArray = suggestions.toArrayList().toArray(new String[0]);
+        String[] suggestionsArray = suggestions.toArrayList().toArray(new String[suggestions.size()]);
         final GeckoBundle bundle = new GeckoBundle(2);
         bundle.putString("query", query);
-        bundle.putStringArray("suggestions", suggestionsArray );
+        bundle.putStringArray("suggestions", suggestionsArray);
         EventDispatcher.getInstance().dispatch("Search:QuerySuggestions", bundle);
     }
 
     @ReactMethod
+    @SuppressWarnings("unused")
     public void searchHistory(String query, Promise promise) {
         final int limit = 5;
         final BrowserDB sdb = BrowserDB.from(GeckoThread.getActiveProfile());
-        final Context context = getCurrentActivity().getApplicationContext();
+        final Context context = getReactApplicationContext();
         final Cursor cursor = sdb.getRankedHistoryForQuery(context.getContentResolver(), query, limit);
 
         final WritableArray wArray = Arguments.createArray();
@@ -80,6 +89,17 @@ public class BrowserActions extends ReactContextBaseJavaModule {
 
         promise.resolve(wArray);
         cursor.close();
+    }
+
+    @ReactMethod
+    @SuppressWarnings("unused")
+    public void hideKeyboard() {
+        try {
+            final InputMethodManager imm = (InputMethodManager) mReactContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mReactContext.getCurrentActivity().getCurrentFocus().getWindowToken(), 0);
+        } catch (Exception ex) {
+            // DO NOTHING
+        }
     }
 
 }
