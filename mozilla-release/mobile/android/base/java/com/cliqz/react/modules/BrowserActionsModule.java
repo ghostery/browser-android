@@ -1,4 +1,4 @@
-package com.cliqz.react;
+package com.cliqz.react.modules;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -22,11 +22,11 @@ import org.mozilla.gecko.util.GeckoBundle;
 /**
  * Copyright © Cliqz 2019
  */
-public class BrowserActions extends ReactContextBaseJavaModule {
+public class BrowserActionsModule extends ReactContextBaseJavaModule {
 
     final private ReactContext mReactContext;
 
-    public BrowserActions(ReactApplicationContext reactContext) {
+    public BrowserActionsModule(ReactApplicationContext reactContext) {
         super(reactContext);
         mReactContext = reactContext;
     }

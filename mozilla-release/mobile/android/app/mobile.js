@@ -372,7 +372,6 @@ pref("devtools.debugger.unix-domain-socket", "@ANDROID_PACKAGE_NAME@/firefox-deb
 
 // Cliqz start
 pref("pref.search.block.adult.content", true);
-pref("pref.search.query.suggestions", true);
 #ifdef MOZ_DEFAULT_USB_DEBUG
 pref("devtools.remote.usb.enabled", true);
 #else

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
+import com.cliqz.react.modules.PrefsModule;
+
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.PrefsHelper;
 
@@ -94,7 +96,7 @@ public class PreferenceManager {
     }
 
     public boolean isQuerySuggestionsEnabled(){
-        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_SEARCH_QUERY_SUGGESTIONS,
+        return mAppSharedPreferences.getBoolean(PrefsModule.PREFS_SEARCH_QUERY_SUGGESTIONS,
                 true);
     }
 
