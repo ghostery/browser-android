@@ -1,4 +1,4 @@
-package com.cliqz.react;
+package com.cliqz.react.modules;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -17,7 +17,7 @@ public class SearchEnginesModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "SearchEnginesModule";
+        return "SearchEngines";
     }
 
     @ReactMethod
