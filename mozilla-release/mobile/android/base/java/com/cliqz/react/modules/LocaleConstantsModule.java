@@ -23,7 +23,7 @@ public class LocaleConstantsModule extends ReactContextBaseJavaModule {
 
     @Override
     public Map<String, Object> getConstants() {
-        Map<String, Object> ua = new HashMap<>();
+        final Map<String, Object> ua = new HashMap<>();
         ua.put("lang", Locale.getDefault().getLanguage());
         return ua;
     }

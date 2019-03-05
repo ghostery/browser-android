@@ -3,6 +3,7 @@ package com.cliqz.react;
 import android.app.Application;
 import android.util.SparseArray;
 
+import com.cliqz.react.modules.SearchEnginesModule;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -93,6 +94,12 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
 
     public static void changeTheme(String theme) {
         getInstance().callAction("ui", "changeTheme", theme);
+    }
+
+    public static void notifySearchEngineChange() {
+        getInstance().mReactContext
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit("SearchEngines:SetDefault", null);
     }
 
     @Override
