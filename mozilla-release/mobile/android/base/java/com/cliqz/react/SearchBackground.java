@@ -13,8 +13,6 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.shell.MainReactPackage;
 
 import org.mozilla.gecko.BuildConfig;
-import org.mozilla.gecko.PrefsHelper;
-import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.util.EventCallback;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,22 +47,6 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .build();
         mReactInstanceManager.addReactInstanceEventListener(this);
         mReactInstanceManager.createReactContextInBackground();
-    }
-
-    /**
-     * Let Search handle search language
-     */
-    public void migrateBackendCountryLanguage() {
-        PrefsHelper.getPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, new PrefsHelper.PrefHandlerBase() {
-            @Override
-            public void prefValue(String prefName, String countryCode) {
-                if (!(countryCode instanceof String) || countryCode.equals("")) {
-                    return;
-                }
-                PrefsHelper.setPref(GeckoPreferences.PREFS_SEARCH_REGIONAL, "");
-                setBackendCountry(countryCode);
-            }
-        });
     }
 
     public void showDevOptionsDialog() {
