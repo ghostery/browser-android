@@ -5,6 +5,9 @@ import com.cliqz.react.modules.PrefsModule;
 import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 
+/**
+ * Copyright © Cliqz 2019
+ */
 public class MigrationManager {
     private final static MigrationManager ourInstance = new MigrationManager();
 

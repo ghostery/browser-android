@@ -97,7 +97,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getAllPrefs(Promise promise) {
-        WritableMap prefs = Arguments.createMap();
+        final WritableMap prefs = Arguments.createMap();
         PrefsHelper.getPrefs(getPrefNamesArray(), new PrefsHelper.PrefHandler() {
             @Override
             public void prefValue(String pref, boolean value) {
@@ -150,7 +150,9 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     }
 
     private String[] getPrefNamesArray() {
-        return getPrefNames().toArray(new String[] { });
+        final Set<String> namesSet = getPrefNames();
+        final String[] names = new String[namesSet.size()];
+        return namesSet.toArray(names);
     }
 
     private void startPrefsListener() {

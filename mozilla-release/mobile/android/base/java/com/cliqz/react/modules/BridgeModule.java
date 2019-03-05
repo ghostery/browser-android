@@ -1,5 +1,7 @@
 package com.cliqz.react.modules;
 
+import android.util.Log;
+
 import com.cliqz.ThemeManager;
 import com.cliqz.react.SearchBackground;
 import com.facebook.react.bridge.Arguments;
@@ -54,6 +56,9 @@ public class BridgeModule extends ReactContextBaseJavaModule implements BundleEv
             case "Search:Search":
                 final String query = GeckoBundleUtils.safeGetString(message, "q");
                 SearchBackground.startSearch(query);
+                break;
+            default:
+                Log.w(getClass().getSimpleName(), "Unknown event " + event);
                 break;
         }
     }
