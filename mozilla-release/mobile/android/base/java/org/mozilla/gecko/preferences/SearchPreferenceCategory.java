@@ -9,6 +9,8 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.cliqz.react.SearchBackground;
+
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoAppShell;
 import org.mozilla.gecko.Telemetry;
@@ -55,6 +57,10 @@ public class SearchPreferenceCategory extends CustomListCategory implements Bund
         super.setDefault(item);
 
         sendGeckoEngineEvent("SearchEngines:SetDefault", item.getTitle().toString());
+
+        /* Cliqz start */
+        SearchBackground.notifySearchEngineChange();
+        /* Cliqz end */
 
         final String identifier = ((SearchEnginePreference) item).getIdentifier();
         Telemetry.sendUIEvent(TelemetryContract.Event.SEARCH_SET_DEFAULT, Method.DIALOG, identifier);

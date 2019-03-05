@@ -5951,6 +5951,11 @@ var SearchEngines = {
 
     let searchEngines = engineData.map(function (engine) {
       return {
+        /* Cliqz start */
+        searchTerm: "__searchTerms__",
+        template: engine.getSubmission("__searchTerms__", "text/html").uri.spec,
+        base_url: engine.searchForm || engine.search.template,
+        /* Cliqz end */
         name: engine.name,
         identifier: engine.identifier,
         iconURI: (engine.iconURI ? engine.iconURI.spec : null),

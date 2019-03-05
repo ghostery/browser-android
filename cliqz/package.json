@@ -10,7 +10,7 @@
     "jsc-android": "^236355.1.1"
   },
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/mobile-cards-android/1.35.0.c275ed8.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/mobile-cards-android/1.35.0.b62c00e.tgz",
     "cliqz-logo-database": "^0.1.2",
     "moment": "^2.24.0",
     "react": "^16.6.3",

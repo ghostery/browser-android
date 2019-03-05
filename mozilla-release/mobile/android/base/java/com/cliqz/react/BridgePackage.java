@@ -4,6 +4,7 @@ import com.cliqz.react.modules.BridgeModule;
 import com.cliqz.react.modules.BrowserActionsModule;
 import com.cliqz.react.modules.LocaleConstantsModule;
 import com.cliqz.react.modules.PrefsModule;
+import com.cliqz.react.modules.SearchEnginesModule;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,6 +25,7 @@ public class BridgePackage implements ReactPackage {
         modules.add(new PrefsModule(reactContext));
         modules.add(new BrowserActionsModule(reactContext));
         modules.add(new LocaleConstantsModule(reactContext));
+        modules.add(new SearchEnginesModule(reactContext));
 
         return modules;
     }
