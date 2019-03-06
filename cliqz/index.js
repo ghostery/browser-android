@@ -34,21 +34,19 @@ class BrowserCoreApp extends React.Component {
   state = {
     results: [],
     cliqz: null,
-    config: {
-      theme: 'light',
-    },
+    config: null,
   }
 
   actions = {
-    changeTheme: theme => {
+    changeAppearance: (appearance) => {
       this.setState(prevState => ({
         results: [],
         config: {
           ...prevState.config,
-          theme
-        }
+          appearance,
+        },
       }));
-    }
+    },
   }
 
   onAction = ({ module, action, args, id }) => {
@@ -71,7 +69,7 @@ class BrowserCoreApp extends React.Component {
       cliqz = new Cliqz(app, this.actions);
       this.setState({
         cliqz,
-        config
+        config,
       });
       app.events.sub('search:results', (results) => {
         this.setState({ results })
@@ -85,8 +83,12 @@ class BrowserCoreApp extends React.Component {
   }
 
   render() {
+    if (!this.state.config) {
+      return null;
+    }
     const results = this.state.results.results || [];
     const meta = this.state.results.meta || {};
+    const SearchComponent = this.state.config.layout === "horizontal" ? SearchUI : SearchUIVertical;
     return (
       <View style={styles.container}>
         {
@@ -94,8 +96,8 @@ class BrowserCoreApp extends React.Component {
           ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
-              <ThemeProvider value={this.state.config.theme}>
-                <SearchUIVertical results={results} meta={meta} />
+              <ThemeProvider value={this.state.config.appearance}>
+                <SearchComponent results={results} meta={meta} />
               </ThemeProvider>
             </CliqzProvider>
           )
@@ -108,7 +110,7 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-  }
+  },
 });
 
 AppRegistry.registerComponent('BrowserCoreApp', () => BrowserCoreApp);

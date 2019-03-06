@@ -24,7 +24,6 @@ import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.notifications.WhatsNewReceiver;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.reader.ReaderModeUtils;
-import org.mozilla.gecko.tabs.TabHistoryController;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
@@ -50,8 +49,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.cliqz.ThemeManager;
-import com.cliqz.react.SearchBackground;
+import com.cliqz.AppearanceManager;
 
 
 public class Tabs implements BundleEventListener {
@@ -352,8 +350,8 @@ public class Tabs implements BundleEventListener {
             data.putInt("previousTabId", oldTab.getId());
         }
 
-        final String theme = tab.isPrivate() ? ThemeManager.THEME_DARK : ThemeManager.THEME_LIGHT;
-        ThemeManager.getInstance().changeTheme(theme);
+        final String appearance = tab.isPrivate() ? AppearanceManager.APPEARANCE_DARK : AppearanceManager.APPEARANCE_LIGHT;
+        AppearanceManager.getInstance().change(appearance);
         mEventDispatcher.dispatch("Tab:Selected", data);
         EventDispatcher.getInstance().dispatch("Tab:Selected", data);
         return tab;
