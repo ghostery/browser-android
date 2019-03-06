@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.PrefsHelper;
 
+import static com.cliqz.react.modules.PrefsModule.PREFS_SEARCH_CARDS_LAYOUT;
+
 
 /**
  * AB-tests manager on the Android side. It syncs Android prefs with GeckoPrefs (the source of truth
@@ -58,6 +60,19 @@ public class ABManager {
         }
 
         PrefsHelper.getPrefs(PREFS, new InnerPrefsHandler());
+    }
+
+    /**
+     * Sets up gecko prefs early in application startup so all browser components like
+     * searchui or new tab page can rely on their existence.
+     *
+     * Note: remember to flush the prefs
+     */
+    public void assignNewUsers() {
+        final double random = Math.random();
+        if (random >= 0.5) {
+            PrefsHelper.setPref(PREFS_SEARCH_CARDS_LAYOUT, "horizontal", true);
+        }
     }
 
     // Migration mechanism in place for future development
