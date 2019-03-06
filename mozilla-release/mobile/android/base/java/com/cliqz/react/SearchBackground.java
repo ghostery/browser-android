@@ -92,8 +92,8 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
         getInstance().callAction("search", "setBackendCountry", code);
     }
 
-    public static void changeTheme(String theme) {
-        getInstance().callAction("ui", "changeTheme", theme);
+    public static void changeAppearance(String theme) {
+        getInstance().callAction("ui", "changeAppearance", theme);
     }
 
     public static void notifySearchEngineChange() {

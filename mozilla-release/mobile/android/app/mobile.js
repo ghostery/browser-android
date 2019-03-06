@@ -371,6 +371,8 @@ pref("dom.max_script_run_time", 20);
 pref("devtools.debugger.unix-domain-socket", "@ANDROID_PACKAGE_NAME@/firefox-debugger-socket");
 
 // Cliqz start
+pref("searchui.cards.layout", "vertical");
+pref("searchui.suggestionsEnabled", true);
 pref("pref.search.block.adult.content", true);
 #ifdef MOZ_DEFAULT_USB_DEBUG
 pref("devtools.remote.usb.enabled", true);

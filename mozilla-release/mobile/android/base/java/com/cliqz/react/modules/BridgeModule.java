@@ -2,7 +2,7 @@ package com.cliqz.react.modules;
 
 import android.util.Log;
 
-import com.cliqz.ThemeManager;
+import com.cliqz.AppearanceManager;
 import com.cliqz.react.SearchBackground;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -13,10 +13,14 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
 import org.mozilla.gecko.EventDispatcher;
+import org.mozilla.gecko.PrefsHelper;
+import org.mozilla.gecko.PrefsHelper.PrefHandlerBase;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.GeckoBundleUtils;
+
+import static com.cliqz.react.modules.PrefsModule.PREFS_SEARCH_CARDS_LAYOUT;
 
 /**
  * Copyright © Cliqz 2019
@@ -68,13 +72,40 @@ public class BridgeModule extends ReactContextBaseJavaModule implements BundleEv
         SearchBackground.replyToAction(hash, response);
     }
 
-    //TODO create private methods for getTheme and getCardStyle
-
+    /**
+     * Config has to be in format:
+     *
+     * {
+     *     "appearance": "light|dark",
+     *     "layout": "vertical|horizontal"
+     * }
+     *
+     */
     @ReactMethod
     public void getConfig(final Promise promise) {
-        final WritableMap outData = Arguments.createMap();
-        outData.putString("theme", ThemeManager.THEME_LIGHT);
-        outData.putString("cardStyle", "vertical");
-        promise.resolve(outData);
+        final WritableMap config = Arguments.createMap();
+        config.putString("appearance", AppearanceManager.getInstance().getCurrent());
+
+        PrefsHelper.getPrefs(new String[] { PREFS_SEARCH_CARDS_LAYOUT }, new PrefHandlerBase() {
+            @Override
+            public void prefValue(String prefName, boolean value) {
+            }
+
+            @Override
+            public void prefValue(String prefName, int value) {
+            }
+
+            @Override
+            public void prefValue(String prefName, String value) {
+                if (prefName.equals(PREFS_SEARCH_CARDS_LAYOUT)) {
+                    config.putString("layout", value);
+                }
+            }
+
+            @Override
+            public void finish() {
+                promise.resolve(config);
+            }
+        });
     }
 }
