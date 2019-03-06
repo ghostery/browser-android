@@ -485,12 +485,14 @@ public class Tab {
             return;
         }
 
+        /* Cliqz Start o/
         if (mManifestUrl != null) {
             showPwaBadge();
 
         } else {
             clearPwaPageAction();
         }
+        /o Cliqz End */
     }
 
     public void setHasOpenSearch(boolean hasOpenSearch) {
