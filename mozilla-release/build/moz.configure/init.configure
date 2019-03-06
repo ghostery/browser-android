@@ -1129,7 +1129,7 @@ def milestone(build_env, build_project, _):
                      symbolversion='%s%s' % (major_version, ab_patch),
                      is_nightly=is_nightly,
                      is_release_or_beta=is_release_or_beta,
-                     app_version=app_version,
+                     app_version=app_version_display,
                      app_version_display=app_version_display)
 
 # Cliqz Start

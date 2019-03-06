@@ -17,12 +17,20 @@ if (mozconfig.substs.MOZILLA_OFFICIAL) {
 }
 
 /* Cliqz Start */
-def getVersionCode(baseVersion) {
-    def archCode = 3
-    if (mozconfig.substs.CPU_ARCH.toString().equals("x86")) {
-        archCode = 5
+def customVersionCode() {
+    def offset = 90
+
+    def buildNum = 9909
+    if (System.getenv('BUILD_NUMBER')){
+        buildNum = System.getenv('BUILD_NUMBER').toInteger()
     }
-    baseVersion * 100 + 50 + archCode
+
+    def archNum = 3
+    if (mozconfig.substs.CPU_ARCH.toString().equals("x86")){
+        archNum = 5
+    }
+
+    return ((offset + buildNum) * 100) + archNum + 50
 }
 /* Cliqz End */
 
@@ -35,8 +43,7 @@ android {
         manifestPlaceholders = project.ext.manifestPlaceholders
 
         /* Cliqz start */
-        versionCode getVersionCode(125)
-
+        versionCode customVersionCode()
         ndk {
             abiFilters mozconfig.substs.CPU_ARCH.toString()
         }
