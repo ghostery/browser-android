@@ -42,7 +42,7 @@ def cleanUp(String testsFolder="") {
     }
 }
 
-def s3copy(String apkFullPath, String s3Path, String fileName, String buildArch, Boolean latestLink) {
+def s3Copy(String apkFullPath, String s3Path, String fileName, String buildArch, Boolean latestLink) {
     if (buildarch != ""){
         buildArch = buildarch.equals("arm") ? "" : "_${buildarch}"
     }

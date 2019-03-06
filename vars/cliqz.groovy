@@ -126,7 +126,7 @@ def rSyncRepo(String orig, String copy) {
     """
 }
 
-def buildFreshTab(String workspace=".") {
+def buildCliqzReactNative(String workspace=".") {
     sh """#!/bin/bash -l
         set -e
         set -x
