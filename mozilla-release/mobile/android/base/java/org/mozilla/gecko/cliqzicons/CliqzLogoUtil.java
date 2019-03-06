@@ -2,15 +2,24 @@ package org.mozilla.gecko.cliqzicons;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 /**
  * Copyright © Cliqz 2018
  */
 public class CliqzLogoUtil {
+
+    private static final float TEXT_SIZE_TOLERANCE = 1f;
+    private static final float MARGIN_PROPORTION = 0.05f; // 5%
+
+    @SuppressLint("UseSparseArrays")
+    private static final HashMap<Integer, Integer> TEXT_SIZES_MAP = new HashMap<>();
+    private static final float MAX_ACCEPTED_SIZE_DIFFERENCE = 2f;
 
     private enum LogoSizes {
         s48x48(48),
@@ -125,7 +134,7 @@ public class CliqzLogoUtil {
             index += hostName.charAt(i);
         }
         index %= DEFAULT_COLORS.length;
-        final int textSize = (int) (LogoSizes.getSize(Math.max(width, height)).size * 0.7);
+        final int textSize = calculateTextSize(width, height);
         return new DefaultIconDrawable(hostName, Color.parseColor(DEFAULT_COLORS[index]), textSize, radius);
     }
 
@@ -139,7 +148,7 @@ public class CliqzLogoUtil {
             final String[] hostParts = uriHost.split("\\.");
             if (hostParts.length == 0) {
                 // This should never happen, just in case
-                return "";
+                return "?";
             } else if (hostParts.length <= 2) {
                 // Urls like https://itsfoss.com that do not have a www., amp., m., etc as prefix
                 return hostParts[0];
@@ -158,7 +167,44 @@ public class CliqzLogoUtil {
             }
         } catch (URISyntaxException e) {
             e.printStackTrace();
-            return "";
+            return "!";
         }
+    }
+
+    private static int calculateTextSize(int width, int height) {
+        // i.e. 1920 x 1080, key = 192001080;
+        final int key = 100000 * width + height;
+        final Integer memorisedSize = TEXT_SIZES_MAP.get(key);
+        if (memorisedSize != null) {
+            return memorisedSize;
+        }
+
+        // Calculate the size
+        final Paint paint = new Paint();
+        final String sampleText = "mm";
+        final float margin = width * MARGIN_PROPORTION;
+        float deltaSize = Integer.MAX_VALUE;
+        float prevSize = 0;
+        float size = width;
+        while (deltaSize > TEXT_SIZE_TOLERANCE) {
+            paint.setTextSize(size);
+            final float calculatedSize = paint.measureText(sampleText)+ 2f * margin;
+            deltaSize = Math.abs(prevSize - size) / 2f;
+            final float d = width - calculatedSize;
+            prevSize = size;
+            if (d < 0) {
+                size -= deltaSize;
+            } else if (d > MAX_ACCEPTED_SIZE_DIFFERENCE) {
+                size += deltaSize;
+            } else {
+                break;
+            }
+        }
+
+        synchronized (TEXT_SIZES_MAP) {
+            TEXT_SIZES_MAP.put(key, (int) size);
+        }
+
+        return (int) size;
     }
 }

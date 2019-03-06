@@ -20,6 +20,7 @@ import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopSite;
 import org.mozilla.gecko.activitystream.homepanel.stream.TopPanelRow;
 import org.mozilla.gecko.cliqzicons.CliqzLogoUtil;
+import org.mozilla.gecko.cliqzicons.RoundedCornersTransformation;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.icons.IconCallback;
 import org.mozilla.gecko.icons.IconResponse;
@@ -32,7 +33,6 @@ import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 /* package-local */ class TopSitesCard extends RecyclerView.ViewHolder
         implements IconCallback {
@@ -41,15 +41,16 @@ import java.util.concurrent.Future;
     private final ImageView faviconView;
 
     private final ThemedTextView title;
-    /* Cliqz End */
 
     private final ImageView pinIconView;
-    private Future<IconResponse> ongoingIconLoad;
+    // private Future<IconResponse> ongoingIconLoad;
 
     private TopSite topSite;
     private int absolutePosition;
-    /*Cliqz Start*/
-    /* package-local */ TopSitesCard(final RelativeLayout card, final TopPanelRow.OnCardLongClickListener onCardLongClickListener) {
+
+    /* package-local */
+    @SuppressWarnings({"RedundantCast", "Convert2Lambda"})
+    TopSitesCard(final RelativeLayout card, final TopPanelRow.OnCardLongClickListener onCardLongClickListener) {
     /*Cliqz End*/
         super(card);
 
@@ -96,6 +97,7 @@ import java.util.concurrent.Future;
         final int newsFavIconCornerRadius = resources.getDimensionPixelSize(R.dimen.news_item_favicon_radius);
         Picasso.with(faviconView.getContext())
                 .load(CliqzLogoUtil.getIconUrl(topSite.getUrl(), newsFavIconSize, newsFavIconSize))
+                .transform(new RoundedCornersTransformation(newsFavIconCornerRadius))
                 .placeholder(CliqzLogoUtil.getDefaultIcon(topSite.getUrl(), newsFavIconSize, newsFavIconSize, newsFavIconCornerRadius))
                 .into(faviconView);
         /* Cliqz End */
