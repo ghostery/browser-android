@@ -125,7 +125,7 @@ def build(Map m){
     return {
         if (buildParam) {
             node(nodeLabel) {
-                getImageName().inside("-v ${volumeStr()}:/orig") {
+                getImageName().inside("-v '${volumeStr()}:/orig'") {
                     stage('Add Repo') {
                         sh """#!/bin/bash -l
                             set -e
