@@ -26,6 +26,7 @@ public class PrefsModule extends ReactContextBaseJavaModule {
     private static final String SEARCHUI_PREF_NAMES = "searchui.prefNames";
     public static String PREFS_SEARCH_QUERY_SUGGESTIONS = PREF_PREFIX + "suggestionsEnabled";
     public static String PREFS_SEARCH_ADULT_RESULTS = PREF_PREFIX + "adultContentFilter";
+    public static String PREFS_SEARCH_CARDS_LAYOUT = PREF_PREFIX + "cards.layout";
     private final Set<String> mPrefIgnoreList = new HashSet<>();
 
     private final SharedPreferences mPreferences;
