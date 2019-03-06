@@ -33,6 +33,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.cliqz.ABManager;
+import com.cliqz.react.MigrationManager;
 import com.cliqz.react.SearchBackground;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -406,8 +407,9 @@ public class GeckoApplication extends Application
             Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
 
-        PreferenceManager.init(getApplicationContext());
-        ABManager.init(getApplicationContext());
+        PreferenceManager.init(context);
+        ABManager.init(context);
+        MigrationManager.getInstance().migrate(context);
         SearchBackground.initialize(this);
         /* Cliqz end */
 
