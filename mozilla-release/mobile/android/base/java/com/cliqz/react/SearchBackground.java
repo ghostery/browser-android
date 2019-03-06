@@ -3,7 +3,6 @@ package com.cliqz.react;
 import android.app.Application;
 import android.util.SparseArray;
 
-import com.cliqz.react.modules.SearchEnginesModule;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -44,7 +43,7 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .addPackage(new BridgePackage())
                 .addPackage(new MainReactPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
-                .setInitialLifecycleState(LifecycleState.RESUMED)
+                .setInitialLifecycleState(LifecycleState.BEFORE_RESUME)
                 .build();
         mReactInstanceManager.addReactInstanceEventListener(this);
         mReactInstanceManager.createReactContextInBackground();

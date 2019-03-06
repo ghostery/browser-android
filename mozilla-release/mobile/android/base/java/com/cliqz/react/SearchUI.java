@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.bridge.ReactContext;
 
 import org.mozilla.gecko.AppConstants;
 import org.mozilla.gecko.R;
@@ -60,6 +61,10 @@ public class SearchUI {
 
     public void onResume(Activity activity) {
         mReactInstanceManager.onHostResume(activity);
+        final ReactContext reactContext = mReactInstanceManager.getCurrentReactContext();
+        if (reactContext != null) {
+            reactContext.onHostResume(activity);
+        }
     }
 
     public void onDestroy() {
