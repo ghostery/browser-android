@@ -38,7 +38,7 @@ android {
         versionCode getVersionCode(125)
 
         ndk {
-            abiFilters "armeabi-v7a", "x86"
+            abiFilters mozconfig.substs.CPU_ARCH.toString()
         }
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
