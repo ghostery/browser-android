@@ -45,7 +45,7 @@ android {
         /* Cliqz start */
         versionCode customVersionCode()
         ndk {
-            abiFilters mozconfig.substs.CPU_ARCH.toString()
+            abiFilters mozconfig.substs.ANDROID_CPU_ARCH.toString()
         }
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
