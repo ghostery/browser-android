@@ -11,6 +11,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.preferences.PreferenceManager;
 
 import java.util.Locale;
 
@@ -53,7 +55,13 @@ public class AppBackgroundManager {
 
     private final int screenHeight;
 
+    private final Context mContext;
+
+    private final PreferenceManager mPreferenceManager;
+
     private AppBackgroundManager(Context context) {
+        this.mContext = context;
+        this.mPreferenceManager = PreferenceManager.getInstance();
         final WindowManager windowManager = (WindowManager) context.getApplicationContext()
                 .getSystemService(Context.WINDOW_SERVICE);
         final DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -81,6 +89,41 @@ public class AppBackgroundManager {
             appBackgroundManagerInstance = new AppBackgroundManager(context);
         }
         return appBackgroundManagerInstance;
+    }
+
+    public void setSearchViewBackground(@NonNull View view) {
+        if (mPreferenceManager.isBackgroundEnabled()) {
+            setViewBackground(view, ContextCompat.getColor(mContext, R.color.general_blue_color));
+        } else {
+            setSearchViewBackgroundDefaultColor(view);
+        }
+    }
+
+    @UiThread
+    public void setSearchViewBackgroundDefaultColor(@NonNull View view) {
+        view.setTag(R.id.background_manager_mode_key, Mode.COLOR);
+        view.setTag(R.id.background_manager_target_key, null);
+        // Default color is a gradient.
+        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+        final boolean isLightTheme = PreferenceManager.getInstance().isLightThemeEnabled();
+        // TODO: SearchUI's background is not themed, so if-else's for now.
+        if (isLightTheme) {
+            if (selectedTab != null && selectedTab.isPrivate()) {
+                view.setBackground(new ScreenSizedDrawable(
+                        view.getResources().getDrawable(R.color.light_theme_ghost_tab_color)));
+            } else {
+                view.setBackground(new ScreenSizedDrawable(
+                        view.getResources().getDrawable(android.R.color.white)));
+            }
+        } else {
+            if (selectedTab != null && selectedTab.isPrivate()) {
+                view.setBackground(new ScreenSizedDrawable(
+                        view.getResources().getDrawable(R.drawable.cliqz_default_background_private)));
+            } else {
+                view.setBackground(new ScreenSizedDrawable(
+                        view.getResources().getDrawable(R.drawable.cliqz_default_background_normal)));
+            }
+        }
     }
 
     @UiThread
