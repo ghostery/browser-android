@@ -4771,7 +4771,7 @@ public class BrowserApp extends GeckoApp
         }
     }
 
-    private void hideCliqzQuerySuggestions(){
+    public void hideCliqzQuerySuggestions(){
         mCliqzQuerySuggestionsContainer.setVisibility(View.INVISIBLE);
     }
 
