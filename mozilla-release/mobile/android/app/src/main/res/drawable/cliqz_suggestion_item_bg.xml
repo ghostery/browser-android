@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright © Cliqz 2019 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:gecko="http://schemas.android.com/apk/res-auto">
+    <item android:drawable="@drawable/cliqz_suggestion_item_bg_light" gecko:light_theme="true"/>
+    <item android:drawable="@drawable/url_bar_entry_bg_normal"/>
+</selector>

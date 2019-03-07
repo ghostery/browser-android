@@ -15,7 +15,7 @@
               android:orientation="horizontal">
               <!--android:background="@color/photon_notification_bg"-->
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/suggestions_prompt_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -23,11 +23,11 @@
         android:layout_weight="1"
         android:fontFamily="sans-serif"
         android:lineSpacingMultiplier="1.1"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_browser_search_text_color"
         android:textSize="14sp"
         tools:text="Would you like to turn on search suggestion?"/>
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/suggestions_prompt_no"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -38,12 +38,12 @@
         android:nextFocusRight="@+id/suggestions_prompt_yes"
         android:text="@string/button_no"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_browser_search_text_color"
         android:textSize="14sp"
         android:textStyle="bold"/>
         <!--android:background="@drawable/search_suggestion_prompt_no"-->
 
-    <TextView
+    <org.mozilla.gecko.widget.themed.ThemedTextView
         android:id="@+id/suggestions_prompt_yes"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -52,7 +52,7 @@
         android:minWidth="64dp"
         android:text="@string/button_yes"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"
+        android:textColor="@color/cliqz_browser_search_text_color"
         android:textSize="14sp"
         android:textStyle="bold"/>
         <!--android:background="@drawable/search_suggestion_prompt_yes"-->

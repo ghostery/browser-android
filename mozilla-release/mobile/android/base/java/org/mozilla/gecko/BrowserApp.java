@@ -4802,6 +4802,7 @@ public class BrowserApp extends GeckoApp
     private void refreshBackground(boolean isPrivate) {
         if (isHomePagerVisible()) {
             ((HomePager) mHomeScreen).setPrivateMode(isPrivate);
+            mBrowserSearch.setPrivateMode(isPrivate);
         }
     }
 
@@ -4832,6 +4833,9 @@ public class BrowserApp extends GeckoApp
         }
         if (mHomeScreen != null) {
             ((HomePager) mHomeScreen).setLightTheme(mPreferenceManager.isLightThemeEnabled());
+        }
+        if (mBrowserSearch != null) {
+            mBrowserSearch.setLightTheme(mPreferenceManager.isLightThemeEnabled());
         }
     }
     /* Cliqz end */

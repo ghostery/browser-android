@@ -43,6 +43,8 @@ import org.mozilla.gecko.util.EventCallback;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.util.StringUtils;
 import org.mozilla.gecko.util.ThreadUtils;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
+import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -142,8 +144,13 @@ public class BrowserSearch extends HomeFragment
     // Adapter for the list of search results
     private SearchAdapter mAdapter;
 
+    /* Cliqz Start */
     // The view shown by the fragment
-    private LinearLayout mView;
+    private ThemedLinearLayout mView;
+    private ThemedTextView promptText;
+    private ThemedTextView yesButton;
+    private ThemedTextView noButton;
+    /* Cliqz End */
 
     // The list showing search results
     private HomeListView mList;
@@ -314,12 +321,13 @@ public class BrowserSearch extends HomeFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // All list views are styled to look the same with a global activity theme.
         // If the style of the list changes, inflate it from an XML.
-        mView = (LinearLayout) inflater.inflate(R.layout.browser_search, container, false);
+        /* Cliqz Start */
+        mView = (ThemedLinearLayout) inflater.inflate(R.layout.browser_search, container, false);
         mList = (HomeListView) mView.findViewById(R.id.home_list_view);
         mSearchEngineBar = (SearchEngineBar) mView.findViewById(R.id.search_engine_bar);
-        /* Cliqz start */
         reloadBackground();
-        /* Cliqz end */
+        setPrivateMode(Tabs.getInstance().getSelectedTab().isPrivate());
+        /* Cliqz End */
         return mView;
     }
 
@@ -509,7 +517,9 @@ public class BrowserSearch extends HomeFragment
         }
 
         if (msg == Tabs.TabEvents.SELECTED) {
-            mList.setPrivateMode(tab.isPrivate());
+            /* Cliqz Start */
+            setPrivateMode(tab.isPrivate());
+            /* Cliqz End */
         }
     }
 
@@ -866,11 +876,18 @@ public class BrowserSearch extends HomeFragment
 
         mSuggestionsOptInPrompt = ((ViewStub) mView.findViewById(R.id.suggestions_opt_in_prompt)).inflate();
 
-        TextView promptText = (TextView) mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_title);
+        /* Cliqz Start */
+        promptText = (ThemedTextView) mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_title);
         promptText.setText(getResources().getString(R.string.suggestions_prompt));
 
-        final View yesButton = mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_yes);
-        final View noButton = mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_no);
+        yesButton = mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_yes);
+        noButton = mSuggestionsOptInPrompt.findViewById(R.id.suggestions_prompt_no);
+
+        final boolean isLightTheme = preferenceManager.isLightThemeEnabled();
+        yesButton.setLightTheme(isLightTheme);
+        noButton.setLightTheme(isLightTheme);
+        promptText.setLightTheme(isLightTheme);
+        /* Cliqz End */
 
         final OnClickListener listener = new OnClickListener() {
             @Override
@@ -1134,7 +1151,7 @@ public class BrowserSearch extends HomeFragment
             super(context, null, new int[] { ROW_STANDARD,
                                              ROW_SEARCH,
                                              ROW_SUGGEST },
-                                 new int[] { R.layout.home_item_row,
+                                 new int[] { R.layout.cliqz_suggestion_item_row,
                                              R.layout.home_search_item_row,
                                              R.layout.home_search_item_row });
         }
@@ -1207,23 +1224,33 @@ public class BrowserSearch extends HomeFragment
                 final SearchEngine engine = mSearchEngines.get(position);
                 row.updateSuggestions(mSuggestionsEnabled, engine, mSearchHistorySuggestions);
                 row.setPrivateMode(isPrivate);
+                /* Cliqz Start */
+                row.setLightTheme(preferenceManager.isLightThemeEnabled());
+                /* Cliqz End */
             } else {
                 // Account for the search engines
                 position -= getPrimaryEngineCount();
 
                 final Cursor c = getCursor(position);
-                final TwoLinePageRow row = (TwoLinePageRow) view;
+                /* Cliqz Start */
+                final TwoLinePageRowSuggestionItem row = (TwoLinePageRowSuggestionItem) view;
+                /* Cliqz End */
 
                 // Highlight all substrings in title field if they matches the search term.
                 row.setTitleFormatter(mTwoLinePageRowTitleFormatter);
 
                 row.updateFromCursor(c);
                 row.setPrivateMode(isPrivate);
+                /* Cliqz Start */
+                row.setLightTheme(preferenceManager.isLightThemeEnabled());
+                /* Cliqz End */
             }
         }
     }
 
-    private TwoLinePageRow.TitleFormatter mTwoLinePageRowTitleFormatter = new TwoLinePageRow.TitleFormatter() {
+    /* Cliqz Start */
+    private TwoLinePageRowSuggestionItem.TitleFormatter mTwoLinePageRowTitleFormatter = new TwoLinePageRowSuggestionItem.TitleFormatter() {
+    /* Cliqz End */
         @Override
         public CharSequence format(@NonNull CharSequence title) {
             // Don't try to search for an empty string, we would get a match for every character in the title
@@ -1402,11 +1429,13 @@ public class BrowserSearch extends HomeFragment
     private void reloadBackground() {
         final AppBackgroundManager appBackgroundManager = AppBackgroundManager.getInstance
                 (getContext());
-        if (preferenceManager.isBackgroundEnabled()) {
-            appBackgroundManager.setViewBackground(mView, ContextCompat.getColor(getContext(), R
-                    .color.url_bar));
-        } else {
+        final boolean isLightTheme = preferenceManager.isLightThemeEnabled();
+        if (isLightTheme || !preferenceManager.isBackgroundEnabled()) {
             appBackgroundManager.setViewBackgroundDefaultColor(mView);
+            setLightTheme(isLightTheme);
+        } else {
+            appBackgroundManager.setViewBackground(mView,
+                    ContextCompat.getColor(getContext(), R.color.url_bar));
         }
     }
 
@@ -1414,6 +1443,40 @@ public class BrowserSearch extends HomeFragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (TextUtils.equals(key, GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED)) {
             reloadBackground();
+        } else if (TextUtils.equals(key, GeckoPreferences.PREFS_BLUE_THEME)) {
+            reloadBackground();
+            setLightTheme(preferenceManager.isLightThemeEnabled());
+        }
+    }
+
+    public void setLightTheme(boolean isLightTheme) {
+        if (mView != null) {
+            mView.setLightTheme(isLightTheme);
+        }
+        if (promptText != null) {
+            promptText.setLightTheme(isLightTheme);
+        }
+        if (yesButton != null) {
+            yesButton.setLightTheme(isLightTheme);
+        }
+        if (noButton != null) {
+            noButton.setLightTheme(isLightTheme);
+        }
+
+        if (mSearchEngineBar != null) {
+            mSearchEngineBar.isLightTheme(isLightTheme);
+        }
+    }
+
+    public void setPrivateMode(boolean isPrivate) {
+        if (mList != null) {
+            mList.setPrivateMode(isPrivate);
+        }
+        if (mView != null) {
+            mView.setPrivateMode(isPrivate);
+        }
+        if (mSearchEngineBar != null) {
+            mSearchEngineBar.setPrivateMode(isPrivate);
         }
     }
     /* Cliqz end */

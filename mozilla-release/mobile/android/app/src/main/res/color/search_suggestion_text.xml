@@ -6,7 +6,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:gecko="http://schemas.android.com/apk/res-auto">
 
-     <!-- Cliqz start -->
+    <!-- Cliqz start -->
+    <item android:color="@android:color/white" gecko:light_theme="true" gecko:state_private="true" />
+    <item android:color="@android:color/black" gecko:light_theme="true" />
+
     <item android:color="@color/photon_search_item_text"
           gecko:state_private="true"/>
     <!-- Cliqz end -->
