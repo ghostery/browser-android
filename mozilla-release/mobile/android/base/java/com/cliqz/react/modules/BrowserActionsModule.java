@@ -14,6 +14,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
+import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.GeckoThread;
 import org.mozilla.gecko.db.BrowserDB;
@@ -97,6 +98,7 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
         try {
             final InputMethodManager imm = (InputMethodManager) mReactContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mReactContext.getCurrentActivity().getCurrentFocus().getWindowToken(), 0);
+            ((BrowserApp)mReactContext.getCurrentActivity()).hideCliqzQuerySuggestions();
         } catch (Exception ex) {
             // DO NOTHING
         }
