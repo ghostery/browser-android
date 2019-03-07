@@ -18,7 +18,7 @@ public class LocaleConstantsModule extends ReactContextBaseJavaModule {
 
     @Override
     public String getName() {
-        return "LocaleConstantsModule";
+        return "LocaleConstants";
     }
 
     @Override
