@@ -95,13 +95,7 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
     @ReactMethod
     @SuppressWarnings("unused")
     public void hideKeyboard() {
-        try {
-            final InputMethodManager imm = (InputMethodManager) mReactContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mReactContext.getCurrentActivity().getCurrentFocus().getWindowToken(), 0);
-            ((BrowserApp)mReactContext.getCurrentActivity()).hideCliqzQuerySuggestions();
-        } catch (Exception ex) {
-            // DO NOTHING
-        }
+        EventDispatcher.getInstance().dispatch("Search:ClearFocus", null);
     }
 
 }
