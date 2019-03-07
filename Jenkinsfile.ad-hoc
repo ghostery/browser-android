@@ -1,5 +1,5 @@
 #!/bin/env groovy
-@Library('cliqz-shared-library@v1.2') _
+@Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
 properties([
     parameters([
@@ -8,8 +8,6 @@ properties([
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ARM', defaultValue: false, description: 'Builds the Ghostery branded `arm` build.'),
         booleanParam(name: 'GHOSTERY_X86', defaultValue: false, description: 'Builds the Ghostery branded `x86` build.'),
-        booleanParam(name: 'BOND_ARM', defaultValue: false, description: 'Builds the Bond branded `arm` build.'),
-        booleanParam(name: 'BOND_X86', defaultValue: false, description: 'Builds the Bond branded `x86` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_ARM', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `arm` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_X86', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ALPHA_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
@@ -45,20 +43,6 @@ def matrix = [
         'channel': 'MA52',
         'target': 'i686-linux-android',
         'buildParam': params.GHOSTERY_X86,
-    ],
-    'Bond ARM':[
-        'arch': 'arm',
-        'brand': 'bond',
-        'channel': 'MA62',
-        'target': 'arm-linux-androideabi',
-        'buildParam': params.BOND_ARM,
-    ],
-    'Bond X86':[
-        'arch': 'x86',
-        'brand': 'bond',
-        'channel': 'MA62',
-        'target': 'i686-linux-android',
-        'buildParam': params.BOND_X86,
     ],
     'Cliqz Alpha ARM':[
         'arch': 'arm',
@@ -96,7 +80,7 @@ node ('kria'){
     def dockerTag = ""
     stage('Checkout') {
         checkout scm
-        dockerTag = readFile('mozilla-release/browser/config/version_display.txt').trim()
+        dockerTag = readFile('mozilla-release/browser/config/version.txt').trim()
         sh """#!/bin/bash -l
             rm -rf mozilla-release/objdir-frontend-android
         """
@@ -119,106 +103,53 @@ def build(Map m){
     def buildParam = m.buildParam
     def nodeLabel = 'kria'
     def getId = m.getId
-    def apkPath = "/app/mozilla-release/objdir-frontend-android/${brandname}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release"
     def apk = ""
     def volumeStr = m.volumeStr
     return {
         if (buildParam) {
             node(nodeLabel) {
                 getImageName().inside("-v '${volumeStr()}:/orig'") {
-                    stage('Add Repo') {
-                        sh """#!/bin/bash -l
-                            set -e
-                            set -x
-                            rsync -r --exclude '.git' --exclude '.idea' --exclude '.tx' /orig/ /app/
-                        """
-                    }
-                    stage('Build Cliqz React Native') {
-                        sh '''#!/bin/bash -l
-                            set -e
-                            set -x
-                            cd /app/cliqz
-                            npm ci
-                            npm run build
-                        '''
-                    }
-                    stage("Build APK: ${flavorname}") {
-                        withEnv([
-                            "ANDROID_TARGET=${androidtarget}",
-                            "BRAND=${brandname}",
-                            "CLIQZ_CHANNEL=${cliqzchannel}"
-                        ]){
-                            sh '''#!/bin/bash -l
-                                set -e
-                                set -x
-                                cd /app/mozilla-release
-                                cp ../mozconfigs/deploy.mozconfig mozconfig
-                                ./mach clobber
-                                ./mach build
-                                rm -f /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
-                                cp /app/mozilla-release/mobile/android/installer/mobile-l10n.js /app/mozilla-release/objdir-frontend-android/$BRAND/dist/bin/defaults/pref/mobile-l10n.js
-                                export MOZ_CHROME_MULTILOCALE=`ls -1 "../l10n/"|paste -s -d " "`
-                                for AB_CD in $MOZ_CHROME_MULTILOCALE; do
-                                    ./mach build chrome-$AB_CD
-                                done
-                                export AB_CD=multi
-                                ./mach package
-                            '''
+                    try{
+                        stage('Add Repo') {
+                            cliqz.rSyncRepo("/orig/", "/app/")
+                        }
+                        stage('Build Cliqz React Native') {
+                            cliqz.buildCliqzReactNative("/app/cliqz")
+                        }
+                        stage("Build APK: ${flavorname}") {
                             withCredentials([
                                 file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                                 string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
                             ]) {
-                                sh """#!/bin/bash -l
-                                    set -e
-                                    set -x
-                                    cd /app/mozilla-release
-                                    export MOZ_CHROME_MULTILOCALE=`ls -1 '../l10n/'|paste -s -d ' '`
-                                    export AB_CD=multi
-                                    ./gradlew :app:assembleWithGeckoBinariesRelease
-                                """
-                            }
-                            apk = sh(returnStdout: true, script: """cd ${apkPath} && find *.apk -name '*-release*' -not -name '*-unsigned-*'""").trim()
-                        }
-                    }
-                    stage("Upload: ${flavorname}") {
-                        withCredentials([
-                            [
-                                $class: 'UsernamePasswordMultiBinding',
-                                credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
-                                passwordVariable: 'AWS_SECRET_ACCESS_KEY',
-                                usernameVariable: 'AWS_ACCESS_KEY_ID',
-                            ]
-                        ]) {
-                            def s3Path = "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}"
-                            def apkFullPath = "${apkPath}/${apk}"
-                            def fileName = "${brandname}_${env.BUILD_NUMBER}_${getId()}"
-                            try {
-                                zip archive: true, dir: "${apkPath}", glob: '', zipFile: "${flavorname}-build.zip"
-                            } catch(e) {
-                                print e
-                            }
-                            if (buildarch=="arm"){
-                                sh """#!/bin/bash -l
-                                    set -e
-                                    set -x
-                                    aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}.apk
-                                    aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest.apk
-                                """
-                            } else {
-                                sh """#!/bin/bash -l
-                                    set -e
-                                    set -x
-                                    aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}_${buildarch}.apk
-                                    aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest_${buildarch}.apk
-                                """
+                                apk = cliqz.buildBrowser("${androidtarget}", "${brandname}", "nightly", "/app/")
                             }
                         }
-                    }
-                    stage('Clean Up') {
-                       sh '''#!/bin/bash
-                           rm -f /app/mozilla-release/mozconfig
-                           rm -rf /app/mozilla-release/objdir-frontend-android
-                       '''
+                        stage("Upload: ${flavorname}") {
+                            withCredentials([
+                                [
+                                    $class: 'UsernamePasswordMultiBinding',
+                                    credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
+                                    passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                                    usernameVariable: 'AWS_ACCESS_KEY_ID',
+                                ]
+                            ]) {
+                                archiveArtifacts allowEmptyArchive: true, artifacts: "/app/build/${apk}"
+                                utils.s3Copy(
+                                    "/app/build/${apk}",
+                                    "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}",
+                                    "${brandname}_${env.BUILD_NUMBER}_${getId()}",
+                                    "${buildarch}",
+                                    true
+                                )
+                            }
+                        }
+                    } catch(e) {
+                        print e
+                        raise e
+                    } finally {
+                        stage('Clean Up') {
+                           utils.cleanUp()
+                        }
                     }
                 }
             }
@@ -246,89 +177,34 @@ stage('Build Applications'){
 
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
-    def sendMail = false
-    def bondMail = false
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         """
-    def baseUrl = "http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/${params.BRANCH}"
-    def bodytxtBond = """
-        ${projectName} - Build # ${env.BUILD_NUMBER}
-        Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
-        """
-    if (params.CLIQZ_ARM) {
-        bodytxt = """${bodytxt}
-            Cliqz apk Uploaded to: ${baseUrl}/cliqz/cliqz_${env.BUILD_NUMBER}_${id}.apk
-        """
-        sendMail = true
+    params.each { prop, val ->
+        if(val){
+            def splitText = prop.toString().toLowerCase().split("_")
+            def brand = ""
+            def suffix = ""
+            if (splitText.size()==3){
+                if (splitText[2] == "x86"){
+                    suffix = "_x86"
+                }
+                brand = "${splitText[0]}-${splitText[1]}"
+            } else {
+                if (splitText[1] == "x86"){
+                    suffix = "_x86"
+                }
+                brand = "${splitText[0]}"
+            }
+            bodytxt = """${bodytxt}
+            ${brand}${suffix} apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/${params.BRANCH}/${brand}/${brand}_${env.BUILD_NUMBER}_${id}${suffix}.apk
+            """
+        }
     }
-    if (params.CLIQZ_X86) {
-        bodytxt = """${bodytxt}
-            Cliqz X86 apk Uploaded to: ${baseUrl}/cliqz/cliqz_${env.BUILD_NUMBER}_${id}_x86.apk
-        """
-        sendMail = true
-    }
-    if (params.GHOSTERY_ARM) {
-        bodytxt = """${bodytxt}
-            Ghostery apk Uploaded to: ${baseUrl}/ghostery/ghostery_${env.BUILD_NUMBER}_${id}.apk
-        """
-        sendMail = true
-    }
-    if (params.GHOSTERY_X86) {
-        bodytxt = """${bodytxt}
-            Ghostery X86 apk Uploaded to: ${baseUrl}/ghostery/ghostery_${env.BUILD_NUMBER}_${id}_x86.apk
-        """
-        sendMail = true
-    }
-    if (params.CLIQZ_ALPHA_ARM) {
-        bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: ${baseUrl}/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}.apk
-        """
-        sendMail = true
-    }
-    if (params.CLIQZ_ALPHA_X86) {
-        bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: ${baseUrl}/cliqz-alpha/cliqz-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
-        """
-        sendMail = true
-    }
-    if (params.GHOSTERY_ALPHA_ARM) {
-        bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: ${baseUrl}/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}.apk
-        """
-        sendMail = true
-    }
-    if (params.GHOSTERY_ALPHA_X86) {
-        bodytxt = """${bodytxt}
-            Cliqz-Alpha apk Uploaded to: ${baseUrl}/ghostery-alpha/ghostery-alpha_${env.BUILD_NUMBER}_${id}_x86.apk
-        """
-        sendMail = true
-    }
-    if (params.BOND_ARM) {
-        bodytxtBond = """${bodytxtBond}
-            Bond apk Uploaded to: ${baseUrl}/bond/bond_${env.BUILD_NUMBER}_${id}.apk
-        """
-        bondMail = true
-    }
-    if (params.BOND_X86) {
-        bodytxtBond = """${bodytxtBond}
-            Bond X86 apk Uploaded to: ${baseUrl}/bond/bond_${env.BUILD_NUMBER}_${id}_x86.apk
-        """
-        bondMail = true
-    }
-    if (sendMail == true){
-        emailext(
-            to: 'androiddev@cliqz.com',
-            subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
-            body: bodytxt.stripIndent()
-        )
-    }
-    if (bondMail == true){
-        emailext(
-            to: 'project-bond@cliqz.com',
-            subject: 'BOND » ad-hoc builds - Build # $BUILD_NUMBER',
-            body: bodytxtBond.stripIndent()
-        )
-    }
+    emailext(
+        to: 'androiddev@cliqz.com',
+        subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
+        body: bodytxt.stripIndent()
+    )
 }
