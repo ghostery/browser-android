@@ -153,10 +153,11 @@ def runAppiumTests(String testsFolder, String apk) {
             set -e
             echo "*** Starting Tests ***"
             export app="`pwd`/build/$APP"
+            $ANDROID_HOME/platform-tools/adb uninstall ${appPackage} || true
             $ANDROID_HOME/platform-tools/adb install "$app"
             cd $TESTS_FOLDER
             appium --log $FLAVOR-appium.log &
-            echo $! > appium.pid
+            APPIUM_PID=$!
             sleep 10
             virtualenv ~/venv
             source ~/venv/bin/activate
@@ -166,10 +167,55 @@ def runAppiumTests(String testsFolder, String apk) {
             $ANDROID_HOME/platform-tools/adb uninstall ${appPackage}
             sleep 10
             $ANDROID_HOME/platform-tools/adb forward --remove-all
-            kill `cat appium.pid` || true
-            rm -f appium.pid
+            kill $APPIUM_PID || true
             echo "*** DONE ***"
         '''
+    }
+    try {
+        archiveArtifacts allowEmptyArchive: true, artifacts: "${testsFolder}/*.log"
+        junit "${testsFolder}/test-reports/*.xml"
+        zip archive: true, dir: "${testsFolder}/screenshots", glob: '', zipFile: "${flavorName}-screenshots.zip"
+    } catch(e) {
+        print e
+    }
+}
+
+def runUITests(){
+    sh'''#!/bin/bash -l
+        set -x
+        echo "*** Starting UI Tests ***"
+        cd mozilla-release
+        $ANDROID_HOME/platform-tools/adb shell mkdir /sdcard/rec
+        $ANDROID_HOME/platform-tools/adb shell """
+            screenrecord --bit-rate 6000000 /sdcard/rec/1.mp4;
+            screenrecord --bit-rate 6000000 /sdcard/rec/2.mp4;
+            screenrecord --bit-rate 6000000 /sdcard/rec/3.mp4;
+            screenrecord --bit-rate 6000000 /sdcard/rec/4.mp4;
+            screenrecord --bit-rate 6000000 /sdcard/rec/5.mp4; """ &
+        RECORDING_PID=$!
+        $ANDROID_HOME/platform-tools/adb logcat -c
+        $ANDROID_HOME/platform-tools/adb logcat > ../UIA-device.log
+        LOGCAT_PID=$!
+        ./gradlew app:connectedWithGeckoBinariesDebugAndroidTest || true
+        kill $RECORDING_PID
+        sleep 3
+        kill $LOGCAT_PID=$!
+        $ANDROID_HOME/platform-tools/adb logcat -c
+        mkdir -p ../recording ../screenshots
+        $ANDROID_HOME/platform-tools/adb pull /sdcard/rec ../recording/
+        $ANDROID_HOME/platform-tools/adb pull /sdcard/test-screenshots ../screenshots/ || true
+        $ANDROID_HOME/platform-tools/adb uninstall ${appPackage} || true
+        echo "*** DONE ***"
+    '''
+    try {
+        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/**/*"
+        archiveArtifacts allowEmptyArchive: true, artifacts: "UIA-device.log"
+        junit "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/outputs/androidTest-results/connected/flavors/WITHGECKOBINARIES/*.xml"
+        zip archive: true, dir: "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/", glob: '', zipFile: "${flavorName}-reports.zip"
+        zip archive: true, dir: "screenshots/", glob: '', zipFile: "${flavorName}-UIA-screenshots.zip"
+        zip archive: true, dir: "recording/", glob: '', zipFile: "${flavorName}-UIA-videos.zip"
+    } catch (e) {
+        print e
     }
 }
 

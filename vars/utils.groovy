@@ -1,15 +1,5 @@
 #!/usr/bin/env groovy
 
-def archiveTestResults(String flavorName, String testsFolder='cliqz-mobile-tests') {
-    try {
-        archiveArtifacts allowEmptyArchive: true, artifacts: "${testsFolder}/*.log"
-        junit "${testsFolder}/test-reports/*.xml"
-        zip archive: true, dir: "${testsFolder}/screenshots", glob: '', zipFile: "${flavorName}-screenshots.zip"
-    } catch(e) {
-        print e
-    }
-}
-
 def fastlaneRelease(
     String certPathCredId,
     String certPassCredId,
@@ -34,6 +24,9 @@ def cleanUp(String testsFolder="") {
         rm -f mozilla-release/mozconfig
         rm -rf mozilla-release/objdir-frontend-android
         rm -rf build
+        rm -rf *.zip
+        rm -rf recording screenshots
+        rm -rf *.log
     """
     if (testsFolder != ""){
         sh """#!/bin/bash
