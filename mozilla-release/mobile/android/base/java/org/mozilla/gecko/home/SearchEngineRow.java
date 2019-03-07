@@ -496,4 +496,22 @@ class SearchEngineRow extends ThemedRelativeLayout {
             }
         }
     }
+
+    /* Cliqz Start */
+    @Override
+    public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
+
+        mUserEnteredView.setLightTheme(isLightTheme);
+        mUserEnteredTextView.setLightTheme(isLightTheme);
+
+        final int childCount = mSuggestionView.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final View child = mSuggestionView.getChildAt(i);
+            if (child instanceof SuggestionItem) {
+                ((SuggestionItem) child).setLightTheme(isLightTheme);
+            }
+        }
+    }
+    /* Cliqz End */
 }

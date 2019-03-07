@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright © Cliqz 2019 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gecko="http://schemas.android.com/apk/res-auto">
+
+    <item android:color="@android:color/white"  gecko:light_theme="true" gecko:state_private="true"/>
+
+    <item android:color="@android:color/black"  gecko:light_theme="true" />
+
+    <item android:color="@color/history_favorites_row"/>
+
+</selector>

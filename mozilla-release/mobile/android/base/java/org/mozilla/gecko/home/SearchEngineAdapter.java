@@ -1,6 +1,7 @@
 package org.mozilla.gecko.home;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tabs;
+import org.mozilla.gecko.preferences.PreferenceManager;
 
 import java.util.Collections;
 import java.util.List;
@@ -89,6 +92,15 @@ public class SearchEngineAdapter
     public void onBindViewHolder(SearchEngineViewHolder holder, int position) {
         if (position != 0) {
             holder.bindItem(getItem(position));
+            /* Cliqz Start */
+        } else {
+            final Drawable icon = DrawableCompat.wrap(
+                    ContextCompat.getDrawable(mContext, R.drawable.search_icon_active));
+            DrawableCompat.setTint(icon, PreferenceManager.getInstance().isLightThemeEnabled() &&
+                    !Tabs.getInstance().getSelectedTab().isPrivate() ? Color.BLACK : Color.WHITE);
+            final ImageView iconView = holder.itemView.findViewById(R.id.search_engine_label);
+            iconView.setImageDrawable(icon);
+            /* Cliqz End */
         }
     }
 
@@ -98,17 +110,10 @@ public class SearchEngineAdapter
     }
 
     private View createLabelView(ViewGroup parent) {
-        View view = LayoutInflater.from(mContext)
+        /* Cliqz Start */
+        return LayoutInflater.from(mContext)
                         .inflate(R.layout.search_engine_bar_label, parent, false);
-        final Drawable icon = DrawableCompat.wrap(
-                ContextCompat.getDrawable(mContext, R.drawable.search_icon_active).mutate());
-        /* Cliqz start */
-        DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, android.R.color.white));
-        /* Cliqz end */
-
-        final ImageView iconView = (ImageView) view.findViewById(R.id.search_engine_label);
-        iconView.setImageDrawable(icon);
-        return view;
+        /* Cliqz End */
     }
 
     private View createSearchEngineView(ViewGroup parent) {

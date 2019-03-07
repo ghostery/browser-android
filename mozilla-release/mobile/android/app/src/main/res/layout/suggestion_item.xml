@@ -10,7 +10,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:gecko="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/url_bar_entry_bg"
+    android:background="@drawable/cliqz_suggestion_item_bg"
     gecko:backgroundCornerRadius="10dp"
     android:clickable="true"
     android:gravity="center_vertical"
