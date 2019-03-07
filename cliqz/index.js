@@ -88,6 +88,7 @@ class BrowserCoreApp extends React.Component {
     }
     const results = this.state.results.results || [];
     const meta = this.state.results.meta || {};
+    const appearance = this.state.config.appearance
     const SearchComponent = this.state.config.layout === "horizontal" ? SearchUI : SearchUIVertical;
     return (
       <View style={styles.container}>
@@ -96,8 +97,8 @@ class BrowserCoreApp extends React.Component {
           ? null
           : (
             <CliqzProvider value={this.state.cliqz}>
-              <ThemeProvider value={this.state.config.appearance}>
-                <SearchComponent results={results} meta={meta} />
+              <ThemeProvider value={appearance}>
+                <SearchComponent results={results} meta={meta} theme={appearance} />
               </ThemeProvider>
             </CliqzProvider>
           )

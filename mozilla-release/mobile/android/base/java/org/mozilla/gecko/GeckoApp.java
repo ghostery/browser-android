@@ -91,9 +91,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cliqz.react.MigrationManager;
-import com.cliqz.react.SearchBackground;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,10 +174,6 @@ public abstract class GeckoApp extends GeckoActivity
     // Length of time in ms during which crashes are classified as startup crashes
     // for crash loop detection purposes.
     private static final int STARTUP_PHASE_DURATION_MS = 30 * 1000;
-    /* Cliqz Start */
-    private static final int GHOSTERY_VERSION_2_2_1 = 12255;
-    private static final int GHOSTERY_VERSION_2_3 = 12555;
-    /* Cliqz End */
 
     private static boolean sAlreadyLoaded;
 
@@ -1777,25 +1770,6 @@ public abstract class GeckoApp extends GeckoActivity
         boolean shouldRestore = false;
 
         final int versionCode = getVersionCode();
-        /* Cliqz Start */
-        final int prefsVersionCode = prefs.getInt(PREFS_VERSION_CODE, 0);
-        // New users should have the background image disabled by default, old users should have
-        // the background image enabled if they didn't explicitly disable it.
-        if (prefsVersionCode > 0) {
-            if (prefsVersionCode <= GHOSTERY_VERSION_2_2_1) {
-                if (prefs.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)) {
-                    prefs.edit()
-                        .putBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_BACKGROUND_ENABLED, true)
-                        .apply();
-                }
-            }
-            if (prefsVersionCode <= GHOSTERY_VERSION_2_3) {
-                final MigrationManager migrationManager = MigrationManager.getInstance();
-                migrationManager.migrateBackendCountryLanguage();
-                migrationManager.migrateQuerySuggestionsPref();
-            }
-        }
-        /* Cliqz End */
         if (getSessionRestoreResumeOnce(prefs)) {
             shouldRestore = true;
         } else if (mLastSessionCrashed) {
@@ -1805,7 +1779,7 @@ public abstract class GeckoApp extends GeckoActivity
             } else {
                 shouldRestore = false;
             }
-        } else if (/* Cliqz */ prefsVersionCode != versionCode) {
+        } else if (prefs.getInt(PREFS_VERSION_CODE, 0) != versionCode) {
             // If the version has changed, the user has done an upgrade, so restore
             // previous tabs.
             prefs.edit().putInt(PREFS_VERSION_CODE, versionCode).apply();

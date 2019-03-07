@@ -1446,14 +1446,6 @@ public class BrowserApp extends GeckoApp
                         hideControlCenter();
                     }
                 }
-                // show/hide query suggestions based on urlBar focus
-                if(mPreferenceManager.isQuerySuggestionsEnabled()) {
-                    if (!hasFocus) {
-                        hideCliqzQuerySuggestions();
-                    } else {
-                        showCliqzQuerySuggestions();
-                    }
-                }
                 /* Cliqz End */
             }
         });
@@ -4715,7 +4707,8 @@ public class BrowserApp extends GeckoApp
         mCliqzQuerySuggestionsContainer.removeAllViews();
 
         if ((originalQuery != null && URLUtil.isValidUrl(originalQuery)) ||
-                suggestions == null || suggestions.length == 0 || !mBrowserToolbar.hasFocus()) {
+                suggestions == null || suggestions.length == 0 || !mBrowserToolbar.hasFocus()
+                || !mBrowserToolbar.getQueryValue().startsWith(originalQuery)) {
             hideCliqzQuerySuggestions();
             return;
         }
@@ -4726,8 +4719,7 @@ public class BrowserApp extends GeckoApp
             if (shownSuggestions >= SUGGESTIONS_LIMIT) {
                 break;
             }
-            if (FILTER.matcher(suggestion).matches() ||
-                    (originalQuery != null && originalQuery.trim().equals(suggestion))) {
+            if (FILTER.matcher(suggestion).matches() || originalQuery.trim().equals(suggestion)) {
                 continue;
             }
             final TextView tv = new TextView(getBaseContext());
@@ -4750,7 +4742,7 @@ public class BrowserApp extends GeckoApp
                 }
             });
             final int beginIndex;
-            if (originalQuery != null && suggestion.startsWith(originalQuery)) {
+            if (suggestion.startsWith(originalQuery)) {
                 beginIndex = originalQuery.length();
             } else {
                 beginIndex = 0;
@@ -4779,7 +4771,7 @@ public class BrowserApp extends GeckoApp
         }
     }
 
-    private void hideCliqzQuerySuggestions(){
+    public void hideCliqzQuerySuggestions(){
         mCliqzQuerySuggestionsContainer.setVisibility(View.INVISIBLE);
     }
 
