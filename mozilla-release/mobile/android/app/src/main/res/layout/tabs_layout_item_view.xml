@@ -36,7 +36,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
-            android:scaleType="centerInside"
+            android:scaleType="fitCenter"
             app:backgroundCornerRadius="@dimen/tab_favicon_corner_radius"
             gecko:dominantBorderEnabled="false"
             gecko:overrideScaleType="false" />

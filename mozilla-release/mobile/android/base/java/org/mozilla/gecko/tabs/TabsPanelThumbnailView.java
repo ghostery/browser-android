@@ -76,7 +76,7 @@ public class TabsPanelThumbnailView extends CropImageView {
     private LayerDrawable normalModeImageDrawable() {
         final Context context = getContext();
         final Drawable backgroundLayer = ContextCompat.getDrawable(context, R.color.tab_item_thumbnail_default_bg);
-        final Drawable logoLayer = ContextCompat.getDrawable(context, R.drawable.globe_light);
+        final Drawable logoLayer = ContextCompat.getDrawable(context, R.drawable.ic_start_tab_icon);
         final LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] { backgroundLayer, logoLayer });
         final int padding = (int) getResources().getDimension(R.dimen.tab_thumbnail_normal_mode_image_padding);
         layerDrawable.setLayerInset(1, padding, padding, padding, padding);
