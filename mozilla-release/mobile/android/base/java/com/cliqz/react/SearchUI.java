@@ -21,28 +21,25 @@ public class SearchUI {
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
 
+    private AppBackgroundManager mBackgroundManager;
+
     public SearchUI() {}
 
     public void onCreate(Context context) {
+        mBackgroundManager = AppBackgroundManager.getInstance(context);
+
         final SearchBackground mSearchBackground = SearchBackground.getInstance();
         mReactInstanceManager = mSearchBackground.mReactInstanceManager;
 
         mReactRootView = new ReactRootView(context);
         mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
 
-
-        // TODO: move this logic to AppBackgroundManager
-        final AppBackgroundManager backgroundManager = AppBackgroundManager.getInstance(context);
-        if (PreferenceManager.getInstance().isBackgroundEnabled()) {
-            backgroundManager.setViewBackground(mReactRootView, ContextCompat.getColor(context, R.color.general_blue_color));
-        } else {
-            backgroundManager.setViewBackgroundDefaultColor(mReactRootView);
-        }
     }
 
     public void show() {
         if (mReactRootView != null) {
             mReactRootView.setVisibility(View.VISIBLE);
+            mBackgroundManager.setSearchViewBackground(mReactRootView);
         }
     }
 
