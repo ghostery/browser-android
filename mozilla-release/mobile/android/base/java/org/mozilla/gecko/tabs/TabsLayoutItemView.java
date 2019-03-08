@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
@@ -224,11 +225,10 @@ public class TabsLayoutItemView extends LinearLayout
                                        .build()
                                        .execute(mFaviconView.createIconCallback());
             /o Cliqz Block Comment end */
-            final Context context = getContext();
-            if (tab.getTitle().equals(context.getString(R.string.home_title))) {
+            if (AboutPages.isAboutHome(tab.getURL())) {
                 mFaviconView.setImageDrawable(getDefaultFavIcon(tab));
             } else {
-                Picasso.with(context)
+                Picasso.with(getContext())
                         .load(CliqzLogoUtil.getIconUrl(url, iconSize, iconSize))
                         .into(mFaviconView);
             }
@@ -262,6 +262,10 @@ public class TabsLayoutItemView extends LinearLayout
         mTitle.setLightTheme(isLightTheme);
         DrawableCompat.setTint(DrawableCompat.wrap(mCloseButton.getDrawable()),
                 isLightTheme ? Color.BLACK : Color.WHITE);
+        if (mFaviconView != null && mFaviconView.getDrawable() != null) {
+            DrawableCompat.setTint(DrawableCompat.wrap(mFaviconView.getDrawable()),
+                    isLightTheme ? ContextCompat.getColor(getContext(), R.color.general_blue_color) : Color.WHITE);
+        }
     }
 
     private Drawable initDefaultVectorDrawable(int drawableId) {
