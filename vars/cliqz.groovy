@@ -194,12 +194,12 @@ def runUITests(){
             screenrecord --bit-rate 6000000 /sdcard/rec/5.mp4; """ &
         RECORDING_PID=$!
         $ANDROID_HOME/platform-tools/adb logcat -c
-        $ANDROID_HOME/platform-tools/adb logcat > ../UIA-device.log
+        $ANDROID_HOME/platform-tools/adb logcat > ../UIA-device.log &
         LOGCAT_PID=$!
         ./gradlew app:connectedWithGeckoBinariesDebugAndroidTest || true
         kill $RECORDING_PID
         sleep 3
-        kill $LOGCAT_PID=$!
+        kill $LOGCAT_PID
         $ANDROID_HOME/platform-tools/adb logcat -c
         mkdir -p ../recording ../screenshots
         $ANDROID_HOME/platform-tools/adb pull /sdcard/rec ../recording/
