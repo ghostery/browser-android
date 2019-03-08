@@ -101,9 +101,9 @@ def buildBrowser(
                 echo '*** DONE ***'
             """
             apkName = sh(returnStdout: true,
-                script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release && \
+                script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinaries/release && \
                 find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
-            apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinariesRelease/release/${apkName}"
+            apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/WithGeckoBinaries/release/${apkName}"
         }
         sh """#!/bin/bash -l
             set -x
