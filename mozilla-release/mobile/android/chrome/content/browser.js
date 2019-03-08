@@ -1449,13 +1449,6 @@ var BrowserApp = {
       // a fullscreen transition.
       return;
     }
-    /* Cliqz start */
-    // this is a counter action to overlaying cliqz panel whenever urlbar is selected in the following PR:
-    // https://github.com/ghostery/browser-android/pull/383/files#diff-2b905fad033b1c02f370bed0beea6363R1662
-    // this change puts the correct browser on top whenever a tab is selected to fix the following issue:
-    // https://cliqztix.atlassian.net/browse/AB2-612
-    Cliqz.overlayPanel(aTab.browser);
-    /* Cliqz end */
 
     this.selectedTab = aTab;
 
@@ -1995,9 +1988,6 @@ var BrowserApp = {
 
       case "Tab:Selected":
         this._handleTabSelected(this.getTabForId(data.id));
-        let isPrivate = PrivateBrowsingUtils.isBrowserPrivate(this.selectedTab.browser);
-        const theme = isPrivate ? 'dark' : 'light';
-        Cliqz.messageExtension( { module: "mobile-cards", action: "changeTheme", args: [theme]});
         break;
 
       case "Tab:Closed": {
@@ -6262,14 +6252,7 @@ var ActivityObserver = {
 
   observe: function ao_observe(aSubject, aTopic, aData) {
     let isForeground = false;
-    let tab;
-    if (Cliqz.Search.browser && Cliqz.Search.browser.getAttribute("primary")) {
-      // Search view is on top
-      tab = Cliqz.Search;
-    } else {
-      // Browser tab is on top
-      tab = BrowserApp.selectedTab;
-    }
+    let tab = BrowserApp.selectedTab;
 
     UITelemetry.addEvent("show.1", "system", null, aTopic);
 
@@ -6592,105 +6575,18 @@ var Cliqz = {
     return promise;
   },
 
-  _createBrowserForExtension: function (id) {
-    const browser = document.createElement("browser");
-
-    browser.setAttribute("type", "content");
-    browser.setAttribute("messagemanagergroup", "browsers");
-    browser.setAttribute("contentsource", id);
-    BrowserApp.deck.appendChild(browser);
-    if (this.isVisible) {
-      this.overlayPanel(browser);
-    }
-
-    // return a tab look-alike object to get handled properly by ActivityObserver
-    return {
-      browser,
-      setActive(active) {
-        active ? this.browser.focus() : this.browser.blur();
-        this.browser.docShellIsActive = active;
-      },
-      getActive() { return this.browser.docShellIsActive; }
-    }
-  },
-
-  loadCardsUI: function() {
-    if (this.Search) {
-      return;
-    }
-
-    const id = 'firefox@ghostery.com';
-    const uuid = UUIDMap.get(id);
-    const theme = Services.prefs.getBoolPref("pref.cliqz.blue.theme", true) ? "blue" : "white";
-    const path = `cliqz/mobile-cards/cards.html?bg=${theme}`;
-
-    this.Search = this._createBrowserForExtension(id);
-    this.Search.browser.loadURI("moz-extension://" + uuid + "/" + path);
-    this.Search.browser.contentWindow.addEventListener('message', this._searchExtensionListener.bind(this));
-  },
-
-  startSearch(query) {
-    this.messageExtension({ module: "search", action: "startSearch", args: [query, {}, { contextId: 'mobile-cards' }] });
-  },
-
   _searchExtensionListener(msg) {
     console.log("Dispatching event from the search extension to native", msg.action);
     switch (msg.action) {
-      case "openUrl": // args [url as string]
-        if (!msg.args[0]) {
-          break;
-        }
-        // var success = this.hidePanel(this.Search.browser);
-        // if (success) {
-          BrowserApp.deck.selectedPanel.loadURI(msg.args[0]);
-        // }
-        // used by the java side to exit the edit mode
-        GlobalEventDispatcher.sendRequest({
-          type: "Search:OpenLink"
-        });
-
-        // telemetry
-        GlobalEventDispatcher.sendRequest({
-          type: "Search:Keyword",
-          identifier: 'cliqz',
-          name: 'cliqz'
-        });
-
-        break;
-      case "autocomplete": // args [data as string]
-        GlobalEventDispatcher.sendRequest({
-          type: "Search:Autocomplete",
-          data: msg.args[0]
-        });
-        break;
-      case "suggestions": // args [query as string, suggestions as array]
-        GlobalEventDispatcher.sendRequest({
-          type: "Search:QuerySuggestions",
-          data: {
-            query: msg.args[0],
-            suggestions: msg.args[1]
-          }
-        });
-        break;
       case "getInstallDate":
         return Services.prefs.getCharPref("android.not_a_preference.browser.install.date", "16917");
       case "ready":
         this._searchExtensionListener({ action: 'renderReady' });
         this._handleExtensionReady("firefox@ghostery.com");
-        if (this.lastQueuedQuery) {
-          this.startSearch(this.lastQueuedQuery);
-          this.lastQueuedQuery = "";
-        }
-        this.searchIsReady = true;
         break;
       case "idle":
         GlobalEventDispatcher.sendRequest({
           type: "Search:Idle"
-        });
-        break;
-      case "renderReady":
-        GlobalEventDispatcher.sendRequest({
-          type: "Search:Ready"
         });
         break;
       case "setIcon":
@@ -6767,49 +6663,6 @@ var Cliqz = {
     }
   },
 
-  overlayPanel: function(panel) {
-    /* Cliqz start */
-    var currentPanel = BrowserApp.deck.selectedPanel;
-    if (currentPanel === panel && panel.hasAttribute("primary")) {
-      // already visible
-      return;
-    }
-    
-    if (currentPanel) {
-      if (currentPanel.hasAttribute("contentsource")) {
-        // current tab is already an overlay
-        // -> we simply hide it
-        currentPanel.removeAttribute("primary");
-      } else if (currentPanel !== panel) {
-        // we need to store the current active panel to be able
-        // to show it when the overlay panel will close
-        BrowserApp.deck.backPanel = currentPanel;
-        currentPanel.removeAttribute("primary"); 
-      }
-    }
-    /* Cliqz end */
-
-    // it must be primary in order to get the touch events
-    panel.setAttribute("primary", "true");
-    BrowserApp.deck.selectedPanel = panel;
-  },
-
-  hidePanel: function(panel) {
-    if (!BrowserApp.deck.backPanel ||
-        !panel.hasAttribute("primary")) {
-      // not visible already
-      return false;
-    }
-
-    panel.removeAttribute("primary");
-
-    BrowserApp.deck.backPanel.setAttribute("primary", "true");
-    BrowserApp.deck.selectedPanel = BrowserApp.deck.backPanel;
-    delete BrowserApp.deck.backPanel;
-
-    return true;
-  },
-
   onEvent: function(event, data, callbacks) {
     let onSuccess = () => {};
     let onError = () => {};
@@ -6819,37 +6672,6 @@ var Cliqz = {
     }
     // event cases should be sorted in alphabitical order
     switch(event) {
-      case "Cards:CallBackgroundAction":
-        this.messageExtension({
-          module: data.module,
-          action: data.action,
-          args: data.args
-        }).then(response => {
-          onSuccess(response);
-        }).catch(error => {
-          onError(error);
-        });
-        break;
-      case "Search:Analysis":
-        const { data: msg = {}, immediate = false, schema = "" } = data;
-        this.messageExtension({
-          module: "anolysis",
-          action: "handleTelemetrySignal",
-          args: [msg, immediate, schema]
-        });
-        break;
-      case "Search:Hide":
-        this.isVisible = false;
-        this.Search && this.hidePanel(this.Search.browser);
-        this.messageExtension({ module: "search", action: "stopSearch", args: [{ contextId: 'mobile-cards' }]});
-        break;
-      case "Search:Search":
-        this.lastQueuedQuery = data.q || "";
-        if (this.searchIsReady) {
-          this.startSearch(this.lastQueuedQuery);
-          this.lastQueuedQuery = "";
-        }
-        break;
       case "SystemAddon:Request":
         this.messageExtension({
           module: data.module,
@@ -6859,10 +6681,6 @@ var Cliqz = {
           response => callback.onSuccess(response),
           error => callback.onError(error),
         );
-        break;
-      case "Search:Show":
-        this.isVisible = true; // save the state before search is initialized
-        // this.Search && this.overlayPanel(this.Search.browser);
         break;
       case "Privacy:AdblockToggle":
         this.messageExtension({ name: "adblockToggle", message: data})
@@ -6885,10 +6703,6 @@ var Cliqz = {
           name: 'updateBlocking',
           message: blockingPolicy
         });
-        break;
-      case "Search:ChangeTheme":
-        const theme = data.isLightTheme ? "white" : "blue";
-        Cliqz.messageExtension({ action: "changeBrowserTheme", args: [theme] });
         break;
     }
   }
