@@ -1,5 +1,5 @@
 #!/bin/env groovy
-@Library('cliqz-shared-library@v1.2') _
+@Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
 properties([
     parameters([
