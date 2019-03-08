@@ -103,7 +103,7 @@ def build(Map m){
                             archiveArtifacts allowEmptyArchive: true, artifacts: "/app/build/${apk}"
                             utils.s3Copy(
                                 "/app/build/${apk}",
-                                "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}",
+                                "s3://repository.cliqz.com/dist/android/nightly/${brandname}",
                                 "${brandname}_${env.BUILD_NUMBER}_${getId()}",
                                 "${buildarch}",
                                 true
