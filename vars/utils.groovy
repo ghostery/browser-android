@@ -36,21 +36,21 @@ def cleanUp(String testsFolder="") {
 }
 
 def s3Copy(String apkFullPath, String s3Path, String fileName, String buildArch, Boolean latestLink) {
-    if (buildarch != ""){
-        buildArch = buildarch.equals("arm") ? "" : "_${buildarch}"
+    if (buildArch != ""){
+        buildArch = buildArch.equals("arm") ? "" : "_${buildArch}"
     }
     if (latestLink){
         sh """#!/bin/bash -l
             set -e
             set -x
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildarch}.apk
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest${buildarch}.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildArch}.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/latest${buildArch}.apk
         """
     } else {
         sh """#!/bin/bash -l
             set -e
             set -x
-            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildarch}.apk
+            aws s3 cp --acl public-read --acl bucket-owner-full-control ${apkFullPath} ${s3Path}/${fileName}${buildArch}.apk
         """
     }
 }
