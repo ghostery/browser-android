@@ -888,6 +888,7 @@ public class BrowserApp extends GeckoApp
             "Addons:PreventGhosteryCliqz",
             "Search:Focus",
             "Search:QuerySuggestions",
+            "Search:ClearFocus",
             /* Cliqz end */
             null);
 
@@ -1748,7 +1749,9 @@ public class BrowserApp extends GeckoApp
             "Privacy:Info",
             "Search:Idle",
             "Addons:PreventGhosteryCliqz",
+            "Search:Focus",
             "Search:QuerySuggestions",
+            "Search:ClearFocus",
             /* Cliqz end */
             null);
 
@@ -2397,6 +2400,11 @@ public class BrowserApp extends GeckoApp
                 final String searchQuery = message.getString("query");
                 enterEditingMode();
                 mBrowserToolbar.urlEditLayout.setText(searchQuery);
+                showCliqzQuerySuggestions();
+                break;
+            case "Search:ClearFocus":
+                mBrowserToolbar.urlEditLayout.clearFocus();
+                hideCliqzQuerySuggestions();
                 break;
             /* Cliqz end */
 
