@@ -1,5 +1,10 @@
 # Stefano's developing mozconfig file, do not use this for production
 
+if [ -f "${topsrcdir}/mozoverrides" ]
+then
+    . "${topsrcdir}/mozoverrides"
+fi
+
 # Branding
 if [ -z "${CLIQZ_BRANDING}" ]
 then

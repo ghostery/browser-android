@@ -2356,7 +2356,9 @@ public class BrowserApp extends GeckoApp
 
             case "Search:OpenLink":
                 Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"), Tabs.LOADURL_USER_ENTERED);
-                mBrowserToolbar.cancelEdit();
+                //We don't want fresh tab to be visible between page load and card click. Ticket# AB2-720
+                ThreadUtils.getUiHandler().postDelayed(() ->
+                        mBrowserToolbar.cancelEdit(), 300);
                 break;
 
             case "Privacy:Count":
