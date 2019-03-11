@@ -133,6 +133,29 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .emit("SearchEngines:SetDefault", null);
     }
 
+    public static void notifyLocationChange(String url, int tabId) {
+        final WritableMap windowTreeInformation =  new WritableNativeMap();
+        windowTreeInformation.putInt("tabId", tabId);
+
+        final WritableMap message = new WritableNativeMap();
+        message.putString("url", url);
+        message.putMap("windowTreeInformation", windowTreeInformation);
+        
+        getInstance().callAction("core", "notifyLocationChange", message);
+    }
+
+    public static void notifyStateChange(String url, int tabId) {
+        final WritableMap windowTreeInformation =  new WritableNativeMap();
+        windowTreeInformation.putInt("tabId", tabId);
+
+        final WritableMap message = new WritableNativeMap();
+        message.putString("urlSpec", url);
+        message.putString("originalUrl", url);
+        message.putMap("windowTreeInformation", windowTreeInformation);
+
+        getInstance().callAction("core", "notifyStateChange", message);
+    }
+
     @Override
     public void onReactContextInitialized(ReactContext context) {
         mReactContext = context;
