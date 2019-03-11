@@ -30,10 +30,16 @@ import static com.cliqz.react.modules.PrefsModule.PREFS_SEARCH_CARDS_LAYOUT;
  */
 public class BridgeModule extends ReactContextBaseJavaModule implements BundleEventListener {
 
+    private static final String EVENT_SEARCH_SEARCH = "Search:Search";
+    private static final String EVENT_SEARCH_OPEN_LINK = "Search:OpenLink";
+    private static final String EVENT_CONTENT_LOCATION_CHANGE = "Content:LocationChange";
+    private static final String EVENT_CONTENT_STATE_CHANGE = "Content:StateChange";
     private final ReactApplicationContext mReactContext;
     private String[] EVENTS = new String[] {
-            "Search:Search",
-            "Search:OpenLink",
+            EVENT_SEARCH_SEARCH,
+            EVENT_SEARCH_OPEN_LINK,
+            EVENT_CONTENT_LOCATION_CHANGE,
+            EVENT_CONTENT_STATE_CHANGE,
     };
 
     public BridgeModule(ReactApplicationContext reactContext) {
@@ -64,12 +70,19 @@ public class BridgeModule extends ReactContextBaseJavaModule implements BundleEv
     @Override
     public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
         switch (event) {
-            case "Search:Search":
+            case EVENT_SEARCH_SEARCH:
                 final String query = GeckoBundleUtils.safeGetString(message, "q");
                 SearchBackground.startSearch(query);
                 break;
-            case "Search:OpenLink":
+            case EVENT_SEARCH_OPEN_LINK:
                 SearchBackground.stopSearch();
+                break;
+            case EVENT_CONTENT_LOCATION_CHANGE:
+                SearchBackground.notifyLocationChange(message.getString("uri"), message.getInt("tabID"));
+                break;
+            case EVENT_CONTENT_STATE_CHANGE:
+                // TODO: disabled for now - not sure if needed
+                // SearchBackground.notifyStateChange(message.getString("uri"), message.getInt("tabID"));
                 break;
             default:
                 Log.w(getClass().getSimpleName(), "Unknown event " + event);
