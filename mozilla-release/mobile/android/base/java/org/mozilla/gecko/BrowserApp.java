@@ -1495,6 +1495,15 @@ public class BrowserApp extends GeckoApp
 
         // Intercept key events for gamepad shortcuts
         mBrowserToolbar.setOnKeyListener(this);
+
+        /*Cliqz Start*/
+        mBrowserToolbar.setOnKeyboardCloseListener(new BrowserToolbar.OnKeyboardCloseListener() {
+            @Override
+            public void onKeyboardClosed() {
+                hideCliqzQuerySuggestions();
+            }
+        });
+        /*Cliqz End*/
     }
 
     private void setDynamicToolbarEnabled(boolean enabled) {
