@@ -30,6 +30,8 @@ public class Telemetry {
         static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
         static final String VIEW_HOME = "home";
         static final String TARGET_SETTINGS = "settings";
+        static final String TYPE_SEARCH = "search";
+        static final String TARGET_CLOSE = "close";
     }
 
     /**
@@ -61,6 +63,12 @@ public class Telemetry {
                 extra);
     }
 
+    public static void sendCloseSearchSignal() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.TARGET, Values.TARGET_CLOSE);
+        sendTelemetry(Values.TYPE_SEARCH, Values.ACTION_CLICK, extra);
+    }
+
     // Generalized send telemetry method with the common required fields
     @SuppressWarnings("SameParameterValue")
     private static void sendTelemetry(@NonNull String type,
@@ -74,6 +82,15 @@ public class Telemetry {
         signal.putString(Keys.CONTEXT, context);
         signal.putString(Keys.VIEW, view);
 
+        SystemAddon.sendTelemetry(signal);
+    }
+
+    private static void sendTelemetry(@NonNull String type,
+                                      @NonNull String action,
+                                      @Nullable GeckoBundle extra) {
+        final GeckoBundle signal = extra != null ? new GeckoBundle(extra) : new GeckoBundle();
+        signal.putString(Keys.TYPE, type);
+        signal.putString(Keys.ACTION, action);
         SystemAddon.sendTelemetry(signal);
     }
 }

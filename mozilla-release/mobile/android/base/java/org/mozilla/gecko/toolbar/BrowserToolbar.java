@@ -405,6 +405,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                             TelemetryContract.Method.ACTIONBAR,
                             getResources().getResourceEntryName(mEditCancel.getId()));
                     cancelEdit();
+                    com.cliqz.Telemetry.sendCloseSearchSignal()
                 }
             }
         });
