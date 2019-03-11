@@ -11,6 +11,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.gecko.util.GeckoBundle;
+import org.mozilla.gecko.util.GeckoBundleUtils;
 
 import java.util.Iterator;
 
@@ -121,5 +123,16 @@ public class Utils {
             }
         }
         return array;
+    }
+
+    public static GeckoBundle convertReadableMapToGeckoBundle(ReadableMap map) {
+        try {
+            final JSONObject json = convertMapToJson(map);
+            final GeckoBundle bundle = GeckoBundle.fromJSONObject(json);
+            return bundle;
+        } catch (JSONException e) {
+            // This should generally never happen, so this method should't throw
+            return new GeckoBundle();
+        }
     }
 }
