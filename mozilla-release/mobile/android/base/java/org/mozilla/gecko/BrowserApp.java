@@ -1484,6 +1484,7 @@ public class BrowserApp extends GeckoApp
                 hideBrowserSearch();
                 hideHomePager();
                 /* Cliqz start */
+                SearchBackground.stopSearch();
                 hideCliqzQuerySuggestions();
                 mCliqzQuerySuggestionsContainer.removeAllViews();
                 /* Cliqz end */
@@ -2354,7 +2355,7 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Search:OpenLink":
-                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"));
+                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"), Tabs.LOADURL_USER_ENTERED);
                 //We don't want fresh tab to be visible between page load and card click. Ticket# AB2-720
                 ThreadUtils.getUiHandler().postDelayed(() ->
                         mBrowserToolbar.cancelEdit(), 300);
@@ -2858,6 +2859,11 @@ public class BrowserApp extends GeckoApp
         if (TextUtils.isEmpty(url)) {
             return;
         }
+
+        /* Cliqz start */
+        final boolean isPrivateMode = Tabs.getInstance().getSelectedTab().isPrivate();
+        SearchBackground.reportSelection(url, isPrivateMode);
+        /* Cliqz end */
 
         // If the URL doesn't look like a search query, just load it.
         if (!StringUtils.isSearchQuery(url, true)) {

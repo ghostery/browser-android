@@ -8,6 +8,8 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.shell.MainReactPackage;
@@ -80,7 +82,37 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
     }
 
     public static void startSearch(String query) {
-        getInstance().callAction("search", "startSearch", query);
+        final WritableMap params = new WritableNativeMap();
+        // TODO add search params
+        getInstance().callAction("search", "startSearch", query, params, getSearchSenderArgument());
+    }
+
+    public static void stopSearch() {
+        final WritableMap params = new WritableNativeMap();
+        params.putString("entryPoint", "browserBar");
+        getInstance().callAction("search", "stopSearch", params, getSearchSenderArgument());
+    }
+
+    public static void reportSelection(String query, boolean isPrivateMode) {
+        final WritableMap result = new WritableNativeMap();
+        result.putInt("index", -1);
+
+        final WritableMap param = new WritableNativeMap();
+        param.putString("action", "click");
+        param.putString("elementName", "");
+        param.putBoolean("isFromAutoCompletedUrl", false);
+        param.putBoolean("isNewTab", false);
+        param.putBoolean("isPrivateMode", isPrivateMode);
+        param.putBoolean("isPrivateResult", false);
+        param.putString("query", query);
+        param.putString("url", query);
+        param.putBoolean("isSearchEngine", true);
+        param.putMap("rawResult", result);
+        param.putArray("resultOrder", new WritableNativeArray());
+
+        getInstance().callAction("search", "reportSelection", param, getSearchSenderArgument());
+
+        stopSearch();
     }
 
     public static void getBackendCountries(EventCallback callback) {
@@ -104,5 +136,11 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
     @Override
     public void onReactContextInitialized(ReactContext context) {
         mReactContext = context;
+    }
+
+    private static ReadableMap getSearchSenderArgument() {
+        final WritableMap sender = new WritableNativeMap();
+        sender.putString("contextId", "mobile-cards");
+        return sender;
     }
 }
