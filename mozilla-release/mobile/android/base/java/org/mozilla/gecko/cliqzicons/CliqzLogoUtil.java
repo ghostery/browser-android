@@ -19,7 +19,12 @@ public class CliqzLogoUtil {
 
     @SuppressLint("UseSparseArrays")
     private static final HashMap<Integer, Integer> TEXT_SIZES_MAP = new HashMap<>();
+    private static final HashMap<String, String[]> EXCEPTIONS;
+
     private static final float MAX_ACCEPTED_SIZE_DIFFERENCE = 2f;
+    private static final int EXCEPTIONS_PRE_DOMAIN_INDEX = 0;
+    private static final int EXCEPTIONS_DOMAIN_INDEX = 1;
+    private static final int EXCEPTIONS_TLD_INDEX = 2;
 
     private enum LogoSizes {
         s48x48(48),
@@ -73,15 +78,15 @@ public class CliqzLogoUtil {
 
     @SuppressLint("DefaultLocale")
     public static String getIconUrl(String url, int width, int height) {
-        String[] urlParts = {};
+        String host = "";
         try {
             final URI uri = new URI(url);
-            if (uri.getHost() != null) {
-                urlParts = uri.getHost().split("\\.");
-            }
+            final String tmpHost = uri.getHost();
+            host = tmpHost != null ? tmpHost : "";
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        final String[] urlParts = host.split("\\.");
         //We need to get the rule from the brand database which matches the url
         //cliqz.example.de and ghostery.example.de can have different logos
         //similarly mobile.example.de and mobile.example.com can have different logos
@@ -89,10 +94,18 @@ public class CliqzLogoUtil {
         // This is the example to give an idea what the variables below represent
         // In case of mobile.example.co.uk, mobile is predomain, example is domain and
         // .co.uk is the tld
+        //
+        // EXCEPTIONS handles rare cases in which the default logic doesn't work (i.e.
+        // https://uk.mobile.domain.tld)
         StringBuilder tld = new StringBuilder();
         final String preDomain;
         final String domain;
-        if (urlParts.length > 2) {
+        final String[] exception = EXCEPTIONS.get(host);
+        if (exception != null) {
+            preDomain = exception[EXCEPTIONS_PRE_DOMAIN_INDEX];
+            domain = exception[EXCEPTIONS_DOMAIN_INDEX];
+            tld.append(exception[EXCEPTIONS_TLD_INDEX]);
+        } else if (urlParts.length > 2) {
             preDomain = urlParts[0];
             domain = urlParts[1];
             for (int i = 2; i < urlParts.length; i++) {
@@ -188,7 +201,7 @@ public class CliqzLogoUtil {
         float size = width;
         while (deltaSize > TEXT_SIZE_TOLERANCE) {
             paint.setTextSize(size);
-            final float calculatedSize = paint.measureText(sampleText)+ 2f * margin;
+            final float calculatedSize = paint.measureText(sampleText) + 2f * margin;
             deltaSize = Math.abs(prevSize - size) / 2f;
             final float d = width - calculatedSize;
             prevSize = size;
@@ -206,5 +219,10 @@ public class CliqzLogoUtil {
         }
 
         return (int) size;
+    }
+
+    static {
+        EXCEPTIONS = new HashMap<>();
+        EXCEPTIONS.put("uk.mobile.reuters.com", new String[] { "uk.mobile", "reuters", ".com" });
     }
 }

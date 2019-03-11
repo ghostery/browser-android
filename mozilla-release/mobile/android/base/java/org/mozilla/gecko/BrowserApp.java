@@ -3146,9 +3146,12 @@ public class BrowserApp extends GeckoApp
         if(mFormAssistPopup != null) {
             mFormAssistPopup.hide();
         }
-        /* Cliqz end */
 
-        mFindInPageBar.hide();
+        if (mFindInPageBar != null) {
+            // Really weird PlayStore crash
+            mFindInPageBar.hide();
+        }
+        /* Cliqz end */
 
         // Refresh toolbar height to possibly restore the toolbar padding
         refreshToolbarHeight();
