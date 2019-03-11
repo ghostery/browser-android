@@ -12,6 +12,8 @@ import org.mozilla.gecko.util.GeckoBundle;
  */
 public class Telemetry {
 
+    private static long freshTabShownOn = Long.MAX_VALUE;
+
     // Groups of all possible telemetry keys
     private final static class Keys {
         static final String TYPE = "type";
@@ -25,10 +27,17 @@ public class Telemetry {
     // Groups of all possible telemetry values
     private static class Values {
         static final String TYPE_ONBOARDING = "onboarding";
+        static final String TYPE_HOME = "home";
+        static final String TYPE_TOOLBAR = "toolbar";
+        static final String TYPE_SEARCH = "search";
+        static final String TYPE_NAVIGATION = "navigation";
         static final String ACTION_CLICK = "click";
         static final String ACTION_SHOW = "show";
+        static final String ACTION_HIDE = "hide";
         static final String CONTEXT_HOME_CUSTOMIZATION = "home_customization";
         static final String VIEW_HOME = "home";
+        static final String VIEW_NEWS = "news";
+        static final String VIEW_WEB = "web";
         static final String TARGET_SETTINGS = "settings";
     }
 
@@ -38,12 +47,10 @@ public class Telemetry {
      */
     public static void sendHomeSettingsShowTelemetry() {
         final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, Values.VIEW_HOME);
         extra.putString(Keys.STYLE, ABManager.getInstance().getHomeSettingsStyle());
-        sendTelemetry(Values.TYPE_ONBOARDING,
-                Values.ACTION_SHOW,
-                Values.CONTEXT_HOME_CUSTOMIZATION,
-                Values.VIEW_HOME,
-                extra);
+        extra.putString(Keys.CONTEXT, Values.CONTEXT_HOME_CUSTOMIZATION);
+        sendTelemetry(Values.TYPE_ONBOARDING, Values.ACTION_SHOW, extra);
     }
 
     /**
@@ -52,28 +59,104 @@ public class Telemetry {
      */
     public static void sendHomeSettingsClickTelemetry() {
         final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, Values.VIEW_HOME);
         extra.putString(Keys.TARGET, Values.TARGET_SETTINGS);
         extra.putString(Keys.STYLE, ABManager.getInstance().getHomeSettingsStyle());
-        sendTelemetry(Values.TYPE_ONBOARDING,
-                Values.ACTION_CLICK,
-                Values.CONTEXT_HOME_CUSTOMIZATION,
-                Values.VIEW_HOME,
-                extra);
+        extra.putString(Keys.CONTEXT, Values.CONTEXT_HOME_CUSTOMIZATION);
+        sendTelemetry(Values.TYPE_ONBOARDING, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendFreshTabShownTelemetry(boolean topSitesShown, boolean newsShown,
+                                                  boolean backgroundShown, boolean isLightTheme) {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putBoolean("is_topsites_on", topSitesShown);
+        extra.putBoolean("is_news_on", newsShown);
+        extra.putBoolean("is_background_on", backgroundShown);
+        extra.putString("theme", isLightTheme ? "lite" : "blue");
+        sendTelemetry(Values.TYPE_HOME, Values.ACTION_SHOW, extra);
+        freshTabShownOn = System.currentTimeMillis();
+    }
+
+    public static void sendFreshTabHiddenTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        long durationFreshTabShown = System.currentTimeMillis() - freshTabShownOn;
+        durationFreshTabShown = durationFreshTabShown < 0L ? 0 : durationFreshTabShown;
+        freshTabShownOn = Long.MAX_VALUE;
+        extra.putLong("show_duration", durationFreshTabShown);
+        sendTelemetry(Values.TYPE_HOME, Values.ACTION_HIDE, extra);
+    }
+
+    public static void sendTopSiteClickTelemetry(int index, int topSitesCount) {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putInt("index", index);
+        extra.putInt("topsiteCount", topSitesCount);
+        extra.putString(Keys.TARGET, "topsite");
+        sendTelemetry(Values.TYPE_HOME, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendTopNewsClickTelemetry(int index, String newsType) {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString("target", newsType);
+        extra.putInt("index", index);
+        sendTelemetry(Values.TYPE_HOME, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendToggleNewsListTelemetry(boolean isNewsExpanded) {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, Values.VIEW_NEWS);
+        extra.putString(Keys.TARGET, isNewsExpanded ? "show" : "hide");
+        sendTelemetry(Values.TYPE_HOME, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendToolbarClickTelemetry(String target, String view) {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, view);
+        extra.putString(Keys.TARGET, target);
+        sendTelemetry(Values.TYPE_TOOLBAR, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendSearchBarFocusChangeTelemetry(boolean hasFocus, String view) {
+        String action = hasFocus ? "focus" : "blur";
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, view);
+        sendTelemetry(Values.TYPE_SEARCH, action, extra);
+    }
+
+    public static void sendSearchBarCloseClickTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.TARGET, "close");
+        sendTelemetry(Values.TYPE_SEARCH, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendReadModeClickTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.VIEW, Values.VIEW_WEB);
+        extra.putString(Keys.TARGET, "reader");
+        sendTelemetry(Values.TYPE_SEARCH, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendBackClickTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.TARGET, "back");
+        sendTelemetry(Values.TYPE_NAVIGATION, Values.ACTION_CLICK, extra);
+    }
+
+    public static void sendForwardClickTelemetry() {
+        final GeckoBundle extra = new GeckoBundle();
+        extra.putString(Keys.TARGET, "forward");
+        sendTelemetry(Values.TYPE_NAVIGATION, Values.ACTION_CLICK, extra);
     }
 
     // Generalized send telemetry method with the common required fields
     @SuppressWarnings("SameParameterValue")
     private static void sendTelemetry(@NonNull String type,
                                       @NonNull String action,
-                                      @NonNull String context,
-                                      @NonNull String view,
                                       @Nullable GeckoBundle extra) {
         final GeckoBundle signal = extra != null ? new GeckoBundle(extra) : new GeckoBundle();
         signal.putString(Keys.TYPE, type);
         signal.putString(Keys.ACTION, action);
-        signal.putString(Keys.CONTEXT, context);
-        signal.putString(Keys.VIEW, view);
 
         SystemAddon.sendTelemetry(signal);
     }
+
 }

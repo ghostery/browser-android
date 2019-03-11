@@ -32,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.Clipboard;
 import org.mozilla.gecko.EventDispatcher;
@@ -387,6 +388,11 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 activity.openOptionsMenu();
                 /* Cliqz Start */
                 hideOverlays();
+                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+                if (selectedTab != null) {
+                    final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
+                    com.cliqz.Telemetry.sendToolbarClickTelemetry("menu", viewType);
+                }
                 /* Cliqz End */
             }
         });
@@ -405,6 +411,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                             TelemetryContract.Method.ACTIONBAR,
                             getResources().getResourceEntryName(mEditCancel.getId()));
                     cancelEdit();
+                    com.cliqz.Telemetry.sendSearchBarCloseClickTelemetry();
                 }
             }
         });
@@ -657,6 +664,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 activity.showNormalTabs();
             else
                 activity.showPrivateTabs();
+
+            /* Cliqz Start */
+            if (AboutPages.isAboutHome(tab.getURL())) {
+                com.cliqz.Telemetry.sendFreshTabHiddenTelemetry();
+            }
+            /* Cliqz End */
         }
     }
 
@@ -1106,6 +1119,11 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
             activity.toggleControlCenter();
         } else {
             activity.hideControlCenter();
+        }
+        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+        if (selectedTab != null) {
+            final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
+            com.cliqz.Telemetry.sendToolbarClickTelemetry("control_center", viewType);
         }
     }
     /**

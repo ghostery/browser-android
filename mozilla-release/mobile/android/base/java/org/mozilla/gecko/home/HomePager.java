@@ -28,6 +28,7 @@ import com.booking.rtlviewpager.RtlViewPager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
@@ -599,6 +600,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             // Start a UI telemetry session for the newly selected panel.
             final String newPanelId = ((HomeAdapter) getAdapter()).getPanelIdAtPosition(position);
             startNewPanelTelemetrySession(newPanelId);
+            /* Cliqz Start */
+            sendPanelSelectedTelemetry(position);
+            /* Cliqz End */
         }
 
         @Override
@@ -622,6 +626,33 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         @Override
         public void onPageScrollStateChanged(int state) { }
     }
+
+    /* Cliqz Start */
+    void sendPanelSelectedTelemetry(final int position) {
+        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+        if (selectedTab != null) {
+            final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
+            final String target;
+            switch (position) {
+                case 0:
+                    target = "home";
+                    break;
+                case 1:
+                    target = "favorites";
+                    break;
+                case 2:
+                    target = "history";
+                    break;
+                case 3:
+                    target = "myoffrz";
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unexpected position " + position + " in HomePager selected.");
+            }
+            com.cliqz.Telemetry.sendToolbarClickTelemetry(target, viewType);
+        }
+    }
+    /* Cliqz End */
 
     /**
      * Start UI telemetry session for the a panel.

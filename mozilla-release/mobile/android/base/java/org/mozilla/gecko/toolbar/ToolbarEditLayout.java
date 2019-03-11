@@ -10,9 +10,13 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.speech.RecognizerIntent;
 import android.widget.Button;
+
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.ActivityHandlerHelper;
 import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.R;
+import org.mozilla.gecko.Tab;
+import org.mozilla.gecko.Tabs;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.animation.PropertyAnimator;
@@ -112,6 +116,13 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
                         }
                     }
                 }
+                /* Cliqz Start */
+                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
+                if (selectedTab != null) {
+                    final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
+                    com.cliqz.Telemetry.sendSearchBarFocusChangeTelemetry(hasFocus, viewType);
+                }
+                /* Cliqz End */
             }
         });
 

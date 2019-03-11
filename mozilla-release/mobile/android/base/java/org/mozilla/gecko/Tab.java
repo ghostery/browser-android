@@ -39,6 +39,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.cliqz.Telemetry;
+
 import static org.mozilla.gecko.toolbar.PageActionLayout.PageAction.UUID_PAGE_ACTION_PWA;
 
 public class Tab {
@@ -595,6 +597,9 @@ public class Tab {
             return false;
 
         EventDispatcher.getInstance().dispatch("Session:Back", null);
+        /* Cliqz Start */
+        Telemetry.sendBackClickTelemetry();
+        /* Cliqz End */
         return true;
     }
 
@@ -612,6 +617,9 @@ public class Tab {
             return false;
 
         EventDispatcher.getInstance().dispatch("Session:Forward", null);
+        /* Cliqz Start */
+        Telemetry.sendForwardClickTelemetry();
+        /* Cliqz End */
         return true;
     }
 
