@@ -3,12 +3,12 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:gecko="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@android:color/black"
     tools:context=".BrowserApp"
     tools:layout_height="wrap_content"
     tools:layout_width="match_parent"
     tools:minHeight="45dp"
     tools:orientation="horizontal"
-    tools:background="@android:color/black"
     tools:parentTag="LinearLayout">
 
     <org.mozilla.gecko.widget.themed.ThemedImageView
@@ -18,7 +18,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
-        gecko:drawableTintList="@color/cliqz_start_tab_font_color"
+        gecko:drawableTintList="@color/cliqz_bookmarks_fold_title_font_color"
         gecko:srcCompat="@drawable/ic_menu_back" />
 
     <LinearLayout
@@ -28,21 +28,22 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingEnd="@dimen/page_row_edge_padding"
-        android:paddingRight="@dimen/page_row_edge_padding">
+        android:paddingRight="@dimen/page_row_edge_padding"
+        tools:ignore="RtlSymmetry">
 
         <org.mozilla.gecko.widget.FadedSingleColorTextView
             android:id="@+id/title"
             style="@style/Widget.TwoLinePageRow.Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/cliqz_start_tab_font_color"
+            android:textColor="@color/cliqz_bookmarks_fold_title_font_color"
             gecko:fadeWidth="90dp"
-            tools:text="This is a long test title"/>
+            tools:text="This is a long test title" />
 
     </LinearLayout>
 
     <View
         android:id="@+id/padding_end"
         android:layout_width="@dimen/page_row_edge_padding"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 </merge>

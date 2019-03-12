@@ -888,6 +888,7 @@ public class BrowserApp extends GeckoApp
             "Addons:PreventGhosteryCliqz",
             "Search:Focus",
             "Search:QuerySuggestions",
+            "Search:ClearFocus",
             /* Cliqz end */
             null);
 
@@ -1486,6 +1487,7 @@ public class BrowserApp extends GeckoApp
                 hideBrowserSearch();
                 hideHomePager();
                 /* Cliqz start */
+                SearchBackground.stopSearch();
                 hideCliqzQuerySuggestions();
                 mCliqzQuerySuggestionsContainer.removeAllViews();
                 /* Cliqz end */
@@ -1498,6 +1500,15 @@ public class BrowserApp extends GeckoApp
 
         // Intercept key events for gamepad shortcuts
         mBrowserToolbar.setOnKeyListener(this);
+
+        /*Cliqz Start*/
+        mBrowserToolbar.setOnKeyboardCloseListener(new BrowserToolbar.OnKeyboardCloseListener() {
+            @Override
+            public void onKeyboardClosed() {
+                hideCliqzQuerySuggestions();
+            }
+        });
+        /*Cliqz End*/
     }
 
     private void setDynamicToolbarEnabled(boolean enabled) {
@@ -1751,7 +1762,9 @@ public class BrowserApp extends GeckoApp
             "Privacy:Info",
             "Search:Idle",
             "Addons:PreventGhosteryCliqz",
+            "Search:Focus",
             "Search:QuerySuggestions",
+            "Search:ClearFocus",
             /* Cliqz end */
             null);
 
@@ -2354,8 +2367,10 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Search:OpenLink":
-                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"));
-                mBrowserToolbar.cancelEdit();
+                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"), Tabs.LOADURL_USER_ENTERED);
+                //We don't want fresh tab to be visible between page load and card click. Ticket# AB2-720
+                ThreadUtils.getUiHandler().postDelayed(() ->
+                        mBrowserToolbar.cancelEdit(), 300);
                 break;
 
             case "Privacy:Count":
@@ -2400,6 +2415,11 @@ public class BrowserApp extends GeckoApp
                 final String searchQuery = message.getString("query");
                 enterEditingMode();
                 mBrowserToolbar.urlEditLayout.setText(searchQuery);
+                showCliqzQuerySuggestions();
+                break;
+            case "Search:ClearFocus":
+                mBrowserToolbar.urlEditLayout.clearFocus();
+                hideCliqzQuerySuggestions();
                 break;
             /* Cliqz end */
 
@@ -2853,6 +2873,11 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
+        /* Cliqz start */
+        final boolean isPrivateMode = Tabs.getInstance().getSelectedTab().isPrivate();
+        SearchBackground.reportSelection(url, isPrivateMode);
+        /* Cliqz end */
+
         // If the URL doesn't look like a search query, just load it.
         if (!StringUtils.isSearchQuery(url, true)) {
             Tabs.getInstance().loadUrl(url, Tabs.LOADURL_USER_ENTERED);
@@ -3137,9 +3162,12 @@ public class BrowserApp extends GeckoApp
         if(mFormAssistPopup != null) {
             mFormAssistPopup.hide();
         }
-        /* Cliqz end */
 
-        mFindInPageBar.hide();
+        if (mFindInPageBar != null) {
+            // Really weird PlayStore crash
+            mFindInPageBar.hide();
+        }
+        /* Cliqz end */
 
         // Refresh toolbar height to possibly restore the toolbar padding
         refreshToolbarHeight();

@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/myoffrz_padding_10"
             android:layout_marginTop="@dimen/myoffrz_padding_10"
-            tools:src="@drawable/icon" />
+            tools:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/offer_tap_code_to_copy_label"

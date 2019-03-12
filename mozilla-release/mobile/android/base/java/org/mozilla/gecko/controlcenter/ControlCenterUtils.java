@@ -15,7 +15,7 @@ public class ControlCenterUtils {
     private ControlCenterUtils() {
     }
 
-    public static byte[] getCCDataHash(GeckoBundle geckoBundle) {
+    static byte[] getCCDataHash(GeckoBundle geckoBundle) {
         MessageDigest m;
         try {
             m = MessageDigest.getInstance("MD5");
@@ -35,6 +35,8 @@ public class ControlCenterUtils {
                 "data/panel/panel/enable_ad_block") ? 1 : 0)});
         m.update(new byte[]{(byte) (GeckoBundleUtils.safeGetBoolean(geckoBundle,
                 "data/panel/panel/enable_anti_tracking") ? 1 : 0)});
+        m.update(new byte[]{(byte) (GeckoBundleUtils.safeGetBoolean(geckoBundle,
+                "data/cliqz/adblock/disabledForDomain") ? 1 : 0)});
 
         final GeckoBundle[] summaryCategories = GeckoBundleUtils.safeGetBundleArray(geckoBundle,
                 "data/summary/categories");

@@ -8,13 +8,14 @@ import org.mozilla.gecko.util.GeckoBundle;
  * Copyright © Cliqz 2019
  */
 public class SystemAddon {
+    public static final String EXTENSION_ID = "firefox@ghostery.com";
+    public static final String MODULE_CORE = "core";
+    public static final String ACTION_SEND_TELEMETRY = "sendTelemetry";
 
     private static final String KEY_MODULE = "module";
     private static final String KEY_ARGS = "args";
     private static final String MESSAGE_NAME = "SystemAddon:Request";
-    private static final String MODULE_CORE = "core";
     private static final String MODULE_ABTESTS_LEGACY = "abtests-legacy";
-    private static final String ACTION_SEND_TELEMETRY = "sendTelemetry";
     private static final String ACTION_GET_RUNNING_TESTS = "getRunningTests";
     private static final String KEY_DATA = "data";
     private static final String ACTION_STATUS = "status";
@@ -23,7 +24,7 @@ public class SystemAddon {
     private SystemAddon() {}
 
     public static void sendTelemetry(GeckoBundle signal, String schema) {
-        sendMessage(MODULE_CORE, ACTION_SEND_TELEMETRY, new GeckoBundle[] { wrap(signal), wrap(schema) });
+        sendMessage(MODULE_CORE, ACTION_SEND_TELEMETRY, new GeckoBundle[] { wrap(signal), wrap(false), wrap(schema) });
     }
 
     public static void sendTelemetry(GeckoBundle signal) {
@@ -71,6 +72,12 @@ public class SystemAddon {
     private static GeckoBundle wrap(String string) {
         final GeckoBundle wrappingBundle = new GeckoBundle();
         wrappingBundle.putString(KEY_DATA, string);
+        return wrappingBundle;
+    }
+
+    private static GeckoBundle wrap(boolean bool) {
+        final GeckoBundle wrappingBundle = new GeckoBundle();
+        wrappingBundle.putBoolean(KEY_DATA, bool);
         return wrappingBundle;
     }
 }

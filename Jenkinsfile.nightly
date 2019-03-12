@@ -1,5 +1,5 @@
 #!/bin/env groovy
-@Library('cliqz-shared-library@v1.2') _
+@Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 def matrix = [
 //     'Cliqz ARM':[
 //         'arch': 'arm',
@@ -88,7 +88,7 @@ def build(Map m){
                             file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
                             string(credentialsId: 'b7422020-fe1b-4c57-9230-f3d52afee3cf', variable: 'CERT_PASS')
                         ]) {
-                            apk = cliqz.buildBrowser("${androidtarget}", "${brandname}", "nightly", "/app/")
+                            apk = cliqz.buildBrowser("${androidtarget}", "${brandname}", "nightly", "/app")
                         }
                     }
                     stage("Upload: ${flavorname}") {

@@ -13,6 +13,7 @@ import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;
+import org.mozilla.gecko.toolbar.BrowserToolbar.OnKeyboardCloseListener;
 import org.mozilla.gecko.toolbar.ToolbarEditLayout.OnSearchStateChangeListener;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
@@ -59,6 +60,9 @@ public class ToolbarEditText extends CustomEditText
     private OnDismissListener mDismissListener;
     private OnFilterListener mFilterListener;
     private OnSearchStateChangeListener mSearchStateChangeListener;
+    /*Cliqz start*/
+    private OnKeyboardCloseListener mOnKeyboardCloseListener;
+    /*Cliqz end*/
 
     private ToolbarPrefs mPrefs;
 
@@ -98,6 +102,12 @@ public class ToolbarEditText extends CustomEditText
     void setOnSearchStateChangeListener(OnSearchStateChangeListener listener) {
         mSearchStateChangeListener = listener;
     }
+
+    /*Cliqz Start*/
+    void setOnKeyboardCloseListener(OnKeyboardCloseListener listener) {
+        mOnKeyboardCloseListener = listener;
+    }
+    /*Cliqz End*/
 
     @Override
     public void onAttachedToWindow() {
@@ -639,6 +649,7 @@ public class ToolbarEditText extends CustomEditText
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 // Drop the virtual keyboard.
                 clearFocus();
+                mOnKeyboardCloseListener.onKeyboardClosed();
                 return true;
             }
 
