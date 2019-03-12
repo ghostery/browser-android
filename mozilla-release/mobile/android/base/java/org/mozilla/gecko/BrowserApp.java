@@ -1403,6 +1403,9 @@ public class BrowserApp extends GeckoApp
             @Override
             public void onActivate() {
                 enterEditingMode();
+                /* Cliqz Start */
+                com.cliqz.Telemetry.sendToolbarClickTelemetry("search");
+                /* Cliqz End */
             }
         });
 
@@ -2460,6 +2463,7 @@ public class BrowserApp extends GeckoApp
     public void addPrivateTab() {
         /* Cliqz Start */
         Tabs.getInstance().addTab(Tabs.LOADURL_NONE | Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
+        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
         /* Cliqz End */
     }
 
@@ -3100,6 +3104,9 @@ public class BrowserApp extends GeckoApp
         Log.d(LOGTAG, "onActivityResult: " + requestCode + ", " + resultCode + ", " + data);
         switch (requestCode) {
             case ACTIVITY_REQUEST_PREFERENCES:
+                /* Cliqz Start */
+                com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
+                /* Cliqz End */
                 // We just returned from preferences. If our locale changed,
                 // we need to redisplay at this point, and do any other browser-level
                 // bookkeeping that we associate with a locale change.
@@ -3233,7 +3240,10 @@ public class BrowserApp extends GeckoApp
         }
 
         mHomeScreenContainer.setVisibility(View.VISIBLE);
+        /* Cliqz Start */
+        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
         mSearchUI.hide();
+        /* Cliqz End */
         mHomeScreen.load(getSupportLoaderManager(),
                         getSupportFragmentManager(),
                         panelId,
@@ -4005,6 +4015,9 @@ public class BrowserApp extends GeckoApp
         }
 
         if (itemId == R.id.settings) {
+            /* Cliqz Start */
+            com.cliqz.Telemetry.sendFreshTabHiddenTelemetry();
+            /* Cliqz End */
             intent = new Intent(this, GeckoPreferences.class);
             // We want to know when the Settings activity returns, because
             // we might need to redisplay based on a locale change.
@@ -4345,6 +4358,10 @@ public class BrowserApp extends GeckoApp
     @Override
     public void onUrlOpen(String url, EnumSet<OnUrlOpenListener.Flags> flags) {
         onUrlOpenWithReferrer(url, null, flags);
+
+        /* Cliqz Start */
+        com.cliqz.Telemetry.sendFreshTabHiddenTelemetry();
+        /* Cliqz End */
     }
 
     @Override

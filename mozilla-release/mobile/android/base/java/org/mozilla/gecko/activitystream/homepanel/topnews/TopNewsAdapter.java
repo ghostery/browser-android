@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cliqz.Telemetry;
+
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.activitystream.homepanel.model.TopNews;
 import org.mozilla.gecko.home.HomePager;
@@ -59,6 +61,15 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             final TopNews newsCard = topNews.get(position - 1);
             onUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(newsCard.getUrl()), EnumSet.noneOf
                     (HomePager.OnUrlOpenListener.Flags.class));
+            final String newsType;
+            if (newsCard.isBreaking()) {
+                newsType = "breakingnews";
+            } else if (newsCard.isLocalNews()) {
+                newsType = "localnews";
+            } else {
+                newsType = "topnews";
+            }
+            Telemetry.sendTopNewsClickTelemetry(position - 1, newsType);
         }
     }
 
@@ -91,6 +102,7 @@ public class TopNewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 notifyItemRangeRemoved(COLLAPSED_NUM_NEWS_COUNT + 1, changedCount);
             }
         }
+        Telemetry.sendToggleNewsListTelemetry(isNewsExpanded);
         preferenceManager.setNewsViewExpanded(isNewsExpanded);
     }
 

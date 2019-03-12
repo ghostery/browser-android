@@ -18,6 +18,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -28,6 +29,7 @@ import com.booking.rtlviewpager.RtlViewPager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.mozilla.gecko.AboutPages;
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.Tab;
 import org.mozilla.gecko.Tabs;
@@ -599,6 +601,9 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
             // Start a UI telemetry session for the newly selected panel.
             final String newPanelId = ((HomeAdapter) getAdapter()).getPanelIdAtPosition(position);
             startNewPanelTelemetrySession(newPanelId);
+            /* Cliqz Start */
+            sendPanelSelectedTelemetry(position);
+            /* Cliqz End */
         }
 
         @Override
@@ -622,6 +627,34 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
         @Override
         public void onPageScrollStateChanged(int state) { }
     }
+
+    /* Cliqz Start */
+    void sendPanelSelectedTelemetry(final int position) {
+        final HomeAdapter adapter = (HomeAdapter) getAdapter();
+        if (adapter == null) {
+            return;
+        }
+        final String panelId = adapter.getPanelIdAtPosition(position);
+        final String target;
+        switch (panelId) {
+            case HomeConfig.TOP_SITES_PANEL_ID:
+                target = "home";
+                break;
+            case HomeConfig.BOOKMARKS_PANEL_ID:
+                target = "favorites";
+                break;
+            case HomeConfig.COMBINED_HISTORY_PANEL_ID:
+                target = "history";
+                break;
+            case HomeConfig.MY_OFFRZ_PANEL_ID:
+                target = "myoffrz";
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected position " + position + " in HomePager selected.");
+        }
+        com.cliqz.Telemetry.sendToolbarClickTelemetry(target);
+    }
+    /* Cliqz End */
 
     /**
      * Start UI telemetry session for the a panel.

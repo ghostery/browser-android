@@ -126,6 +126,16 @@ public class PreferenceManager {
         editor.putBoolean(GeckoPreferences.PREFS_SHOW_CUSTOMIZE_TAB_SNACKBAR, value).apply();
     }
 
+    public boolean isTopSitesEnabled() {
+        return  mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_TOPSITES_ENABLED,
+                true);
+    }
+
+    public boolean isNewsEnabled() {
+        return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_ENABLED,
+                true);
+    }
+
     public boolean isNewsViewExpanded() {
         return mAppSharedPreferences.getBoolean(GeckoPreferences.PREFS_CLIQZ_TAB_NEWS_EXPANDED,
                 GeckoPreferences.PREFS_DEFAULT_NEWS_VIEW_EXPANDED);

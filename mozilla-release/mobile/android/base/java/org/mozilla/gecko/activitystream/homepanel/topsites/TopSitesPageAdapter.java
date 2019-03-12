@@ -85,6 +85,9 @@ import java.util.List;
                 TelemetryContract.Method.LIST_ITEM,
                 extras.build()
         );
+        /* Cliqz Start */
+        com.cliqz.Telemetry.sendTopSiteClickTelemetry(position, topSites.size());
+        /* Cliqz End */
 
         onUrlOpenListener.onUrlOpen(StringUtils.decodeUserEnteredUrl(topSite.getUrl()), EnumSet.noneOf(HomePager.OnUrlOpenListener.Flags.class));
     }

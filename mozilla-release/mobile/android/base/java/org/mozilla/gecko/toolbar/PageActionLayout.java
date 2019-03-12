@@ -41,6 +41,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.cliqz.Telemetry;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -55,6 +57,9 @@ public class PageActionLayout extends ThemedLinearLayout
     private static final int DEFAULT_PAGE_ACTIONS_SHOWN = 2;
     public static final String PREF_PWA_ONBOARDING = GeckoPreferences.NON_PREF_PREFIX + "pref_pwa_onboarding";
 
+    /* Cliqz Start */
+    private static final String READER_MODE_ICON_URI ="drawable://ic_readermode";
+    /* Cliqz End */
     public interface PageActionLayoutDelegate {
         void addPageAction(GeckoBundle message);
         void removePageAction(GeckoBundle message);
@@ -186,6 +191,12 @@ public class PageActionLayout extends ThemedLinearLayout
                     mPwaConfirm = PwaConfirm.show(getContext());
                     return;
                 }
+                /* Cliqz Start */
+                // Cannot use id to compare cause it is generated at runtime in javascript.
+                if (READER_MODE_ICON_URI.equals(imageURL)) {
+                    Telemetry.sendReadModeClickTelemetry();
+                }
+                /* Cliqz End */
                 final GeckoBundle data = new GeckoBundle(1);
                 data.putString("id", id);
                 EventDispatcher.getInstance().dispatch("PageActions:Clicked", data);
