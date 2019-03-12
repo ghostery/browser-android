@@ -17,6 +17,8 @@ class Cliqz {
   constructor(app, actions) {
     this.app = app;
     this.app.modules['ui'] = {
+      status() {},
+      name: 'ui',
       action(action, ...args) {
         return Promise.resolve().then(() => {
           return actions[action](...args);
