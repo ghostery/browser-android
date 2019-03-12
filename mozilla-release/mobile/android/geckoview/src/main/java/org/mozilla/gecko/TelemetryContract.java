@@ -107,6 +107,9 @@ public interface TelemetryContract {
         // When the user performs actions on the in-content network error page.
         NETERROR("neterror.1"),
 
+        // Cliqz
+        FEATUREERROR("feattureerror.1"),
+
         // User actions related to a Progressive Web Application
         PWA("pwa.1"),
 
