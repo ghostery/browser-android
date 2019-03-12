@@ -118,6 +118,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         public void onStopEditing();
     }
 
+    /*Cliqz Start*/
+    public interface OnKeyboardCloseListener {
+        public void onKeyboardClosed();
+    }
+    /*Cliqz End*/
+
     protected enum UIMode {
         EDIT,
         DISPLAY
@@ -792,6 +798,12 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     public void setOnFilterListener(OnFilterListener listener) {
         urlEditLayout.setOnFilterListener(listener);
     }
+
+    /*Cliqz Start*/
+    public void setOnKeyboardCloseListener(OnKeyboardCloseListener listener) {
+        urlEditLayout.setOnKeyboardCloseListener(listener);
+    }
+    /*Cliqz End*/
 
     @Override
     public void setOnFocusChangeListener(OnFocusChangeListener listener) {

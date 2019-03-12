@@ -21,6 +21,7 @@ import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnCommitListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnDismissListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.OnFilterListener;
+import org.mozilla.gecko.toolbar.BrowserToolbar.OnKeyboardCloseListener;
 import org.mozilla.gecko.toolbar.BrowserToolbar.TabEditingState;
 import org.mozilla.gecko.util.ActivityResultHandler;
 import org.mozilla.gecko.util.ActivityUtils;
@@ -267,6 +268,10 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
     }
 
     /*Cliqz Start*/
+    void setOnKeyboardCloseListener(OnKeyboardCloseListener listener) {
+        mEditText.setOnKeyboardCloseListener(listener);
+    }
+
     public void setText(String text) {
         mEditText.setText(text);
     }
