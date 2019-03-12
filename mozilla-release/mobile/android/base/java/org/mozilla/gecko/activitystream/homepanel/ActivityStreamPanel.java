@@ -144,8 +144,13 @@ public class ActivityStreamPanel extends FrameLayout implements Tabs.OnTabsChang
         customizeNewTabView = findViewById(R.id.customize_newtab_view);
         customizeNewTabViewSnackBar = findViewById(R.id.customize_newtab_snackbar);
 
-        final View customizeTabLink = customizeNewTabView.findViewById(R.id.customize_tab_link);
-        Telemetry.sendHomeSettingsShowTelemetry();
+        final CliqzCustomizeNewTabView customizeTabLink =
+                customizeNewTabView.findViewById(R.id.customize_tab_link);
+        customizeTabLink.setOnVisibilityChangeListener((visibility) -> {
+            if (visibility == View.VISIBLE && !preferenceManager.isNewsViewExpanded()) {
+                Telemetry.sendHomeSettingsShowTelemetry();
+            }
+        });
         if (ABManager.NEWTAB_SETTINGS_TEXT_STYLE.equals(abManager.getHomeSettingsStyle())) {
             customizeTabLink.setBackgroundColor(Color.argb(0, 0, 0, 0));
         }
