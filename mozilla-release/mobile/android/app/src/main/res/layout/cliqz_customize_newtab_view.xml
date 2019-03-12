@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <org.mozilla.gecko.widget.SelfHidingLinearLayout
+    <org.mozilla.gecko.activitystream.homepanel.CliqzCustomizeNewTabView
         android:id="@+id/customize_tab_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +42,6 @@
             android:textStyle="bold"
             tools:text="Go to Settings" />
 
-    </org.mozilla.gecko.widget.SelfHidingLinearLayout>
+    </org.mozilla.gecko.activitystream.homepanel.CliqzCustomizeNewTabView>
 
 </LinearLayout>
