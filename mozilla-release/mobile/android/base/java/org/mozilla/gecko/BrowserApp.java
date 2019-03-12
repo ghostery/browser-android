@@ -1403,11 +1403,7 @@ public class BrowserApp extends GeckoApp
             public void onActivate() {
                 enterEditingMode();
                 /* Cliqz Start */
-                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-                if (selectedTab != null) {
-                    final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
-                    com.cliqz.Telemetry.sendToolbarClickTelemetry("search", viewType);
-                }
+                com.cliqz.Telemetry.sendToolbarClickTelemetry("search");
                 /* Cliqz End */
             }
         });
@@ -2447,9 +2443,7 @@ public class BrowserApp extends GeckoApp
     public void addPrivateTab() {
         /* Cliqz Start */
         Tabs.getInstance().addTab(Tabs.LOADURL_NONE | Tabs.LOADURL_PRIVATE | Tabs.LOADURL_START_EDITING);
-        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager.isTopSitesEnabled(),
-                mPreferenceManager.isNewsEnabled(), mPreferenceManager.isBackgroundEnabled(),
-                mPreferenceManager.isLightThemeEnabled());
+        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
         /* Cliqz End */
     }
 
@@ -3086,9 +3080,7 @@ public class BrowserApp extends GeckoApp
         switch (requestCode) {
             case ACTIVITY_REQUEST_PREFERENCES:
                 /* Cliqz Start */
-                com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager.isTopSitesEnabled(),
-                        mPreferenceManager.isNewsEnabled(), mPreferenceManager.isBackgroundEnabled(),
-                        mPreferenceManager.isLightThemeEnabled());
+                com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
                 /* Cliqz End */
                 // We just returned from preferences. If our locale changed,
                 // we need to redisplay at this point, and do any other browser-level
@@ -3221,9 +3213,7 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer.setVisibility(View.VISIBLE);
         /* Cliqz Start */
-        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager.isTopSitesEnabled(),
-                mPreferenceManager.isNewsEnabled(), mPreferenceManager.isBackgroundEnabled(),
-                mPreferenceManager.isLightThemeEnabled());
+        com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
         mSearchUI.hide();
         /* Cliqz End */
         mHomeScreen.load(getSupportLoaderManager(),

@@ -117,11 +117,7 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
                     }
                 }
                 /* Cliqz Start */
-                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-                if (selectedTab != null) {
-                    final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
-                    com.cliqz.Telemetry.sendSearchBarFocusChangeTelemetry(hasFocus, viewType);
-                }
+                com.cliqz.Telemetry.sendSearchBarFocusChangeTelemetry(hasFocus);
                 /* Cliqz End */
             }
         });

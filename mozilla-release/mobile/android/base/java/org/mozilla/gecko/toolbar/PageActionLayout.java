@@ -192,7 +192,8 @@ public class PageActionLayout extends ThemedLinearLayout
                     return;
                 }
                 /* Cliqz Start */
-                if (imageURL.equals(READER_MODE_ICON_URI)) {
+                // Cannot use id to compare cause it is generated at runtime in javascript.
+                if (READER_MODE_ICON_URI.equals(imageURL)) {
                     Telemetry.sendReadModeClickTelemetry();
                 }
                 /* Cliqz End */

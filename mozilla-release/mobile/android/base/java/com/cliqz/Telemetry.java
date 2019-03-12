@@ -3,6 +3,7 @@ package com.cliqz;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.GeckoBundle;
 
 /**
@@ -66,13 +67,12 @@ public class Telemetry {
         sendTelemetry(Values.TYPE_ONBOARDING, Values.ACTION_CLICK, extra);
     }
 
-    public static void sendFreshTabShownTelemetry(boolean topSitesShown, boolean newsShown,
-                                                  boolean backgroundShown, boolean isLightTheme) {
+    public static void sendFreshTabShownTelemetry(PreferenceManager preferenceManager) {
         final GeckoBundle extra = new GeckoBundle();
-        extra.putBoolean("is_topsites_on", topSitesShown);
-        extra.putBoolean("is_news_on", newsShown);
-        extra.putBoolean("is_background_on", backgroundShown);
-        extra.putString("theme", isLightTheme ? "lite" : "blue");
+        extra.putBoolean("is_topsites_on", preferenceManager.isTopSitesEnabled());
+        extra.putBoolean("is_news_on", preferenceManager.isNewsEnabled());
+        extra.putBoolean("is_background_on", preferenceManager.isBackgroundEnabled());
+        extra.putString("theme", preferenceManager.isLightThemeEnabled() ? "lite" : "blue");
         sendTelemetry(Values.TYPE_HOME, Values.ACTION_SHOW, extra);
         freshTabShownOn = System.currentTimeMillis();
     }
@@ -108,17 +108,17 @@ public class Telemetry {
         sendTelemetry(Values.TYPE_HOME, Values.ACTION_CLICK, extra);
     }
 
-    public static void sendToolbarClickTelemetry(String target, String view) {
+    public static void sendToolbarClickTelemetry(String target) {
         final GeckoBundle extra = new GeckoBundle();
-        extra.putString(Keys.VIEW, view);
+        extra.putString(Keys.VIEW, TelemetryUtils.getPageViewType());
         extra.putString(Keys.TARGET, target);
         sendTelemetry(Values.TYPE_TOOLBAR, Values.ACTION_CLICK, extra);
     }
 
-    public static void sendSearchBarFocusChangeTelemetry(boolean hasFocus, String view) {
+    public static void sendSearchBarFocusChangeTelemetry(boolean hasFocus) {
         String action = hasFocus ? "focus" : "blur";
         final GeckoBundle extra = new GeckoBundle();
-        extra.putString(Keys.VIEW, view);
+        extra.putString(Keys.VIEW, TelemetryUtils.getPageViewType());
         sendTelemetry(Values.TYPE_SEARCH, action, extra);
     }
 

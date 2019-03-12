@@ -18,6 +18,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -629,28 +630,29 @@ public class HomePager extends ThemedViewPager implements HomeScreen, Target, Sh
 
     /* Cliqz Start */
     void sendPanelSelectedTelemetry(final int position) {
-        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-        if (selectedTab != null) {
-            final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
-            final String target;
-            switch (position) {
-                case 0:
-                    target = "home";
-                    break;
-                case 1:
-                    target = "favorites";
-                    break;
-                case 2:
-                    target = "history";
-                    break;
-                case 3:
-                    target = "myoffrz";
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unexpected position " + position + " in HomePager selected.");
-            }
-            com.cliqz.Telemetry.sendToolbarClickTelemetry(target, viewType);
+        final HomeAdapter adapter = (HomeAdapter) getAdapter();
+        if (adapter == null) {
+            return;
         }
+        final String panelId = adapter.getPanelIdAtPosition(position);
+        final String target;
+        switch (panelId) {
+            case HomeConfig.TOP_SITES_PANEL_ID:
+                target = "home";
+                break;
+            case HomeConfig.BOOKMARKS_PANEL_ID:
+                target = "favorites";
+                break;
+            case HomeConfig.COMBINED_HISTORY_PANEL_ID:
+                target = "history";
+                break;
+            case HomeConfig.MY_OFFRZ_PANEL_ID:
+                target = "myoffrz";
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected position " + position + " in HomePager selected.");
+        }
+        com.cliqz.Telemetry.sendToolbarClickTelemetry(target);
     }
     /* Cliqz End */
 

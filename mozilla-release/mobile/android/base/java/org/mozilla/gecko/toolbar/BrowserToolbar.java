@@ -388,11 +388,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 activity.openOptionsMenu();
                 /* Cliqz Start */
                 hideOverlays();
-                final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-                if (selectedTab != null) {
-                    final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
-                    com.cliqz.Telemetry.sendToolbarClickTelemetry("menu", viewType);
-                }
+                com.cliqz.Telemetry.sendToolbarClickTelemetry("menu");
                 /* Cliqz End */
             }
         });
@@ -1120,11 +1116,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
         } else {
             activity.hideControlCenter();
         }
-        final Tab selectedTab = Tabs.getInstance().getSelectedTab();
-        if (selectedTab != null) {
-            final String viewType = AboutPages.isAboutHome(selectedTab.getURL()) ? "home" : "web";
-            com.cliqz.Telemetry.sendToolbarClickTelemetry("control_center", viewType);
-        }
+        com.cliqz.Telemetry.sendToolbarClickTelemetry("control_center");
     }
     /**
      * Update the tracker count for the current selected tab
