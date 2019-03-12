@@ -5,17 +5,17 @@ package org.mozilla.gecko.home;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 
 import org.mozilla.gecko.R;
 import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.widget.themed.ThemedImageView;
+import org.mozilla.gecko.widget.themed.ThemedLinearLayout;
 import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 /**
  * Copyright © Cliqz 2018
  */
-public class BookmarkFolderTitleView extends LinearLayout {
+public class BookmarkFolderTitleView extends ThemedLinearLayout {
 
     private final ThemedTextView title;
     private final ThemedImageView icon;
@@ -24,6 +24,7 @@ public class BookmarkFolderTitleView extends LinearLayout {
         this(context, null);
     }
 
+    @SuppressWarnings("RedundantCast")
     public BookmarkFolderTitleView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -42,7 +43,9 @@ public class BookmarkFolderTitleView extends LinearLayout {
         setLightTheme(PreferenceManager.getInstance().isLightThemeEnabled());
     }
 
+    @Override
     public void setLightTheme(boolean isLightTheme) {
+        super.setLightTheme(isLightTheme);
         title.setLightTheme(isLightTheme);
         icon.setLightTheme(isLightTheme);
     }
