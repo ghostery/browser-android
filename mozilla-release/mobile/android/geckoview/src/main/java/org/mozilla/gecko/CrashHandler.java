@@ -39,7 +39,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /* Cliqz start */
     // TODO: make this branding dependant
     private static final String DEFAULT_SERVER_URL =
-        "https://reports.ghostery.net/submit?id=%1$s&version=%2$s&buildid=%3$s";
+        "https://reports.ghostery.net/submit/?id=%1$s&version=%2$s&buildid=%3$s";
         // "https://crash-reports.mozilla.com/submit?id=%1$s&version=%2$s&buildid=%3$s";
     /* Cliqz end */
 
