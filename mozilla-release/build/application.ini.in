@@ -47,5 +47,8 @@ EnableProfileMigrator=1
 #if MOZ_CRASHREPORTER
 [Crash Reporter]
 Enabled=1
-ServerURL=https://crash-reports.mozilla.com/submit?id=@MOZ_APP_ID@&version=@MOZ_APP_VERSION@&buildid=@MOZ_BUILDID@
+; Cliqz Start
+; Needed because reports are sended in C++ code
+ServerURL=https://reports.ghostery.net/submit/sslreports?id=@MOZ_APP_ID@&version=@MOZ_APP_VERSION@&buildid=@MOZ_BUILDID@
+; Cliqz End
 #endif
