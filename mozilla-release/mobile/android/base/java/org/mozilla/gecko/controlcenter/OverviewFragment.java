@@ -2,6 +2,7 @@ package org.mozilla.gecko.controlcenter;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -83,6 +84,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
     private View mOverview;
     private ImageButton mBackButton;
     private BottomSheetBehavior<View> mBottomSheetBehavior;
+    private Resources mResources = null;
     private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback =
             new BottomSheetBehavior.BottomSheetCallback() {
                 @Override
@@ -179,7 +181,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     @Override
     public void updateUI(GeckoBundle controlCenterSettingsData) {
-        if (getView() == null) {
+        if (getView() == null || mResources == null) {
             return; //return if view is not inflated yet
         }
         mNotchTitle.setText(R.string.cc_enhanced_options);
@@ -253,7 +255,7 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
         mPieChart.setData(pieData);
         mPieChart.setDrawEntryLabels(false);
         mTrackersCount.setText(String.valueOf(totalTrackers));
-        mTrackersLabel.setText(getResources().getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers));
+        mTrackersLabel.setText(mResources.getQuantityString(R.plurals.cc_total_trackers_found, totalTrackers));
         mPieChart.setCenterTextColor(ContextCompat.getColor(getContext(), R.color.cc_text_color));
         mPieChart.setHoleRadius(80);
         mPieChart.setDescription(null);
@@ -271,9 +273,9 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
                 mTrackersCountView.setPadding(padding, padding, padding, padding);
             }
         });
-        final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
+        final String trackersBlocked = mResources.getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
         final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
-        trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
+        trackersBlockedSpan.setSpan(new ForegroundColorSpan(mResources.getColor(R.color.cc_restricted)), 0,
                 Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
         if (mDomainName != null) { //landscape mode has no domain name
@@ -365,10 +367,13 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
 
     @Override
     public void refreshUI() {
+        if (mResources == null) {
+            return;
+        }
         final int blockedTrackers = calculateBlockedTrackers();
-        final String trackersBlocked = getResources().getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
+        final String trackersBlocked = mResources.getQuantityString(R.plurals.cc_total_trackers_blocked, blockedTrackers, blockedTrackers);
         final Spannable trackersBlockedSpan = new SpannableString(trackersBlocked);
-        trackersBlockedSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.cc_restricted)), 0,
+        trackersBlockedSpan.setSpan(new ForegroundColorSpan(mResources.getColor(R.color.cc_restricted)), 0,
                 Integer.toString(blockedTrackers).length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         mTrackersBlocked.setText(trackersBlockedSpan);
         final PieData donutData = mPieChart.getData();
@@ -383,6 +388,12 @@ public class OverviewFragment extends ControlCenterFragment implements View.OnCl
             }
             mPieChart.invalidate();
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mResources = context.getApplicationContext().getResources();
     }
 
     @Override
