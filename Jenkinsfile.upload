@@ -24,7 +24,7 @@ node('master') {
             def apk = ""
             def brand = (params.CLIQZ) ? "cliqz" : "ghostery"
             stage('Build and Signs APKS') {
-                cliqz.buildCliqzReactNative("/app/cliqz")
+                cliqz.buildCliqzReactNative("cliqz")
                 
                 withCredentials([
                     file(credentialsId: 'd746a1dd-e075-4844-869a-32116a496352', variable: 'CERT_PATH' ),
