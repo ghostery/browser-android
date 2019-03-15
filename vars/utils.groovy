@@ -1,6 +1,7 @@
 #!/usr/bin/env groovy
 
 def fastlaneRelease(
+    String brand,
     String certPathCredId,
     String certPassCredId,
     String playStoreCertCredId
