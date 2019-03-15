@@ -38,6 +38,7 @@ node('master') {
             }
             stage('Upload') {
                 utils.fastlaneRelease(
+                    "${brand}",
                     'd746a1dd-e075-4844-869a-32116a496352',
                     'b7422020-fe1b-4c57-9230-f3d52afee3cf',
                     '2939d2e1-dd9a-4097-adc2-430e3d67157a'
