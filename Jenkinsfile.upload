@@ -37,6 +37,7 @@ node('master') {
                 }
             }
             stage('Upload') {
+                archiveArtifacts allowEmptyArchive: true, artifacts: "build/*.apk"
                 utils.fastlaneRelease(
                     "${brand}",
                     'd746a1dd-e075-4844-869a-32116a496352',
