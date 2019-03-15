@@ -10,7 +10,7 @@
     "jsc-android": "^236355.1.1"
   },
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v1.35/1.35.0.74911b0.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v1.35/1.35.0.444bb07.tgz",
     "cliqz-logo-database": "^0.1.2",
     "moment": "^2.24.0",
     "react": "^16.6.3",
