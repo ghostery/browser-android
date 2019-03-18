@@ -71,7 +71,7 @@ public class ABManager {
     public void assignNewUsers() {
         final double random = Math.random();
         if (random >= 0.5) {
-            PrefsHelper.setPref(PREFS_SEARCH_CARDS_LAYOUT, "horizontal", true);
+            PrefsHelper.setPref(PREFS_SEARCH_CARDS_LAYOUT, "vertical", true);
         }
     }
 
