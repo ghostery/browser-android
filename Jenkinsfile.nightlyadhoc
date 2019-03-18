@@ -2,12 +2,13 @@
 @Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
 properties([
+    pipelineTriggers([cron('H 23 * * * ')]),
     parameters([
         string(name: 'BRANCH', defaultValue: 'master', description: 'Branch name to build'),
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
-        booleanParam(name: 'GHOSTERY_ARM', defaultValue: false, description: 'Builds the Ghostery branded `arm` build.'),
-        booleanParam(name: 'GHOSTERY_X86', defaultValue: false, description: 'Builds the Ghostery branded `x86` build.'),
+        booleanParam(name: 'GHOSTERY_ARM', defaultValue: true, description: 'Builds the Ghostery branded `arm` build.'),
+        booleanParam(name: 'GHOSTERY_X86', defaultValue: true, description: 'Builds the Ghostery branded `x86` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_ARM', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `arm` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_X86', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ALPHA_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
@@ -136,7 +137,7 @@ def build(Map m){
                                 archiveArtifacts allowEmptyArchive: true, artifacts: "/app/build/${apk}"
                                 utils.s3Copy(
                                     "/app/build/${apk}",
-                                    "s3://repository.cliqz.com/dist/android/adhoc/${params.BRANCH}/${brandname}",
+                                    "s3://repository.cliqz.com/dist/android/nightly/${params.BRANCH}/${brandname}",
                                     "${brandname}_${env.BUILD_NUMBER}_${getId()}",
                                     "${buildarch}",
                                     true
@@ -175,33 +176,50 @@ stage('Build Applications'){
     parallel stepsForParallelBuilds
 }
 
+def transitionIssueList
+def passedBuilds
+stage('JIRA'){
+    withEnv(['JIRA_SITE=cliqztix']){
+        def returnList = jira.transitionIssues()
+        passedBuilds = returnList[0]
+        transitionIssueList = returnList[1]
+    }
+}
+
 stage('Send email') {
     def projectName  = '$PROJECT_NAME'
+    def changesSinceLastSuccess = jira.getChangeString(passedBuilds)
     def bodytxt = """
         ${projectName} - Build # ${env.BUILD_NUMBER}
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         """
     params.each { prop, val ->
-        if(val){
-            def splitText = prop.toString().toLowerCase().split("_")
-            def brand = ""
-            def suffix = ""
-            if (splitText.size()==3){
-                if (splitText[2] == "x86"){
-                    suffix = "_x86"
+        if(prop != "BRANCH"){
+            if(val){
+                def splitText = prop.toString().toLowerCase().split("_")
+                def brand = ""
+                def suffix = ""
+                if (splitText.size()==3){
+                    if (splitText[2] == "x86"){
+                        suffix = "_x86"
+                    }
+                    brand = "${splitText[0]}-${splitText[1]}"
+                } else {
+                    if (splitText[1] == "x86"){
+                        suffix = "_x86"
+                    }
+                    brand = "${splitText[0]}"
                 }
-                brand = "${splitText[0]}-${splitText[1]}"
-            } else {
-                if (splitText[1] == "x86"){
-                    suffix = "_x86"
-                }
-                brand = "${splitText[0]}"
+                bodytxt = """${bodytxt}
+                ${brand}${suffix} apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/${params.BRANCH}/${brand}/${brand}_${env.BUILD_NUMBER}_${id}${suffix}.apk
+                """
             }
-            bodytxt = """${bodytxt}
-            ${brand}${suffix} apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/adhoc/${params.BRANCH}/${brand}/${brand}_${env.BUILD_NUMBER}_${id}${suffix}.apk
-            """
         }
     }
+    bodytxt="""${bodytxt}
+    ${changesSinceLastSuccess}
+    Issues Transtioned ${transitionIssueList}
+    """
     emailext(
         to: 'androiddev@cliqz.com',
         subject: '$PROJECT_NAME - Build # $BUILD_NUMBER',
