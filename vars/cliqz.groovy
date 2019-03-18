@@ -174,7 +174,7 @@ def runAppiumTests(String testsFolder, String apk) {
     try {
         archiveArtifacts allowEmptyArchive: true, artifacts: "${testsFolder}/*.log"
         junit "${testsFolder}/test-reports/*.xml"
-        zip archive: true, dir: "${testsFolder}/screenshots", glob: '', zipFile: "${flavorName}-screenshots.zip"
+        zip archive: true, dir: "${testsFolder}/screenshots", glob: '', zipFile: '${FLAVOR}-screenshots.zip'
     } catch(e) {
         print e
     }
@@ -208,12 +208,12 @@ def runUITests(){
         echo "*** DONE ***"
     '''
     try {
-        archiveArtifacts allowEmptyArchive: true, artifacts: "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/**/*"
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'mozilla-release/objdir-frontend-android/${FLAVOR}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/**/*'
         archiveArtifacts allowEmptyArchive: true, artifacts: "UIA-device.log"
-        junit "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/outputs/androidTest-results/connected/flavors/WITHGECKOBINARIES/*.xml"
-        zip archive: true, dir: "mozilla-release/objdir-frontend-android/${flavorName}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/", glob: '', zipFile: "${flavorName}-reports.zip"
-        zip archive: true, dir: "screenshots/", glob: '', zipFile: "${flavorName}-UIA-screenshots.zip"
-        zip archive: true, dir: "recording/", glob: '', zipFile: "${flavorName}-UIA-videos.zip"
+        junit 'mozilla-release/objdir-frontend-android/${FLAVOR}/gradle/build/mobile/android/app/outputs/androidTest-results/connected/flavors/WITHGECKOBINARIES/*.xml'
+        zip archive: true, dir: 'mozilla-release/objdir-frontend-android/${FLAVOR}/gradle/build/mobile/android/app/reports/androidTests/connected/flavors/WITHGECKOBINARIES/', glob: '', zipFile: '${FLAVOR}-reports.zip'
+        zip archive: true, dir: "screenshots/", glob: '', zipFile: '${FLAVOR}-UIA-screenshots.zip'
+        zip archive: true, dir: "recording/", glob: '', zipFile: '${FLAVOR}-UIA-videos.zip'
     } catch (e) {
         print e
     }
