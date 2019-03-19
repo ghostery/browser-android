@@ -6,6 +6,7 @@ import {
   DeviceEventEmitter,
   NativeModules,
 } from 'react-native';
+import ErrorBoundry from './ErrorBoundry';
 import SearchUI from 'browser-core/build/modules/mobile-cards/SearchUI';
 import SearchUIVertical from 'browser-core/build/modules/mobile-cards-vertical/SearchUI';
 import App from 'browser-core/build/modules/core/app';
@@ -84,6 +85,19 @@ class BrowserCoreApp extends React.Component {
     DeviceEventEmitter.removeAllListeners();
   }
 
+  reportError = error => {
+    // should not happen
+    if (!this.state.cliqz) {
+      return;
+    }
+
+    this.state.cliqz.core.sendTelemetry({
+      type: 'error',
+      source: 'react-native',
+      error: JSON.stringify(error),
+    });
+  }
+
   render() {
     if (!this.state.config) {
       return null;
@@ -93,22 +107,25 @@ class BrowserCoreApp extends React.Component {
     const appearance = this.state.config.appearance
     const SearchComponent = this.state.config.layout === "horizontal" ? SearchUI : SearchUIVertical;
     return (
-      <View style={styles.container}>
-        {
-          (results.length === 0) || !this.state.cliqz
-          ? null
-          : (
-            <CliqzProvider value={this.state.cliqz}>
-              <ThemeProvider value={appearance}>
-                <SearchComponent results={results} meta={meta} theme={appearance} />
-              </ThemeProvider>
-            </CliqzProvider>
-          )
-        }
-      </View>
+      <ErrorBoundry results={results} reportError={this.reportError}>
+        <View style={styles.container}>
+          {
+            (results.length === 0) || !this.state.cliqz
+            ? null
+            : (
+              <CliqzProvider value={this.state.cliqz}>
+                <ThemeProvider value={appearance}>
+                  <SearchComponent results={results} meta={meta} theme={appearance} />
+                </ThemeProvider>
+              </CliqzProvider>
+            )
+          }
+        </View>
+      </ErrorBoundry>
     );
   }
 }
+
 var styles = StyleSheet.create({
   container: {
     flex: 1,
