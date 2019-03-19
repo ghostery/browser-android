@@ -1,9 +1,19 @@
 #!/bin/env groovy
 @Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
+final CLIQZ='cliqz'
+final CLIQZ_ALPHA='cliqz-alpha'
+final GHOSTERY='ghostery'
+final GHOSTERY_CANARY='ghostery-canary'
+
+
 properties([
     parameters([
-        booleanParam(name: 'CLIQZ', defaultValue: false, description: 'Builds and uploads the Cliqz brand to Play Store. If False, the Ghostery Brand.')
+        choice( name: 'BRAND',
+                choices: [ CLIQZ, CLIQZ_ALPHA, GHOSTERY, GHOSTERY_CANARY ],
+                description: 'Pick a brand to use' )
+        string( name: 'BRANCH', defaultValue: 'master',
+                description: 'The branch to be compiled' )
     ])
 ])
 
@@ -22,7 +32,7 @@ node('master') {
     baseImage.inside() {
         try {
             def apk = ""
-            def brand = (params.CLIQZ) ? "cliqz" : "ghostery"
+            def brand = params.BRAND
             stage('Build and Signs APKS') {
                 cliqz.buildCliqzReactNative("cliqz")
                 

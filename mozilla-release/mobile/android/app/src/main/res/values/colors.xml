@@ -369,6 +369,9 @@
     <color name="light_theme_start_tab_font_color">#97A4AE</color>
 
     <color name="light_theme_url_bar_text_highlight">@color/url_bar_dark_blue_color</color>
+
+    <!-- Canary branding -->
+    <color name="canary_background_color">#FDC257</color>
     <!-- Cliqz end -->
 
 </resources>
