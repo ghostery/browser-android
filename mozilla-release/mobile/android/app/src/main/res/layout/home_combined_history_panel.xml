@@ -4,10 +4,11 @@
    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 <!-- Cliqz Start -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/root_view"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 <!-- Cliqz End -->
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -54,4 +55,14 @@
             android:layout_height="48dp"
             android:visibility="gone" />
     <!+- Cliqz End -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/delete_history_fab"
+        app:fabSize="normal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_delete"
+        android:padding="60dp"
+        app:useCompatPadding="true"
+        app:backgroundTint="@color/history_delete_fab_color"/>
 </LinearLayout>
