@@ -37,12 +37,16 @@ node('master') {
                 }
             }
             stage('Upload') {
+                def storeCert = '81d5a4c2-c504-4d18-a29f-18421bb04ddc'
+                if (params.CLIQZ){
+                    storeCert = '2939d2e1-dd9a-4097-adc2-430e3d67157a'
+                }
                 archiveArtifacts allowEmptyArchive: true, artifacts: "build/*.apk"
                 utils.fastlaneRelease(
                     "${brand}",
                     'd746a1dd-e075-4844-869a-32116a496352',
                     'b7422020-fe1b-4c57-9230-f3d52afee3cf',
-                    '2939d2e1-dd9a-4097-adc2-430e3d67157a'
+                    storeCert
                 )
             }
         }
