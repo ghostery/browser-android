@@ -620,7 +620,10 @@ public class SearchEngineManager implements SharedPreferences.OnSharedPreference
                 jsonEngines = regions.getJSONObject(region).getJSONArray("visibleDefaultEngines");
             } else {
                 // Falling back to the overall default
-                jsonEngines = locales.getJSONObject("default").getJSONArray("visibleDefaultEngines");
+                /*Cliqz Start*/
+                //Bug in mozilla code: default object is in the root of the json not inside the locale object
+                jsonEngines = json.getJSONObject("default").getJSONArray("visibleDefaultEngines");
+                /*Cliqz End*/
             }
 
             ArrayList<String> engines = new ArrayList<String>();
