@@ -2,8 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-ANDROID_PACKAGE_NAME=com.ghostery.android.alpha
-MOZ_APP_DISPLAYNAME="Ghostery Alpha"
+ANDROID_PACKAGE_NAME=com.ghostery.android.canary
+MOZ_APP_DISPLAYNAME="Ghostery Canary"
 MOZ_APP_VERSION="2.4"
 KEYSTORE_ALIAS="ghostery"
 MOZ_UPDATER=
