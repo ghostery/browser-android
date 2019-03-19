@@ -71,6 +71,7 @@ import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.animation.Interpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -1411,12 +1412,18 @@ public class BrowserApp extends GeckoApp
 
         mBrowserToolbar.setOnCommitListener(new BrowserToolbar.OnCommitListener() {
             @Override
-            public void onCommitByKey() {
-                if (commitEditingMode()) {
-                    // We're committing in response to a key-down event. Since we'll be hiding the
-                    // ToolbarEditLayout, the corresponding key-up event will end up being sent to
-                    // Gecko which we don't want, as this messes up tracking of the last user input.
-                    mSuppressNextKeyUp = true;
+            public void onCommitByKey(boolean isAutocompleted) {
+                if (isAutocompleted) {
+                    if (commitEditingMode()) {
+                        // We're committing in response to a key-down event. Since we'll be hiding the
+                        // ToolbarEditLayout, the corresponding key-up event will end up being sent to
+                        // Gecko which we don't want, as this messes up tracking of the last user input.
+                        mSuppressNextKeyUp = true;
+                    }
+                } else {
+                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    hideCliqzQuerySuggestions();
                 }
             }
         });

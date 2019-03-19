@@ -79,12 +79,14 @@ public class ToolbarEditText extends CustomEditText
 
     /* Cliqz Start */
     private PreferenceManager mPreferenceManager;
+    private String mLastAutoComplete = "";
     /* Cliqz End */
 
 
     public ToolbarEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+
     }
 
     void setOnCommitListener(OnCommitListener listener) {
@@ -409,7 +411,7 @@ public class ToolbarEditText extends CustomEditText
                 spanEnds[i] = text.getSpanEnd(span);
                 spanFlags[i] = spanFlag;
             }
-
+            mLastAutoComplete = result;
             beginSettingAutocomplete();
 
             // First add trailing text.
@@ -639,7 +641,7 @@ public class ToolbarEditText extends CustomEditText
                 final Editable content = getText();
                 if (!hasCompositionString(content)) {
                     if (mCommitListener != null) {
-                        mCommitListener.onCommitByKey();
+                        mCommitListener.onCommitByKey(mLastAutoComplete.equals(getText().toString()));
                     }
 
                     return true;
@@ -661,12 +663,13 @@ public class ToolbarEditText extends CustomEditText
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if (keyCode == KeyEvent.KEYCODE_ENTER || GamepadUtils.isActionKey(event)) {
+
                 if (event.getAction() != KeyEvent.ACTION_DOWN) {
                     return true;
                 }
 
                 if (mCommitListener != null) {
-                    mCommitListener.onCommitByKey();
+                    mCommitListener.onCommitByKey(mLastAutoComplete.equals(getText().toString()));
                 }
 
                 return true;
@@ -702,8 +705,7 @@ public class ToolbarEditText extends CustomEditText
     @Override
     public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
         switch (event) {
-            case "Search:Autocomplete":
-                final String autoCompletion = message.getString("data");
+            case "Search:Autocomplete": final String autoCompletion = message.getString("data");
                 if (PreferenceManager.getInstance().isAutocompleteEnabled()) {
                     onAutocomplete(autoCompletion);
                 }
