@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-Happy Browsing!
+Here are the release notes, can you add this?
+Dear Ghostery users! A new version is ready:
+* browser starts faster
+* private search is smoother
+* Lite theme - swap theme anytime in the settings
