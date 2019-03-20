@@ -48,7 +48,8 @@ def getIssueList(){
     } else {
        echo 'No JIRA tickets detected'
     }
-    return list
+    def idlist = list.unique()
+    return idlist
 }
 
 def transitionIssues() {
