@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 
 import org.mozilla.gecko.EventDispatcher;
@@ -144,7 +145,17 @@ public class BridgeModule extends ReactContextBaseJavaModule implements BundleEv
         final ReadableArray args = message.getArray("args");
 
         if (SystemAddon.MODULE_CORE.equals(module) && SystemAddon.ACTION_SEND_TELEMETRY.equals(action)) {
-            final GeckoBundle signal = Utils.convertReadableMapToGeckoBundle(args.getMap(0));
+            GeckoBundle signal = null;
+            final ReadableType type = args.getType(0);
+            switch (type) {
+                case Map:
+                    signal = Utils.convertReadableMapToGeckoBundle(args.getMap(0));
+                    break;
+                default:
+                    Log.d(getClass().getSimpleName(), "Unexpected telemetry shape");
+                    return;
+            }
+
             final String schema = args.getString(2);
 
             if (schema != null) {

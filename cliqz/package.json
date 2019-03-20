@@ -2,7 +2,7 @@
   "name": "cliqz-native",
   "version": "0.0.0",
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "build": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=false --reset-cache",
     "build.dev": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=true --reset-cache"
   },
@@ -10,7 +10,7 @@
     "jsc-android": "^236355.1.1"
   },
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v1.35/1.35.0.444bb07.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v1.35/1.35.0.38e6545.tgz",
     "cliqz-logo-database": "^0.1.2",
     "moment": "^2.24.0",
     "react": "^16.6.3",
