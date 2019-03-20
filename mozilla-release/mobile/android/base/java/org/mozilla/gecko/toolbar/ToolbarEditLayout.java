@@ -281,6 +281,8 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
 
     public void setText(String text) {
         mEditText.setText(text);
+        // text doesn't necessarily get set e.g.: about:home
+        mEditText.setSelection(mEditText.getText().length());
     }
     /*Cliqz End*/
 
