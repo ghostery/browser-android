@@ -37,7 +37,7 @@ def getChangeString(passedBuilds) {
 def getIssueList(){
     def list = []
     def changes = getChangeString(passedBuilds)
-    def re = /AB2-([0-9])*/
+    def re = /AB2-([0-9])+/
     def y = changes =~ re
     while (y){
         list.add(y.group().toString())
