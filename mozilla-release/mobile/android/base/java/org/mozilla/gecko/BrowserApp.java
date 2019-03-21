@@ -3051,7 +3051,7 @@ public class BrowserApp extends GeckoApp
             }
 
             /* Cliqz start */
-            String ghostSearch = AboutPages.getGhostSearchFromAboutHomeUrl(tab.getURL());
+            final String ghostSearch = AboutPages.getGhostSearchFromAboutHomeUrl(tab.getURL());
             if (ghostSearch != null && !ghostSearch.isEmpty()) {
                 enterEditingMode();
                 mBrowserToolbar.urlEditLayout.setText(ghostSearch);
