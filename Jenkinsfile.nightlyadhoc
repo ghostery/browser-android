@@ -145,7 +145,7 @@ def build(Map m){
                         }
                     } catch(e) {
                         print e
-                        raise e
+                        error 'Something Failed ! Check Logs above.'
                     } finally {
                         stage('Clean Up') {
                            utils.cleanUp()

@@ -83,7 +83,7 @@ def build(Map m){
                                     }
                                     stage("Run Tests & Upload Results: ${flavorname}") {
                                         timeout(60) {
-                                            cliqz.runAppiumTests("${testsFolder}", "${apk}")
+                                            cliqz.runAppiumTests("${testsFolder}", "${flavorname}", "${apk}")
                                        }
                                     }
                                 }
@@ -92,7 +92,7 @@ def build(Map m){
                     }
                 } catch(e) {
                     print e
-                    raise e
+                    error 'Something Failed ! Check Logs above.'
                 } finally {
                     stage('Clean Up') {
                         utils.cleanUp("${testsFolder}")
