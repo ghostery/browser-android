@@ -1,3 +1,4 @@
-Die neueste Version macht den Browser wieder ein gutes Stück schneller. Zudem enthält sie ein großes Update unseres Werbeblockers und einige weitere Verbesserungen.
-
-Viel Spaß beim Browsen!
+Liebe Ghostery-Nutzer! Es gibt eine neue Version:
+* Browser startet schneller
+* private Suche ist flüssiger
+* Lite Theme - wechsle dein Theme in den Einstellung
