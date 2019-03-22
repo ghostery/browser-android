@@ -79,7 +79,6 @@ public class ToolbarEditText extends CustomEditText
 
     /* Cliqz Start */
     private PreferenceManager mPreferenceManager;
-    private String mLastAutoComplete = "";
     /* Cliqz End */
 
 
@@ -411,7 +410,6 @@ public class ToolbarEditText extends CustomEditText
                 spanEnds[i] = text.getSpanEnd(span);
                 spanFlags[i] = spanFlag;
             }
-            mLastAutoComplete = result;
             beginSettingAutocomplete();
 
             // First add trailing text.
@@ -641,7 +639,7 @@ public class ToolbarEditText extends CustomEditText
                 final Editable content = getText();
                 if (!hasCompositionString(content)) {
                     if (mCommitListener != null) {
-                        mCommitListener.onCommitByKey(mLastAutoComplete.equals(getText().toString()));
+                        mCommitListener.onCommitByKey(getText().toString());
                     }
 
                     return true;
@@ -669,7 +667,7 @@ public class ToolbarEditText extends CustomEditText
                 }
 
                 if (mCommitListener != null) {
-                    mCommitListener.onCommitByKey(mLastAutoComplete.equals(getText().toString()));
+                    mCommitListener.onCommitByKey(getText().toString());
                 }
 
                 return true;

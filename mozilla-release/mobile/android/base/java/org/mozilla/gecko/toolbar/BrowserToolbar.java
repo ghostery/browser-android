@@ -100,7 +100,7 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     public interface OnCommitListener {
-        public void onCommitByKey(boolean isAutocompleted);
+        public void onCommitByKey(String text);
     }
 
     public interface OnDismissListener {
