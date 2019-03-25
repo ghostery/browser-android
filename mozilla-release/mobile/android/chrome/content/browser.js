@@ -1973,6 +1973,28 @@ var BrowserApp = {
             if (specificBrowser)
               browser = specificBrowser;
           }
+          /* Cliqz start */
+          if (data.ghostSearchQuery) {
+            const ghostSearchPattern = "about:home?ghostSearch=";
+            const lsh = BrowserApp.selectedBrowser.docShell.QueryInterface(Ci.nsIWebNavigation)
+              .sessionHistory
+              .legacySHistory;
+            const currentEntry = lsh.getEntryAtIndex(lsh.index);
+            let searchEntry;
+            if (currentEntry.URI.spec.startsWith(ghostSearchPattern)) {
+              searchEntry = currentEntry;
+            } else {
+              searchEntry = Cc["@mozilla.org/browser/session-history-entry;1"]
+              .createInstance(Ci.nsISHEntry);
+              searchEntry.triggeringPrincipal =  Services.scriptSecurityManager.getSystemPrincipal();
+              searchEntry.setLoadTypeAsHistory();
+              lsh.addEntry(searchEntry, true);
+            }
+            searchEntry.URI = Services.io.newURI(`${ghostSearchPattern}${data.ghostSearchQuery}`);
+            // TODO: localisation
+            searchEntry.title = `Ghost Search: ${data.ghostSearchQuery}`;
+          }
+          /* Cliqz end */
           this.loadURI(url, browser, params);
         }
         break;

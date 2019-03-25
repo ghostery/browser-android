@@ -39,9 +39,10 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     @SuppressWarnings("unused")
-    public void openLink(String uri) {
+    public void openLink(String uri, String query) {
         final GeckoBundle bundle = new GeckoBundle(1);
         bundle.putString("uri", uri);
+        bundle.putString("query", query);
         EventDispatcher.getInstance().dispatch("Search:OpenLink", bundle);
     }
 

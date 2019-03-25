@@ -1157,6 +1157,16 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
+        final String url = Tabs.getInstance().getSelectedTab().getURL();
+        if (AboutPages.isAboutHome(url)) {
+            final String ghostSearch = AboutPages.getGhostSearchFromAboutHomeUrl(url);
+            if (ghostSearch != null && !ghostSearch.isEmpty()) {
+                mBrowserToolbar.cancelEdit();
+                super.onBackPressed();
+                return;
+            }
+        }
+
         if (mBrowserToolbar.onBackPressed()) {
             return;
         }
@@ -2367,7 +2377,9 @@ public class BrowserApp extends GeckoApp
                 break;
 
             case "Search:OpenLink":
-                Tabs.getInstance().loadUrl(GeckoBundleUtils.safeGetString(message, "uri"), Tabs.LOADURL_USER_ENTERED);
+                final Intent intent = new Intent();
+                intent.putExtra(Tabs.INTENT_EXTRA_GHOST_SEARCH, GeckoBundleUtils.safeGetString(message, "query"));
+                Tabs.getInstance().loadUrlWithIntentExtras(GeckoBundleUtils.safeGetString(message, "uri"), new SafeIntent(intent), Tabs.LOADURL_USER_ENTERED);
                 //We don't want fresh tab to be visible between page load and card click. Ticket# AB2-720
                 ThreadUtils.getUiHandler().postDelayed(() ->
                         mBrowserToolbar.cancelEdit(), 300);
@@ -3037,6 +3049,14 @@ public class BrowserApp extends GeckoApp
                 // Below line will be run when LOCATION_CHANGE. Which means the page load is almost completed.
                 splashScreen.hide();
             }
+
+            /* Cliqz start */
+            final String ghostSearch = AboutPages.getGhostSearchFromAboutHomeUrl(tab.getURL());
+            if (ghostSearch != null && !ghostSearch.isEmpty()) {
+                enterEditingMode();
+                mBrowserToolbar.urlEditLayout.setText(ghostSearch);
+            }
+            /* Cliqz end */
 
             String panelId = AboutPages.getPanelIdFromAboutHomeUrl(tab.getURL());
             Bundle panelRestoreData = null;

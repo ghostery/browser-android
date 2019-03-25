@@ -58,6 +58,9 @@ public class Tabs implements BundleEventListener {
     public static final String INTENT_EXTRA_TAB_ID = "TabId";
     public static final String INTENT_EXTRA_SESSION_UUID = "SessionUUID";
     private static final String PRIVATE_TAB_INTENT_EXTRA = "private_tab";
+    /* Cliqz start */
+    public static final String INTENT_EXTRA_GHOST_SEARCH = "ghostSearchQuery";
+    /* Cliqz end */
 
     // mOrder and mTabs are always of the same cardinality, and contain the same values.
     private volatile CopyOnWriteArrayList<Tab> mOrder = new CopyOnWriteArrayList<Tab>();
@@ -1077,6 +1080,12 @@ public class Tabs implements BundleEventListener {
                 tabToSelect.setShouldShowToolbarWithoutAnimationOnFirstSelection(true);
             }
         }
+
+        /* Cliqz start */
+        if (intent != null && intent.hasExtra(Tabs.INTENT_EXTRA_GHOST_SEARCH)) {
+            data.putString("ghostSearchQuery", intent.getStringExtra(Tabs.INTENT_EXTRA_GHOST_SEARCH));
+        }
+        /* Cliqz end */
 
         mEventDispatcher.dispatch("Tab:Load", data);
 
