@@ -10,7 +10,7 @@ final CERT_PASS_ID = 'b7422020-fe1b-4c57-9230-f3d52afee3cf'
 final CLIQZ_APIFILE_ID = '2939d2e1-dd9a-4097-adc2-430e3d67157a'
 final GHOSTERY_APIFILE_ID = '81d5a4c2-c504-4d18-a29f-18421bb04ddc'
 properties([
-    pipelineTriggers([cron(env.BRANCH_NAME == 'master' ? 'H 23 * * * ' : '')]),
+    pipelineTriggers([pollSCM(env.BRANCH_NAME == 'master' ? 'H 23 * * * ' : '')]),
     parameters([
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
@@ -21,7 +21,7 @@ properties([
         booleanParam(name: 'GHOSTERY_CANARY_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
         booleanParam(name: 'GHOSTERY_CANARY_X86', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `x86` build.'),
         choice( name: 'BRAND',
-                choices: [ CLIQZ, CLIQZ_ALPHA, GHOSTERY, GHOSTERY_CANARY],
+                choices: [ GHOSTERY_CANARY, GHOSTERY, CLIQZ_ALPHA, CLIQZ],
                 description: 'Pick a brand to publish to the playstore' 
         )
     ])
