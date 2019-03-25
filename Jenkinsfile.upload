@@ -9,7 +9,6 @@ final CERT_FILE_ID = 'd746a1dd-e075-4844-869a-32116a496352'
 final CERT_PASS_ID = 'b7422020-fe1b-4c57-9230-f3d52afee3cf'
 final CLIQZ_APIFILE_ID = '2939d2e1-dd9a-4097-adc2-430e3d67157a'
 final GHOSTERY_APIFILE_ID = '81d5a4c2-c504-4d18-a29f-18421bb04ddc'
-final GHOSTERY_CANARY_APIFILE_ID = ''
 
 properties([
     parameters([
@@ -56,10 +55,8 @@ node('master') {
                         apiFile = CLIQZ_APIFILE_ID
                         break
                     case GHOSTERY:
-                        apiFile = GHOSTERY_APIFILE_ID
-                        break
                     case GHOSTERY_CANARY:
-                        apiFile = GHOSTERY_CANARY_APIFILE_ID
+                        apiFile = GHOSTERY_APIFILE_ID
                         break
                     default:
                         error("Invalid Brand")
