@@ -1,17 +1,29 @@
 #!/bin/env groovy
 @Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
+final CLIQZ = 'cliqz'
+final CLIQZ_ALPHA = 'cliqz-alpha'
+final GHOSTERY = 'ghostery'
+final GHOSTERY_CANARY = 'ghostery-canary'
+final CERT_FILE_ID = 'd746a1dd-e075-4844-869a-32116a496352'
+final CERT_PASS_ID = 'b7422020-fe1b-4c57-9230-f3d52afee3cf'
+final CLIQZ_APIFILE_ID = '2939d2e1-dd9a-4097-adc2-430e3d67157a'
+final GHOSTERY_APIFILE_ID = '81d5a4c2-c504-4d18-a29f-18421bb04ddc'
 properties([
     pipelineTriggers([cron('H 23 * * * ')]),
     parameters([
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ARM', defaultValue: true, description: 'Builds the Ghostery branded `arm` build.'),
-        booleanParam(name: 'GHOSTERY_X86', defaultValue: true, description: 'Builds the Ghostery branded `x86` build.'),
+        booleanParam(name: 'GHOSTERY_X86', defaultValue: false, description: 'Builds the Ghostery branded `x86` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_ARM', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `arm` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_X86', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `x86` build.'),
-        booleanParam(name: 'GHOSTERY_ALPHA_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
-        booleanParam(name: 'GHOSTERY_ALPHA_X86', defaultValue: false, description: 'Builds the Ghostery-Alpha branded `x86` build.')
+        booleanParam(name: 'GHOSTERY_CANARY_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
+        booleanParam(name: 'GHOSTERY_CANARY_X86', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `x86` build.'),
+        choice( name: 'BRAND',
+                choices: [ CLIQZ, CLIQZ_ALPHA, GHOSTERY, GHOSTERY_CANARY],
+                description: 'Pick a brand to publish to the playstore' 
+        )
     ])
 ])
 
@@ -58,19 +70,19 @@ def matrix = [
         'target': 'i686-linux-android',
         'buildParam': params.CLIQZ_ALPHA_X86,
     ],
-    'Ghostery Alpha ARM':[
+    'Ghostery Canary ARM':[
         'arch': 'arm',
-        'brand': 'ghostery-alpha',
+        'brand': 'ghostery-canary',
         'channel': 'MA52',
         'target': 'arm-linux-androideabi',
-        'buildParam': params.GHOSTERY_ALPHA_ARM,
+        'buildParam': params.GHOSTERY_CANARY_ARM,
     ],
-    'Ghostery Alpha X86':[
+    'Ghostery Canary X86':[
         'arch': 'x86',
-        'brand': 'ghostery-alpha',
+        'brand': 'ghostery-canary',
         'channel': 'MA52',
         'target': 'i686-linux-android',
-        'buildParam': params.GHOSTERY_ALPHA_X86,
+        'buildParam': params.GHOSTERY_CANARY_X86,
     ],
 ]
 def baseImage
@@ -124,7 +136,7 @@ def build(Map m){
                                 apk = cliqz.buildBrowser("${androidtarget}", "${brandname}", "nightly", "/app")
                             }
                         }
-                        stage("Upload: ${flavorname}") {
+                        stage("S3Upload: ${flavorname}") {
                             withCredentials([
                                 [
                                     $class: 'UsernamePasswordMultiBinding',
@@ -174,6 +186,58 @@ def stepsForParallelBuilds = helpers.entries(matrix).collectEntries{
 stage('Build Applications'){
     parallel stepsForParallelBuilds
 }
+if (params.GHOSTERY_CANARY_ARM && params.GHOSTERY_CANARY_X86 == true){
+    node ('kria'){
+        baseImage.inside(){
+            stage('Upload') {
+                final brand = params.BRAND
+                withCredentials([
+                    [
+                        $class: 'UsernamePasswordMultiBinding',
+                        credentialsId: 'f1732e5f-3e84-47ad-9286-a5fa6657ec43',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                    ]
+                ]) {
+                    utils.s3Copy(
+                        "s3://repository.cliqz.com/dist/android/nightly/${BRANCH_NAME}/${brand}/latest.apk",
+                        "mozilla-release/mobile/android/",
+                        "arm",
+                        "",
+                        false
+                    )
+                    utils.s3Copy(
+                        "s3://repository.cliqz.com/dist/android/nightly/${BRANCH_NAME}/${brand}/latest_x86.apk",
+                        "mozilla-release/mobile/android/",
+                        "",
+                        "x86",
+                        false
+                    )
+                    sh'mv mozilla-release/mobile/android/_x86.apk mozilla-release/mobile/android/x86.apk'
+                }
+                def apiFile
+                switch(brand) {
+                    case CLIQZ:
+                    case CLIQZ_ALPHA:
+                        apiFile = CLIQZ_APIFILE_ID
+                        break
+                    case GHOSTERY:
+                    case GHOSTERY_CANARY:
+                        apiFile = GHOSTERY_APIFILE_ID
+                        break
+                    default:
+                        error("Invalid Brand")
+                }
+                utils.fastlaneRelease(
+                    brand,
+                    CERT_FILE_ID,
+                    CERT_PASS_ID,
+                    apiFile
+                )
+            }
+        }
+    }
+}
 
 def transitionIssueList
 def passedBuilds
@@ -193,7 +257,7 @@ stage('Send email') {
         Check console output at ${env.JOB_URL}${env.BUILD_NUMBER}/ to view the results.
         """
     params.each { prop, val ->
-        if(prop != "BRANCH"){
+        if(prop != "BRAND"){
             if(val){
                 def splitText = prop.toString().toLowerCase().split("_")
                 def brand = ""
