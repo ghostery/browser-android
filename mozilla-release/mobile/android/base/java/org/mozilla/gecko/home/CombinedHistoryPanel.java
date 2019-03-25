@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,7 +23,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -44,16 +44,12 @@ import org.mozilla.gecko.fxa.FxAccountConstants;
 import org.mozilla.gecko.fxa.SyncStatusListener;
 import org.mozilla.gecko.home.CombinedHistoryPanel.OnPanelLevelChangeListener.PanelLevel;
 import org.mozilla.gecko.preferences.PreferenceManager;
-import org.mozilla.gecko.restrictions.Restrictions;
 import org.mozilla.gecko.Telemetry;
 import org.mozilla.gecko.TelemetryContract;
 import org.mozilla.gecko.db.BrowserDB;
 import org.mozilla.gecko.db.RemoteClient;
-import org.mozilla.gecko.restrictions.Restrictable;
-import org.mozilla.gecko.widget.HistoryDividerItemDecoration;
 import org.mozilla.gecko.util.GeckoBundle;
 import org.mozilla.gecko.widget.ShadowedThemedTextView;
-import org.mozilla.gecko.widget.themed.ThemedTextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,6 +75,7 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
     private CliqzSimplifiedHistoryAdapter mHistoryAdapter;
     private ClientsAdapter mClientsAdapter;
     // private RecentTabsAdapter mRecentTabsAdapter;
+    private FloatingActionButton mDeleteFloatingActionButton;
     /* Cliqz end */
     private CursorLoaderCallbacks mCursorLoaderCallbacks;
 
@@ -165,8 +162,12 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         /* Cliqz Start o/
         mPanelFooterButton = (Button) view.findViewById(R.id.history_panel_footer_button);
         mPanelFooterButton.setText(R.string.home_clear_history_button);
-        mPanelFooterButton.setOnClickListener(new OnFooterButtonClickListener());
-        /o Cliqz End */
+        mPanelFooterButton.setOnClickListener(new OnFooterButtonClickListener()); */
+        mDeleteFloatingActionButton = view.findViewById(R.id.delete_history_fab);
+        mDeleteFloatingActionButton.setOnClickListener(deleteFab -> {
+            showClearHistroyDialog();
+        });
+        /* Cliqz End */
 
         // mRecentTabsAdapter.startListeningForClosedTabs();
         // mRecentTabsAdapter.startListeningForHistorySanitize();
@@ -533,6 +534,9 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         mHistoryEmptyView.setVisibility(showEmptyHistoryView ? View.VISIBLE : View.GONE);
         mClientsEmptyView.setVisibility(showEmptyClientsView ? View.VISIBLE : View.GONE);
         mRecentTabsEmptyView.setVisibility(showEmptyRecentTabsView ? View.VISIBLE : View.GONE);
+        /*Cliqz Start*/
+        mDeleteFloatingActionButton.setVisibility(mHistoryAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+        /*Cliqz End*/
     }
 
     /**
@@ -719,6 +723,27 @@ public class CombinedHistoryPanel extends HomeFragment implements RemoteClientsD
         historyText.setLightTheme(isLightTheme);
 
         mHistoryAdapter.updateTheme();
+    }
+
+    private void showClearHistroyDialog() {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        dialogBuilder.setTitle(R.string.history_clear_dialog_title);
+        dialogBuilder.setMessage(R.string.history_clear_dialog_message);
+        dialogBuilder.setNegativeButton(R.string.history_clear_dialog_negative_button, (AlertDialog.OnClickListener)
+                (dialog, which) -> dialog.dismiss());
+
+        dialogBuilder.setPositiveButton(R.string.history_clear_dialog_positive_button, (AlertDialog.OnClickListener) (dialog, which) -> {
+            dialog.dismiss();
+
+            // Send message to Java to clear history.
+            final GeckoBundle data = new GeckoBundle(1);
+            data.putBoolean("history", true);
+            EventDispatcher.getInstance().dispatch("Sanitize:ClearData", data);
+
+            Telemetry.sendUIEvent(TelemetryContract.Event.SANITIZE, TelemetryContract.Method.BUTTON, "history");
+        });
+
+        dialogBuilder.show();
     }
     /* Cliqz End */
 

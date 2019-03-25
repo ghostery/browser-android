@@ -3598,7 +3598,6 @@ public class BrowserApp extends GeckoApp
         final MenuItem historyList = aMenu.findItem(R.id.history_list);
         final MenuItem findInPage = aMenu.findItem(R.id.find_in_page);
         final MenuItem desktopMode = aMenu.findItem(R.id.desktop_mode);
-        final MenuItem clearHistory = aMenu.findItem(R.id.clear_history);
         final MenuItem reactDebuggingTools = aMenu.findItem(R.id.react);
 
         if (!isAlphaBuild()) {
@@ -3846,9 +3845,6 @@ public class BrowserApp extends GeckoApp
         historyList.setVisible(notInAboutHome);
         bookmarksList.setVisible(notInAboutHome);
         final String mostRecentPanelId = Tabs.getInstance().getSelectedTab().getMostRecentHomePanel();
-        final boolean isHistoryView = mostRecentPanelId != null
-                && mostRecentPanelId.equals(HomeConfig.COMBINED_HISTORY_PANEL_ID);
-        clearHistory.setVisible(!notInAboutHome && isHistoryView);
         /* Cliqz End */
         return true;
     }
@@ -4117,13 +4113,6 @@ public class BrowserApp extends GeckoApp
             showGuestModeDialog(GuestModeDialog.LEAVING);
             return true;
         }
-
-        /* Cliqz Start */
-        if (itemId == R.id.clear_history) {
-            showClearHistroyDialog();
-            return true;
-        }
-        /* Cliqz End */
 
         // We have a few menu items that can also be in the context menu. If
         // we have not already handled the item, give the context menu handler
@@ -4726,33 +4715,6 @@ public class BrowserApp extends GeckoApp
         if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
             EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
         }
-    }
-
-    private void showClearHistroyDialog() {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage(R.string.home_clear_history_confirm);
-        dialogBuilder.setNegativeButton(R.string.button_cancel, new AlertDialog.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
-            }
-        });
-
-        dialogBuilder.setPositiveButton(R.string.button_ok, new AlertDialog.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
-
-                // Send message to Java to clear history.
-                final GeckoBundle data = new GeckoBundle(1);
-                data.putBoolean("history", true);
-                EventDispatcher.getInstance().dispatch("Sanitize:ClearData", data);
-
-                Telemetry.sendUIEvent(TelemetryContract.Event.SANITIZE, TelemetryContract.Method.BUTTON, "history");
-            }
-        });
-
-        dialogBuilder.show();
     }
 
     public void toggleReloadButtonIcon(boolean showReload) {

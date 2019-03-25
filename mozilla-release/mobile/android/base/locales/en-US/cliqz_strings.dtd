@@ -16,7 +16,7 @@
 <!ENTITY activity_stream_top_news_show "Show">
 <!ENTITY activity_stream_top_news_hide "Hide">
 
-<!-- Favorites -->
+<!-- Favorites and History-->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
 <!ENTITY favorites_title "Favorites">
 <!ENTITY favorites "Favorites">
@@ -42,6 +42,10 @@
 <!ENTITY helper_first_offline_favorite_button "Go to favorites">
 <!ENTITY helper_triple_readerview_open_message2 "Favorite Reader View items to read them offline.">
 <!ENTITY helper_triple_readerview_open_button2 "Add to favorites">
+<!ENTITY history_clear_dialog_title "Delete History?">
+<!ENTITY history_clear_dialog_message "This will delete your history and cannot be undone.">
+<!ENTITY history_clear_dialog_positive_button "Delete">
+<!ENTITY history_clear_dialog_negative_button "Cancel">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Want to customize this tab?">

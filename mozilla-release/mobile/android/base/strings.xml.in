@@ -1003,5 +1003,11 @@
   <!-- Ghostery Addon preventing dialog -->
   <string name="prevent_ghostery_addon_dialog_title">&prevent_ghostery_addon_dialog_title;</string>
   <string name="prevent_ghostery_addon_dialog_message">&prevent_ghostery_addon_dialog_message;</string>
+
+  <!-- History-->
+  <string name="history_clear_dialog_title">&history_clear_dialog_title;</string>
+  <string name="history_clear_dialog_message">&history_clear_dialog_message;</string>
+  <string name="history_clear_dialog_positive_button">&history_clear_dialog_positive_button;</string>
+  <string name="history_clear_dialog_negative_button">&history_clear_dialog_negative_button;</string>
   <!-- Cliqz end -->
 </resources>
