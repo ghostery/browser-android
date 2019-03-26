@@ -75,6 +75,28 @@ def genyInstanceStatus() {
     }
 }
 
+def genySetPhoneResolution(String credentialsId) {
+    withCredentials([file(credentialsId: credentialsId, variable: 'FILE' )]) {
+        timeout(5) {
+            sh '''#!/bin/bash -l
+                echo "*** Setting Genymotion Resolution ***"
+                chmod 400 $FILE
+                ssh -v -o StrictHostKeyChecking=no -i $FILE shell@$IP "setprop persist.sys.usb.config adb"
+                ssh -v -o StrictHostKeyChecking=no -i $FILE -NL 5556:127.0.0.1:5555 shell@$IP &
+                $ANDROID_HOME/platform-tools/adb connect 127.0.0.1:5556
+                $ANDROID_HOME/platform-tools/adb wait-for-device
+                $ANDROID_HOME/platform-tools/adb exec-out screencap -p > screen1.png
+                $ANDROID_HOME/platform-tools/adb shell setprop persist.graph_mode 768x1280-32
+                $ANDROID_HOME/platform-tools/adb shell setprop persist.dpi 320
+                $ANDROID_HOME/platform-tools/adb shell setprop ro.build.characteristics default
+                $ANDROID_HOME/platform-tools/adb reboot &
+                sleep 30
+                echo "*** Done ***"
+            '''
+        }
+    }
+}
+
 def connectGenyInstance(String credentialsId) {
     withCredentials([file(credentialsId: credentialsId, variable: 'FILE' )]) {
         sh '''#!/bin/bash -l
