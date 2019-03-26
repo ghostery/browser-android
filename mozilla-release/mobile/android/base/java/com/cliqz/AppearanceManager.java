@@ -23,9 +23,6 @@ public class AppearanceManager {
     }
 
     public void change(String appearance) {
-        if (mCurrentApearance.equals(appearance)) {
-            return;
-        }
         mCurrentApearance = appearance;
         SearchBackground.changeAppearance(appearance);
     }

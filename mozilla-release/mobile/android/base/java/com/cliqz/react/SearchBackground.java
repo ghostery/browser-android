@@ -7,6 +7,7 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
@@ -55,12 +56,16 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
         mReactInstanceManager.showDevOptionsDialog();
     }
 
+    public void reportPrefChange(WritableArray keyValue) {
+        emit("prefchange", keyValue);
+    }
+
     private void callAction(String module, String action, Object... args) {
         final WritableMap eventBody = Arguments.createMap();
         eventBody.putString("module", module);
         eventBody.putString("action", action);
         eventBody.putArray("args", Arguments.fromJavaArgs(args));
-        mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("action", eventBody);
+        emit("action", eventBody);
     }
 
     private void callAction(String module, String action, Object[] args, EventCallback callback) {
@@ -71,7 +76,23 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
         eventBody.putString("module", module);
         eventBody.putString("action", action);
         eventBody.putArray("args", Arguments.fromJavaArgs(args));
-        mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("action", eventBody);
+        emit("action", eventBody);
+    }
+
+    private void emit(String eventName, WritableMap arg) {
+        if (isReady()) {
+            mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, arg);
+        }
+    }
+
+    private void emit(String eventName, WritableArray arg) {
+        if (isReady()) {
+            mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, arg);
+        }
+    }
+
+    private boolean isReady() {
+        return mReactContext != null && mReactContext.hasActiveCatalystInstance();
     }
 
     public static void replyToAction(int hash, ReadableMap response) {
