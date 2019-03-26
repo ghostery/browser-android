@@ -3600,7 +3600,7 @@ public class BrowserApp extends GeckoApp
         final MenuItem desktopMode = aMenu.findItem(R.id.desktop_mode);
         final MenuItem reactDebuggingTools = aMenu.findItem(R.id.react);
 
-        if (!isAlphaBuild()) {
+        if (!isAlphaBuild() && reactDebuggingTools != null) {
             reactDebuggingTools.setVisible(false);
         }
         /* Cliqz End */
@@ -3612,7 +3612,10 @@ public class BrowserApp extends GeckoApp
         final SharedPreferences prefs = GeckoSharedPrefs.forProfile(this);
         /* Cliqz Start */
         //Always show the quit button
-        aMenu.findItem(R.id.quit).setVisible(true);
+        final MenuItem quitMenuItem = aMenu.findItem(R.id.quit);
+        if (quitMenuItem != null) {
+            quitMenuItem.setVisible(true);
+        }
         /* Cliqz End */
 
         // If tab data is unavailable we disable most of the context menu and related items and
