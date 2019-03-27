@@ -11,8 +11,6 @@ public interface BaseControlCenterPagerAdapter {
 
     void init(ControlCenterCallbacks controlCenterCallbacks);
 
-    void setTrackingData(GeckoBundle message);
-
     void updateCurrentView(int position);
 
     interface ControlCenterCallbacks {

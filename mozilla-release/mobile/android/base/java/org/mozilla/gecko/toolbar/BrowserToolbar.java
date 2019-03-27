@@ -379,7 +379,6 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
 
                 toggleTabs();
                 /* Cliqz Start */
-                hideOverlays();
                 activity.hideControlCenter();
                 /* Cliqz End */
             }
@@ -393,7 +392,6 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 urlEditLayout.clearFocus();
                 activity.openOptionsMenu();
                 /* Cliqz Start */
-                hideOverlays();
                 com.cliqz.Telemetry.sendToolbarClickTelemetry("menu");
                 /* Cliqz End */
             }
@@ -532,12 +530,6 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
                 case STOP:
                     if (progressBar.getVisibility() == View.VISIBLE) {
                         // Animate the progress bar to completion before it'll get hidden below.
-                        /* Cliqz Start */
-                        // update the control center page once page loads
-                        if (tab.getLoadProgress() == Tab.LOAD_PROGRESS_STOP) {
-                            activity.updateControlCenterIfNeeded();
-                        }
-                        /* Cliqz End */
                         progressBar.setProgress(tab.getLoadProgress());
                     }
                     // Fall through.
@@ -1116,11 +1108,6 @@ public abstract class BrowserToolbar extends ThemedRelativeLayout
     }
 
     /* Cliqz start */
-    private void hideOverlays() {
-        EventDispatcher.getInstance().dispatch("Privacy:Hide", null);
-        EventDispatcher.getInstance().dispatch("Search:Hide", null);
-    }
-
     @Override
     public void toggleControlCenter() {
         if (urlDisplayLayout.isTitleSet()) {

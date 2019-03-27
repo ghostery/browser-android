@@ -256,7 +256,6 @@ class TabTracker extends TabTrackerBase {
     // unselected.
     GlobalEventDispatcher.registerListener(this, [
       "Tab:Selected",
-      "Privacy:GetInfo",
     ]);
   }
 
@@ -373,14 +372,6 @@ class TabTracker extends TabTrackerBase {
         }
 
         break;
-      }
-
-      case "Privacy:GetInfo": {
-        // we need to close any extension tabs when Privacy control center is triggered
-        const popupTab = tabTracker.extensionPopupTab;
-        if (popupTab) {
-          BrowserApp.closeTab(popupTab);
-        }
       }
     }
   }

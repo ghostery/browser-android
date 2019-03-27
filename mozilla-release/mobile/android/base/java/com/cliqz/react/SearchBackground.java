@@ -80,7 +80,7 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
             callback.sendSuccess(response);
         }
     }
-
+ 
     public static void startSearch(String query) {
         final WritableMap params = new WritableNativeMap();
         // TODO add search params

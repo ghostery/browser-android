@@ -10,7 +10,9 @@ import org.mozilla.gecko.util.GeckoBundle;
 public class SystemAddon {
     public static final String EXTENSION_ID = "firefox@ghostery.com";
     public static final String MODULE_CORE = "core";
+    public static final String MODULE_ADBLOCKER = "adblocker";
     public static final String ACTION_SEND_TELEMETRY = "sendTelemetry";
+    public static final String ACTION_GET_INFO = "getAdBlockInfoForTab";
 
     private static final String KEY_MODULE = "module";
     private static final String KEY_ARGS = "args";
@@ -22,6 +24,10 @@ public class SystemAddon {
     private static final String KEY_ACTION = "action";
 
     private SystemAddon() {}
+
+    public static void getPrivacyInfo(EventCallback callback) {
+        sendMessage(MODULE_ADBLOCKER, ACTION_GET_INFO, callback);
+    }
 
     public static void sendTelemetry(GeckoBundle signal, String schema) {
         sendMessage(MODULE_CORE, ACTION_SEND_TELEMETRY, new GeckoBundle[] { wrap(signal), wrap(false), wrap(schema) });

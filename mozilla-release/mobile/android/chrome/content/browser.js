@@ -6505,12 +6505,6 @@ var Cliqz = {
 
     GlobalEventDispatcher.registerListener(this, [
       "SystemAddon:Request",
-      "Privacy:AdblockToggle",
-      "Privacy:GetInfo",
-      "Privacy:Hide",
-      "Privacy:SetInfo",
-      "Privacy:Show",
-      "Privacy:SetBlockingPolicy"
     ]);
 
     ChromeUtils.import("resource://gre/modules/ExtensionUtils.jsm");
@@ -6589,21 +6583,6 @@ var Cliqz = {
           type: "Search:Idle"
         });
         break;
-      case "setIcon":
-        var count = Number.parseInt(msg.payload.text);
-        count = count ? count : 0;
-        GlobalEventDispatcher.sendRequest({
-          type: "Privacy:Count",
-          tabId: msg.payload.tabId,
-          count: count
-        });
-        break;
-      case "panelData":
-        GlobalEventDispatcher.sendRequest({
-          type: "Privacy:Info",
-          data: msg.payload
-        });
-        break;
       case "ready":
         // it will be considered ready when any message is sent from extension
         break;
@@ -6663,14 +6642,14 @@ var Cliqz = {
     }
   },
 
-  onEvent: function(event, data, callbacks) {
+  onEvent: function(event, data, callback) {
     let onSuccess = () => {};
     let onError = () => {};
-    if (callbacks) {
-      onSuccess = callbacks.onSuccess;
-      onError = callbacks.onError;
+    if (callback) {
+      onSuccess = callback.onSuccess;
+      onError = callback.onError;
     }
-    // event cases should be sorted in alphabitical order
+    // there should be no reason to handle any other event other than "SystemAddon:Request"
     switch(event) {
       case "SystemAddon:Request":
         this.messageExtension({
@@ -6678,31 +6657,9 @@ var Cliqz = {
           action: data.action,
           args: data.args.map(arg => arg.data),
         }).then(
-          response => callback.onSuccess(response),
-          error => callback.onError(error),
+          response => onSuccess(response),
+          error => onError(error),
         );
-        break;
-      case "Privacy:AdblockToggle":
-        this.messageExtension({ name: "adblockToggle", message: data})
-        break;
-      case "Privacy:GetInfo":
-        this.messageExtension({ name: "getAndroidPanelData" });
-        break;
-      case "Privacy:SetInfo":
-        this.messageExtension({ name: "setPanelData", message: data });
-        break;
-      case "Privacy:SetBlockingPolicy":
-        // blocking policy should be one of:
-        // 'UPDATE_BLOCK_ALL'
-        // 'UPDATE_BLOCK_NONE'
-        // 'UPDATE_BLOCK_RECOMMENDED'
-        // 'UPDATE_BLOCK_ADS'
-        let blockingPolicy = data.blockingPolicy;
-        this.messageExtension({
-          origin: 'ghostery-hub',
-          name: 'updateBlocking',
-          message: blockingPolicy
-        });
         break;
     }
   }

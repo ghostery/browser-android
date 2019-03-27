@@ -5,6 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.cliqz.SystemAddon;
+import com.cliqz.react.SearchBackground;
+
 import org.mozilla.gecko.EventDispatcher;
 import org.mozilla.gecko.util.BundleEventListener;
 import org.mozilla.gecko.util.EventCallback;
@@ -18,7 +21,7 @@ import java.util.List;
  * Copyright © Cliqz 2018
  */
 public class ControlCenterPagerAdapter extends FragmentPagerAdapter
-        implements BaseControlCenterPagerAdapter, BundleEventListener,
+        implements BaseControlCenterPagerAdapter,
         GlobalTrackersFragment.GlobalTrackersCallback {
 
     private Context mContext;
@@ -37,9 +40,6 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
     public ControlCenterPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.mContext = context;
-
-        EventDispatcher.getInstance().registerUiThreadListener(this,
-                "Privacy:Info", null);
     }
 
     @Override
@@ -67,26 +67,42 @@ public class ControlCenterPagerAdapter extends FragmentPagerAdapter
         globalTrackersFragment.setGlobalTrackersCallback(this);
         mFragmentList.add(overviewFragment);
         mFragmentList.add(siteTrackersFragment);
-        mFragmentList.add(globalTrackersFragment);
+        //mFragmentList.add(globalTrackersFragment);
     }
 
-    public void setTrackingData(final GeckoBundle message) {
-        for (ControlCenterFragment fragment : mFragmentList) {
-            fragment.updateUI(message);
-        }
+    public void updateInfo() {
+        SystemAddon.getABTests(new EventCallback() {
+            @Override
+            public void sendSuccess(Object response) {
+                System.out.print("test");
+                final GeckoBundle message = (GeckoBundle) response;
+            }
+
+            @Override
+            public void sendError(Object response) {
+
+            }
+        });
+        SystemAddon.getPrivacyInfo(new EventCallback() {
+            @Override
+            public void sendSuccess(Object response) {
+                final GeckoBundle message = (GeckoBundle) response;
+                for (ControlCenterFragment fragment : mFragmentList) {
+                    mCCDataHash = ControlCenterUtils.getCCDataHash(message);
+                    mData = message;
+                    fragment.updateUI(message);
+                }
+            }
+
+            @Override
+            public void sendError(Object response) {
+
+            }
+        });
     }
 
     public void updateCurrentView(int position) {
         mFragmentList.get(position).refreshUI();
-    }
-
-    @Override
-    public void handleMessage(String event, GeckoBundle message, EventCallback callback) {
-        if ("Privacy:Info".equals(event)) {
-            this.mCCDataHash = ControlCenterUtils.getCCDataHash(message);
-            this.mData = message;
-            setTrackingData(message);
-        }
     }
 
     public boolean isDataChanged() {

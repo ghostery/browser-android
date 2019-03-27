@@ -90,32 +90,14 @@ public class GlobalTrackersFragment extends ControlCenterFragment implements Vie
                 dispatchAndRefresh("UPDATE_BLOCK_NONE");
                 mGlobalTrackersCallback.trackingDataChanged();
                 return true;
-            case R.id.reset_settings:
-                RestoreDefaultsDialog.show(getContext(), new RestoreDefaultsDialog.RestoreDialogCallbacks() {
-                    @Override
-                    public void onRestore() {
-                        progressBar.setVisibility(View.VISIBLE);
-                        mGlobalTrackersCallback.trackingDataChanged();
-                    }
-                });
-                return true;
             default:
                 return false;
         }
     }
 
+    // TODO @chrmod remove
     private void dispatchAndRefresh(String policy) {
-        final GeckoBundle bundle = new GeckoBundle();
-        bundle.putString("blockingPolicy", policy);
-        final EventDispatcher evd = EventDispatcher.getInstance();
-        evd.dispatch("Privacy:SetBlockingPolicy", bundle);
-        getView().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                evd.dispatch("Privacy:GetInfo", null);
-            }
-        }, 500);
-        progressBar.setVisibility(View.VISIBLE);
+
     }
 
     @Override

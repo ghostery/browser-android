@@ -2383,16 +2383,6 @@ public class BrowserApp extends GeckoApp
                     mBrowserToolbar.updateGhosty(message.getInt("tabId"), 0);
                 }
                 break;
-
-            case "Privacy:Info":
-                //sync preferences with the ghostery extension just for safety
-                final boolean isAutoUpdateEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/enable_autoupdate");
-                final boolean areFirstPartyTrackersEnabled = GeckoBundleUtils.safeGetBoolean(message, "data/settings/ignore_first_party");
-                final boolean areNewTrackersBlocked = GeckoBundleUtils.safeGetBoolean(message, "data/settings/block_by_default");
-                mPreferenceManager.setGhosteryAutoUpdate(isAutoUpdateEnabled);
-                mPreferenceManager.setAllowFirstPartyTrackers(areFirstPartyTrackersEnabled);
-                mPreferenceManager.setBlockNewTrackers(areNewTrackersBlocked);
-                break;
             case "Search:Idle":
                 break;
             case "Search:QuerySuggestions":
@@ -4666,10 +4656,9 @@ public class BrowserApp extends GeckoApp
             mControlCenterContainer.setVisibility(View.GONE);
             mDynamicToolbar.setPinned(false, PinReason.DISABLED);
         } else {
-            mControlCenterPagerAdapter.setTrackingData(new GeckoBundle());
+            mControlCenterPagerAdapter.updateInfo();
             mControlCenterContainer.setVisibility(View.VISIBLE);
             mControlCenterPager.setCurrentItem(0);
-            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
             mDynamicToolbar.setPinned(true, PinReason.DISABLED);
             ControlCenterMetrics.show();
         }
@@ -4700,12 +4689,6 @@ public class BrowserApp extends GeckoApp
                     }
                 })
                 .buildAndShow();
-    }
-
-    public void updateControlCenterIfNeeded() {
-        if (mControlCenterContainer.getVisibility() == View.VISIBLE) {
-            EventDispatcher.getInstance().dispatch("Privacy:GetInfo",null);
-        }
     }
 
     private void showClearHistroyDialog() {
