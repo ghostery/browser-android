@@ -326,7 +326,9 @@ public class BrowserSearch extends HomeFragment
         mList = (HomeListView) mView.findViewById(R.id.home_list_view);
         mSearchEngineBar = (SearchEngineBar) mView.findViewById(R.id.search_engine_bar);
         reloadBackground();
-        setPrivateMode(Tabs.getInstance().getSelectedTab().isPrivate());
+        final Tab tab = Tabs.getInstance().getSelectedTab();
+        final boolean isTabPrivate = tab != null && tab.isPrivate();
+        setPrivateMode(isTabPrivate);
         /* Cliqz End */
         return mView;
     }
