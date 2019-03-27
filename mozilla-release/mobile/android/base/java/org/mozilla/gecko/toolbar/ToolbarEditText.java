@@ -704,7 +704,7 @@ public class ToolbarEditText extends CustomEditText
         switch (event) {
             case "Search:Autocomplete":
                 final String autoCompletion = message.getString("data");
-                if (PreferenceManager.getInstance().isAutocompleteEnabled()) {
+                if (PreferenceManager.getInstance().isAutocompleteEnabled() && hasFocus()) {
                     onAutocomplete(autoCompletion);
                 }
                 break;

@@ -3055,6 +3055,8 @@ public class BrowserApp extends GeckoApp
             if (ghostSearch != null && !ghostSearch.isEmpty()) {
                 enterEditingMode();
                 mBrowserToolbar.urlEditLayout.setText(ghostSearch);
+                mBrowserToolbar.urlEditLayout.clearFocus();
+                hideCliqzQuerySuggestions();
             }
             /* Cliqz end */
 
