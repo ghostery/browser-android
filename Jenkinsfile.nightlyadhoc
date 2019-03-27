@@ -2,7 +2,7 @@
 @Library(['cliqz-shared-library@v1.2', 'browser-android@automation']) _
 
 properties([
-    pipelineTriggers([cron('H 23 * * * ')]),
+    pipelineTriggers([cron(env.BRANCH_NAME == 'master' ? 'H 23 * * * ' : '')]),
     parameters([
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
