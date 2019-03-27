@@ -45,7 +45,7 @@ class Cliqz {
 
 class BrowserCoreApp extends React.Component {
   state = {
-    results: [],
+    results: {},
     cliqz: null,
     config: null,
   }
@@ -53,7 +53,7 @@ class BrowserCoreApp extends React.Component {
   actions = {
     changeAppearance: (appearance) => {
       this.setState(prevState => ({
-        results: [],
+        results: {},
         config: {
           ...prevState.config,
           appearance,
@@ -87,6 +87,9 @@ class BrowserCoreApp extends React.Component {
       app.events.sub('search:results', (results) => {
         this.setState({ results })
       });
+      app.events.sub('search:session-end', () => {
+        this.setState({ results: {} })
+      });
     });
     DeviceEventEmitter.addListener('action', this.onAction);
   }
@@ -109,7 +112,7 @@ class BrowserCoreApp extends React.Component {
   }
 
   render() {
-    if (!this.state.config) {
+    if (!this.state.config || !this.state.cliqz) {
       return null;
     }
     const results = this.state.results.results || [];
@@ -119,17 +122,11 @@ class BrowserCoreApp extends React.Component {
     return (
       <ErrorBoundry results={results} reportError={this.reportError}>
         <View style={styles.container}>
-          {
-            (results.length === 0) || !this.state.cliqz
-            ? null
-            : (
-              <CliqzProvider value={this.state.cliqz}>
-                <ThemeProvider value={appearance}>
-                  <SearchComponent results={results} meta={meta} theme={appearance} />
-                </ThemeProvider>
-              </CliqzProvider>
-            )
-          }
+          <CliqzProvider value={this.state.cliqz}>
+            <ThemeProvider value={appearance}>
+              <SearchComponent results={results} meta={meta} theme={appearance} />
+            </ThemeProvider>
+          </CliqzProvider>
         </View>
       </ErrorBoundry>
     );
