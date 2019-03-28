@@ -284,6 +284,10 @@ public class ToolbarEditLayout extends ThemedLinearLayout {
         // text doesn't necessarily get set e.g.: about:home
         mEditText.setSelection(mEditText.getText().length());
     }
+
+    public String getNonAutocompleteText() {
+        return mEditText.getNonAutocompleteText();
+    }
     /*Cliqz End*/
 
     String getText() {

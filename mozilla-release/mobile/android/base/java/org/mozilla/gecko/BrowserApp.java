@@ -2885,13 +2885,16 @@ public class BrowserApp extends GeckoApp
             return;
         }
 
+        final boolean isSearchQuery = StringUtils.isSearchQuery(url, true);
+
         /* Cliqz start */
         final boolean isPrivateMode = Tabs.getInstance().getSelectedTab().isPrivate();
-        SearchBackground.reportSelection(url, isPrivateMode);
+        final boolean isAutocompleted = !url.equals(mBrowserToolbar.urlEditLayout.getNonAutocompleteText());
+        SearchBackground.reportSelection(url, isPrivateMode, isSearchQuery, isAutocompleted);
         /* Cliqz end */
 
         // If the URL doesn't look like a search query, just load it.
-        if (!StringUtils.isSearchQuery(url, true)) {
+        if (!isSearchQuery) {
             Tabs.getInstance().loadUrl(url, Tabs.LOADURL_USER_ENTERED);
             Telemetry.sendUIEvent(TelemetryContract.Event.LOAD_URL, TelemetryContract.Method.ACTIONBAR, "user");
 
