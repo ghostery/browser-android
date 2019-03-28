@@ -522,6 +522,19 @@ var BrowserApp = {
     // Notify Java that Gecko has loaded.
     GlobalEventDispatcher.sendRequest({ type: "Gecko:Ready" });
 
+    /* Cliqz start */
+    InitLater(async () => {
+      let version = "missing";
+      try {
+        const addon = await AddonManager.getAddonByID("firefox@ghostery.com");
+        version = addon.version;
+      } catch (e) {
+        // we have  a problem
+      }
+      Telemetry.addData("CLIQZ_ADDON_VERSION", version);
+    });
+    /* Cliqz end */
+
     this.deck.addEventListener("DOMContentLoaded", function() {
       ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
 
