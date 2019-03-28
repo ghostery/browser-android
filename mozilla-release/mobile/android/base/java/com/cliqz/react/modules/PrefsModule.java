@@ -2,6 +2,7 @@ package com.cliqz.react.modules;
 
 import android.content.SharedPreferences;
 
+import com.cliqz.react.SearchBackground;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.Promise;
@@ -169,8 +170,6 @@ public class PrefsModule extends ReactContextBaseJavaModule {
         }
         final WritableArray keyValue = Arguments.fromJavaArgs(new Object[]{ key, value });
 
-        mReactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit("prefchange", keyValue);
+        SearchBackground.getInstance().reportPrefChange(keyValue);
     }
 }
