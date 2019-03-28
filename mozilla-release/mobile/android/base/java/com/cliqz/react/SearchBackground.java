@@ -114,22 +114,25 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
         getInstance().callAction("search", "stopSearch", params, getSearchSenderArgument());
     }
 
-    public static void reportSelection(String query, boolean isPrivateMode) {
+    public static void reportSelection(String query, boolean isPrivateMode, boolean isSearchQuery, boolean isAutocompleted) {
         final WritableMap result = new WritableNativeMap();
         result.putInt("index", -1);
+        result.putString("url", query);
 
         final WritableMap param = new WritableNativeMap();
-        param.putString("action", "click");
+        final String provider = isAutocompleted ? "cliqz" : "instant";
+        final String type = isSearchQuery ? "supplementary-search" : "navigate-to";
+        param.putString("provider", provider);
+        param.putString("type", type);
+        param.putBoolean("isFromAutoCompletedUrl", isAutocompleted);
+        param.putString("action", "enter");
         param.putString("elementName", "");
-        param.putBoolean("isFromAutoCompletedUrl", false);
         param.putBoolean("isNewTab", false);
         param.putBoolean("isPrivateMode", isPrivateMode);
         param.putBoolean("isPrivateResult", false);
         param.putString("query", query);
         param.putString("url", query);
-        param.putBoolean("isSearchEngine", true);
         param.putMap("rawResult", result);
-        param.putArray("resultOrder", new WritableNativeArray());
 
         getInstance().callAction("search", "reportSelection", param, getSearchSenderArgument());
 
