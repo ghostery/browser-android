@@ -331,3 +331,7 @@
 <!-- Change German translation text for snackbar -->
 <!ENTITY cliqz_pinned_page_to_top_sites "Pinned page to Top Sites">
 <!ENTITY cliqz_unpinned_page_from_top_sites "Unpinned page from Top Sites">
+
+<!-- Url bar settings -->
+<!ENTITY ghostery_url_bar_default_text "Ghost Search">
+
