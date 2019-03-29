@@ -73,7 +73,9 @@
   <string name="crash_close_label">&crash_close_label;</string>
   <string name="crash_restart_label">&crash_restart_label;</string>
 
-  <string name="url_bar_default_text">&url_bar_default_text2;</string>
+  <!-- Cliqz start -->
+  <string name="url_bar_default_text">&ghostery_url_bar_default_text;</string>
+  <!-- Cliqz end -->
   <string name="url_bar_qrcode_text">&url_bar_qrcode_text2;</string>
   <string name="url_bar_mic_text">&url_bar_mic_text2;</string>
 
