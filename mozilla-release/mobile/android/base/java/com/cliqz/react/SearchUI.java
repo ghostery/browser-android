@@ -51,6 +51,7 @@ public class SearchUI {
 
     public void addToView(ViewGroup parent) {
         if (mReactRootView != null) {
+            mReactRootView.removeAllViews();
             mReactRootView.setId(View.NO_ID);
             parent.addView(mReactRootView);
         }
