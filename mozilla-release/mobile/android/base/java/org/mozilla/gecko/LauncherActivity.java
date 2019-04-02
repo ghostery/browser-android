@@ -14,8 +14,13 @@ import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
+import com.cliqz.ABManager;
+import com.cliqz.react.MigrationManager;
+import com.cliqz.react.SearchBackground;
+
 import org.mozilla.gecko.home.HomeConfig;
 import org.mozilla.gecko.mma.MmaDelegate;
+import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.switchboard.SwitchBoard;
 import org.mozilla.gecko.util.FileUtils;
 import org.mozilla.gecko.webapps.WebAppActivity;
@@ -56,6 +61,13 @@ public class LauncherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Cliqz start */
+        PreferenceManager.init(this);
+        ABManager.init(this);
+        MigrationManager.getInstance().migrate(this);
+        SearchBackground.initialize(getApplication());
+        /* Cliqz end */
 
         final SafeIntent safeIntent = new SafeIntent(getIntent());
 
