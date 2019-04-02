@@ -406,11 +406,6 @@ public class GeckoApplication extends Application
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
-
-        PreferenceManager.init(context);
-        ABManager.init(context);
-        MigrationManager.getInstance().migrate(context);
-        SearchBackground.initialize(this);
         /* Cliqz end */
 
         super.onCreate();
