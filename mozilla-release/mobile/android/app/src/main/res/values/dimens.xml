@@ -317,7 +317,7 @@
 
     <!-- Intro -->
     <dimen name="cliqz_intro_title_size">16sp</dimen>
-    <dimen name="cliqz_intro_content_size">12sp</dimen>
+    <dimen name="cliqz_intro_content_size">13sp</dimen>
     <dimen name="cliqz_intro_radio_button_height">30dp</dimen>
     <!-- Cliqz end -->
 

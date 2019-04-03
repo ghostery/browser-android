@@ -43,7 +43,9 @@
         <TextView
             android:id="@+id/data_collection_detail_tv"
             style="@style/Cliqz.Intro.Text.Content"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
+            android:textAlignment="textStart"
+            android:textColorLink="@color/general_blue_color"
             tools:text="Support Ghostery by sharing anonymous analytics and Human Web data to improve Ghostery's performance" />
     </LinearLayout>
 </merge>
