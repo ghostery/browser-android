@@ -14489,5 +14489,15 @@
     "n_buckets": 50,
     "bug_numbers": [1499418],
     "description": "GeckoView: Time taken to initialize all GeckoView modules in ms."
+  },
+  "CLIQZ_ADDON_VERSION": {
+    "record_in_processes": ["main"],
+    "expires_in_version": "never",
+    "releaseChannelCollection": "opt-out",
+    "kind": "enumerated",
+    "n_values": 50,
+    "description": "Cliqz addon version",
+    "alert_emails": [],
+    "bug_numbers": []
   }
 }
