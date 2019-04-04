@@ -17,6 +17,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -76,7 +77,7 @@ public class TabsPanelThumbnailView extends CropImageView {
     private LayerDrawable normalModeImageDrawable() {
         final Context context = getContext();
         final Drawable backgroundLayer = ContextCompat.getDrawable(context, R.color.tab_item_thumbnail_default_bg);
-        final Drawable logoLayer = ContextCompat.getDrawable(context, R.drawable.ic_start_tab_icon);
+        final VectorDrawableCompat logoLayer = VectorDrawableCompat.create(context.getResources(), R.drawable.ic_start_tab_icon, null);
         final LayerDrawable layerDrawable = new LayerDrawable(new Drawable[] { backgroundLayer, logoLayer });
         final int padding = (int) getResources().getDimension(R.dimen.tab_thumbnail_normal_mode_image_padding);
         layerDrawable.setLayerInset(1, padding, padding, padding, padding);

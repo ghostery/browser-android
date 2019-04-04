@@ -6,6 +6,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
@@ -43,7 +44,7 @@ public class DefaultIconDrawable extends Drawable {
         final float w = bounds.width();
         final float h = bounds.height();
         paint.setColor(color);
-        canvas.drawRoundRect(0F, 0F, w, h, radius, radius, paint);
+        canvas.drawRoundRect(new RectF(0F, 0F, w, h), radius, radius, paint);
         final float xPos = (w / 2F);
         final float yPos = (h / 2F) - ((paint.descent() + paint.ascent()) / 2F);
         paint.setColor(Color.WHITE);

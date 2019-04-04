@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_delete"
+        app:srcCompat="@drawable/ic_delete"
         android:padding="60dp"
         app:useCompatPadding="true"
         app:backgroundTint="@color/history_delete_fab_color"/>
