@@ -7,10 +7,11 @@
     "build.dev": "node node_modules/react-native/local-cli/cli.js bundle --platform android --entry-file index.js --bundle-output ../mozilla-release/mobile/android/app/src/main/assets/index.android.bundle --dev=true --reset-cache"
   },
   "devDependencies": {
-    "jsc-android": "^236355.1.1"
+    "jsc-android": "^236355.1.1",
+    "react-native-fs": "^2.13.3"
   },
   "dependencies": {
-    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v1.35/1.35.1.c037691.tgz",
+    "browser-core": "https://s3.amazonaws.com/cdncliqz/update/edge/rn-ghostery-android/v3.36/1.36.0.09794d6.tgz",
     "cliqz-logo-database": "^0.1.2",
     "moment": "^2.24.0",
     "react": "^16.6.3",
