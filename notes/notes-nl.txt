@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-Happy Browsing!
+Er is een nieuwe versie beschikbaar:
+* bugs verholpen die de app lieten crashen
+* snelle manier om alle geschiedenis te verwijderen
+* eenvoudige manier om terug te gaan naar de Ghost Search-resultaten (klik op vorige)
+* beter overzicht van de Ghost Search-resultaten dankzij een nieuw design

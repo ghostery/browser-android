@@ -16,7 +16,7 @@
 <!ENTITY activity_stream_top_news_show "顯示">
 <!ENTITY activity_stream_top_news_hide "隱藏">
 
-<!-- Favorites -->
+<!-- Favorites and History-->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
 <!ENTITY favorites_title "收藏夾">
 <!ENTITY favorites "收藏夾">
@@ -33,10 +33,8 @@
 <!ENTITY pref_dialog_activitystream_recentFavorites "最近收藏">
 <!ENTITY favorite_edit_title "編輯收藏夾">
 <!ENTITY home_favorites_empty "您所儲存的收藏網址顯示在這裏。">
-<!ENTITY favoritehistory_import_both "導入收藏夾和歷史記錄
-                                      從安卓">
-<!ENTITY favoritehistory_import_favorites "導入收藏夾
-                                           從安卓">
+<!ENTITY favoritehistory_import_both "正在從 Android 匯入我的最愛及里程記錄">
+<!ENTITY favoritehistory_import_favorites "正在從 Android 匯入我的最愛">
 <!ENTITY searchable_description2 "收藏夾和歷史記錄">
 <!ENTITY new_guest_session_text3 "使用它的人將無法查看您的任何個人瀏覽數據（如已保存的登錄信息，歷史記錄或收藏夾）。\n\n當您的客人用完后，他們的瀏覽數據將被刪除，您的會話將恢復。">
 <!ENTITY restrictable_feature_advanced_settings_description2 "這包括導入收藏夾，修復標籤頁和自動更新。關閉以簡化設置，從而適合任何家庭成員。">
@@ -44,6 +42,10 @@
 <!ENTITY helper_first_offline_favorite_button "去到收藏夾">
 <!ENTITY helper_triple_readerview_open_message2 "收藏夾閱讀模式插件以便離線閱讀">
 <!ENTITY helper_triple_readerview_open_button2 "添加到收藏夾">
+<!ENTITY history_clear_dialog_title "刪除歷程記錄？">
+<!ENTITY history_clear_dialog_message "這會刪除您的歷程記錄且無法復原。">
+<!ENTITY history_clear_dialog_positive_button "刪除">
+<!ENTITY history_clear_dialog_negative_button "取消">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "想要自定義此選項卡？">
@@ -75,7 +77,7 @@
 <!ENTITY myoffrz_no_offers_title "看起來似乎我們沒有任何優惠">
 <!ENTITY myoffrz_no_offers_msg_line1 "但是我們將它們添加在此 ">
 <!ENTITY myoffrz_no_offers_msg_line2 "一旦我們有一個">
-<!ENTITY myoffrz_onboarding_description "獲取 &amp;brandMyOffrz 的優惠折扣及特價；">
+<!ENTITY myoffrz_onboarding_description "獲取 &brandMyOffrz; 的優惠折扣及特價；">
 <!ENTITY myoffrz_order_now_label "現在預訂！">
 <!ENTITY myoffrz_tap_code_to_copy_label "點擊代碼以複製">
 <!ENTITY myoffrz_terms_and_conditions_label "條款">
@@ -261,8 +263,7 @@
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "關於我們">
-<!ENTITY pref_category_about_us_summary
-    "應用版本，擴展版本，政策和許可，版權標記">
+<!ENTITY pref_category_about_us_summary "應用版本，擴展版本，政策和許可，版權標記">
 <!ENTITY pref_app_version "應用版本">
 <!ENTITY pref_about_arn "裝置ARN">
 <!ENTITY pref_extension_version "擴展版本">
@@ -321,8 +322,7 @@
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "已可供！">
-<!ENTITY prevent_ghostery_addon_dialog_message
-        "附加組件未作為&amp;formatS1安裝；已集成在您的瀏覽器中。">
+<!ENTITY prevent_ghostery_addon_dialog_message "附加組件未作為&formatS1；已安裝集成在您的瀏覽器中。">
 
 <!-- Change German translations in the 3-dots menu because they were too long -->
 <!ENTITY cliqz_contextmenu_pin_to_top_sites "鎖定至熱門網站">
@@ -331,3 +331,7 @@
 <!-- Change German translation text for snackbar -->
 <!ENTITY cliqz_pinned_page_to_top_sites "鎖定頁面至熱門網站">
 <!ENTITY cliqz_unpinned_page_from_top_sites "從熱門網站解鎖頁面">
+
+<!-- Url bar settings -->
+<!ENTITY ghostery_url_bar_default_text "Ghost搜索">
+

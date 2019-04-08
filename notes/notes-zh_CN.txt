@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-快乐浏览！
+有新版本可用：
+* 修复了可导致系统崩溃的错误
+* 可快速删除所有历史记录
+* 可轻松返回至 Ghost 搜索结果页面（点击返回按钮）
+* Ghost 搜索结果页面采用全新设计，内容呈现一目了然

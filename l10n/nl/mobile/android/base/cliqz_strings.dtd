@@ -16,7 +16,7 @@
 <!ENTITY activity_stream_top_news_show "Toon">
 <!ENTITY activity_stream_top_news_hide "Verberg">
 
-<!-- Favorites -->
+<!-- Favorites and History-->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
 <!ENTITY favorites_title "Favorieten">
 <!ENTITY favorites "Favorieten">
@@ -33,10 +33,8 @@
 <!ENTITY pref_dialog_activitystream_recentFavorites "Recente favorieten">
 <!ENTITY favorite_edit_title "Bewerk favoriet">
 <!ENTITY home_favorites_empty "Je opgeslagen favorieten verschijnen hier.">
-<!ENTITY favoritehistory_import_both "Favorieten en geschiedenis importeren
-                                      van Android">
-<!ENTITY favoritehistory_import_favorites "Favorieten importeren
-                                           van Android">
+<!ENTITY favoritehistory_import_both "Favorieten en geschiedenis van Android importeren">
+<!ENTITY favoritehistory_import_favorites "Favorieten van Android importeren">
 <!ENTITY searchable_description2 "Favorieten en geschiedenis">
 <!ENTITY new_guest_session_text3 "De persoon die het gebruikt kan niet in je persoonlijke browsingdata kijken (zoals opgeslagen logins, geschiedenis of favorieten).\n\nWanneer je gast klaar is wordt zijn/haar browsingdata verwijdert en jou sessie hersteld.">
 <!ENTITY restrictable_feature_advanced_settings_description2 "Dit is inclusief het importeren van favorieten, het herstellen van tabs en geautomatiseerde updates.  Zet uit voor eenvoudige instellingen geschikt voor ieder gezinslid.">
@@ -44,6 +42,10 @@
 <!ENTITY helper_first_offline_favorite_button "Ga naar favorieten">
 <!ENTITY helper_triple_readerview_open_message2 "Favoriete Reader View items om offline te lezen.">
 <!ENTITY helper_triple_readerview_open_button2 "Voeg toe aan favorieten">
+<!ENTITY history_clear_dialog_title "Geschiedenis verwijderen?">
+<!ENTITY history_clear_dialog_message "Hiermee wordt je geschiedenis verwijderd. Dit kan niet ongedaan worden gemaakt.">
+<!ENTITY history_clear_dialog_positive_button "Verwijder">
+<!ENTITY history_clear_dialog_negative_button "Annuleren">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Wil je deze tab aanpassen?">
@@ -261,8 +263,7 @@
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Over ons">
-<!ENTITY pref_category_about_us_summary
-    "AppVersie, Uigebreide versie, Beleid en Lincenties, Imprint">
+<!ENTITY pref_category_about_us_summary "AppVersie, Uigebreide versie, Beleid en Lincenties, Imprint">
 <!ENTITY pref_app_version "Applicatie Versie">
 <!ENTITY pref_about_arn "Apparaat ARN">
 <!ENTITY pref_extension_version "Uitgebreide Versie">
@@ -315,14 +316,13 @@
 
 <!-- Anti-phishing -->
 <!ENTITY antiphishing_dialog_title "Waarschuwing: misleidende website!">
-<!ENTITY antiphishing_message "&brandShortName; heeft toegang tot &amp;formatS1 geblokkeerd; omdat het bekend staat als een phishing website. Phishing websites doen zich voor als betrouwbare websites om inloggegevens, wachtwoord of andere gevoelige informatie van je te achterhalen.">
+<!ENTITY antiphishing_message "&brandShortName; heeft toegang tot &formatS1; geblokkeerd; omdat het bekend staat als een phishing website. Phishing websites doen zich voor als betrouwbare websites om inloggegevens, wachtwoord of andere gevoelige informatie van je te achterhalen.">
 <!ENTITY antiphishing_walk_away "Terug naar veilige site">
 <!ENTITY antiphishing_ignore_danger "Ga door ondanks waarschuwing">
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "Reeds beschikbaar!">
-<!ENTITY prevent_ghostery_addon_dialog_message
-        "Add-on is niet geïnstalleerd omdat &formatS1; al in je browser is geïntegreerd.">
+<!ENTITY prevent_ghostery_addon_dialog_message "Add-on is niet geïnstalleerd omdat &formatS1; al in je browser is geïntegreerd.">
 
 <!-- Change German translations in the 3-dots menu because they were too long -->
 <!ENTITY cliqz_contextmenu_pin_to_top_sites "Pin vast op Top Sites">
@@ -331,3 +331,7 @@
 <!-- Change German translation text for snackbar -->
 <!ENTITY cliqz_pinned_page_to_top_sites "Pagina op Top Sites vastgepind">
 <!ENTITY cliqz_unpinned_page_from_top_sites "Pagina van Top Sites losgemaakt">
+
+<!-- Url bar settings -->
+<!ENTITY ghostery_url_bar_default_text "Ghost Search">
+

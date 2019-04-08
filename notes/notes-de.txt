@@ -1,4 +1,5 @@
-Liebe Ghostery-Nutzer! Es gibt eine neue Version:
-* Browser startet schneller
-* private Suche ist flüssiger
-* Lite Theme - wechsle dein Theme in den Einstellung
+Es ist eine neue Version verfügbar:
+* Bugs behoben, die die App zum Absturz brachten
+* schnelle Möglichkeit, die gesamte Chronik zu löschen
+* einfache Möglichkeit, zu den Ergebnissen von Ghost Search zurückzukehren (Zurück-Button drücken)
+* besserer Überblick über die Ergebnisse von Ghost Search durch neues Design

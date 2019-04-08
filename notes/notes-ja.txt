@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-楽しく閲覧できます！
+新しいバージョンを利用できます：
+* アプリがクラッシュするバグを修正しました
+* すべての履歴をすばやく削除できるようになりました
+* Ghost Searchの結果に簡単に戻れるようになりました（「戻る」ボタンをクリック）
+* Ghost Searchの結果の概要がわかりやすくなるよう、デザインを一新しました

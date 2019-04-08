@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-¡Que navegues a gusto!
+Hay una nueva versión disponible:
+* corrección de errores que provocaban que la aplicación se bloqueara
+* ahora se puede eliminar todo el historial más rápidamente
+* ahora es más fácil volver a los resultados de la Búsqueda Ghost (mediante el botón Atrás)
+* vista de resultados de Búsqueda Ghost mejorada gracias a un nuevo diseño
