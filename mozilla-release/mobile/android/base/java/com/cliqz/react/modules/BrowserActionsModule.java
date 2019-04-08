@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.view.inputmethod.InputMethodManager;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -66,7 +67,7 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     @SuppressWarnings("unused")
-    public void searchHistory(String query, Promise promise) {
+    public void searchHistory(String query, Callback callback) {
         final int limit = 5;
         final BrowserDB sdb = BrowserDB.from(GeckoThread.getActiveProfile());
         final Context context = getReactApplicationContext();
@@ -75,7 +76,7 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
         final WritableArray wArray = Arguments.createArray();
 
         if (!cursor.moveToFirst()) {
-            promise.resolve(wArray);
+            callback.invoke(wArray);
             cursor.close();
             return;
         }
@@ -89,7 +90,7 @@ public class BrowserActionsModule extends ReactContextBaseJavaModule {
             wArray.pushMap(outData);
         } while (cursor.moveToNext());
 
-        promise.resolve(wArray);
+        callback.invoke(wArray);
         cursor.close();
     }
 
