@@ -79,6 +79,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.cliqz.ABManager;
+import com.cliqz.react.MigrationManager;
+import com.cliqz.react.SearchBackground;
+import com.cliqz.react.SearchUI;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -113,7 +119,6 @@ import org.mozilla.gecko.dlc.DlcStudyService;
 import org.mozilla.gecko.dlc.DlcSyncService;
 import org.mozilla.gecko.extensions.ExtensionPermissionsHelper;
 import org.mozilla.gecko.firstrun.OnboardingHelper;
-import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
 import org.mozilla.gecko.home.BrowserSearch;
 import org.mozilla.gecko.home.HomeBanner;
 import org.mozilla.gecko.home.HomeConfig;
@@ -192,13 +197,8 @@ import org.mozilla.gecko.widget.GeckoActionProvider;
 import org.mozilla.gecko.widget.SplashScreen;
 import org.mozilla.gecko.widget.themed.ThemedTabLayout;
 import org.mozilla.geckoview.DynamicToolbarAnimator;
+import org.mozilla.geckoview.DynamicToolbarAnimator.PinReason;
 import org.mozilla.geckoview.GeckoSession;
-
-/* Cliqz start */
-import com.cliqz.react.SearchBackground;
-import com.cliqz.react.SearchUI;
-import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
-/* Cliqz end */
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -214,8 +214,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mozilla.gecko.mma.MmaDelegate.NEW_TAB;
-import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 import static org.mozilla.gecko.util.JavaUtil.getBundleSizeInBytes;
+import static org.mozilla.gecko.util.ViewUtil.dpToPx;
 
 public class BrowserApp extends GeckoApp
                         implements ActionModePresenter,
@@ -717,6 +717,13 @@ public class BrowserApp extends GeckoApp
         // layout, which GeckoApp takes care of.
         final GeckoApplication app = (GeckoApplication) getApplication();
         app.prepareLightweightTheme();
+
+        /* Cliqz start */
+        PreferenceManager.init(this);
+        ABManager.init(this);
+        MigrationManager.getInstance().migrate(this);
+        SearchBackground.initialize(getApplication());
+        /* Cliqz end */
 
         super.onCreate(savedInstanceState);
 
