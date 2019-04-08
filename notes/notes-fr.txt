@@ -1,4 +1,5 @@
-Chers Utilisateurs Ghostery ! Une nouvelle version est prête:
-• Le navigateur démarre plus vite
-• La recherche privée est plus facile
-• Thème allégé - changez de thème quand vous le souhaitez dans les paramètres
+Une nouvelle version est disponible :
+*correction de bugs provoquant l'arrêt de l'application
+*suppression rapide de tout l'historique
+*retour simple aux résultats de la Recherche Ghost (appuyer sur le bouton de retour)
+*meilleur aperçu des résultats de la Recherche Ghost grâce à un nouveau design

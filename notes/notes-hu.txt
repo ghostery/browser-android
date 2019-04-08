@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-Kellemes böngészést!
+Új verzió érhető el:
+*az alkalmazás összeomlását okozó hibák javítva
+*az összes előzmény törlése gyorsan
+*egyszerű visszatérés a Ghost Search eredményekhez (a Vissza gomb megnyomásával)
+*a Ghost Search eredmények jobb áttekinthetősége az új dizájnnak köszönhetően

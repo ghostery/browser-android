@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-Miłego przeglądania!
+Dostępna jest nowa wersja:
+* naprawiono błędy powodujące awarię aplikacji
+* szybki sposób usunięcia całej historii
+* szybki sposób powrotu do wyników wyszukiwania Ghost Search (naciśnij przycisk wstecz)
+* lepszy podgląd wyników wyszukiwania Ghost Search dzięki nowemu wyglądowi

@@ -16,7 +16,7 @@
 <!ENTITY activity_stream_top_news_show "Mostrar">
 <!ENTITY activity_stream_top_news_hide "Ocultar">
 
-<!-- Favorites -->
+<!-- Favorites and History-->
 <!-- Favorites for Cliqz/Ghostery. Bookmarks for Firefox -->
 <!ENTITY favorites_title "Favoritos">
 <!ENTITY favorites "Favoritos">
@@ -33,10 +33,8 @@
 <!ENTITY pref_dialog_activitystream_recentFavorites "Favoritos recientes">
 <!ENTITY favorite_edit_title "Editar favorito">
 <!ENTITY home_favorites_empty "Los favoritos que guardes aparecen aquí.">
-<!ENTITY favoritehistory_import_both "Importando favoritos e historial
-                                      de Android">
-<!ENTITY favoritehistory_import_favorites "Importando favoritos
-                                           de Android">
+<!ENTITY favoritehistory_import_both "Importar favoritos e historial desde Android">
+<!ENTITY favoritehistory_import_favorites "Importar favoritos desde Android">
 <!ENTITY searchable_description2 "Favoritos e historial">
 <!ENTITY new_guest_session_text3 "La persona que lo use no podrá ver ninguno de tus datos personales de navegación (como inicios de sesión, historial o favoritos).\n\nCuando tu invitado haya terminado, se borrarán sus datos de navegación y se restaurará tu sesión.">
 <!ENTITY restrictable_feature_advanced_settings_description2 "Esto incluye importar favoritos, restaurar pestañas y actualizaciones automáticas. Desactívalo para ajustes simplificados aptos para cualquier miembro de la familia.">
@@ -44,6 +42,10 @@
 <!ENTITY helper_first_offline_favorite_button "Ir a favoritos">
 <!ENTITY helper_triple_readerview_open_message2 "Marca elementos de la lista de lectura como favoritos para leeerlos sin conexión.">
 <!ENTITY helper_triple_readerview_open_button2 "Añadir a favoritos">
+<!ENTITY history_clear_dialog_title "¿Eliminar el historial?">
+<!ENTITY history_clear_dialog_message "Se eliminará tu historial. Esta acción no puede deshacerse.">
+<!ENTITY history_clear_dialog_positive_button "Borrar">
+<!ENTITY history_clear_dialog_negative_button "Cancelar">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "¿Quieres personalizar esta pestaña?">
@@ -261,8 +263,7 @@
 
 <!-- About Settings -->
 <!ENTITY pref_category_about_us "Sobre nosotros">
-<!ENTITY pref_category_about_us_summary
-    "AppVersion, versión de extensión, políticas y licencias, información legal">
+<!ENTITY pref_category_about_us_summary "AppVersion, versión de extensión, políticas y licencias, información legal">
 <!ENTITY pref_app_version "Versión de la aplicación">
 <!ENTITY pref_about_arn "ARN de dispositivo">
 <!ENTITY pref_extension_version "Versión de la extensión">
@@ -321,8 +322,7 @@
 
 <!-- Ghostery Addon preventing dialog -->
 <!ENTITY prevent_ghostery_addon_dialog_title "¡Ya disponible!">
-<!ENTITY prevent_ghostery_addon_dialog_message
-        "La extensión &formatS1; ya está instalada en tu navegador.">
+<!ENTITY prevent_ghostery_addon_dialog_message "La extensión &formatS1; ya está instalada en tu navegador.">
 
 <!-- Change German translations in the 3-dots menu because they were too long -->
 <!ENTITY cliqz_contextmenu_pin_to_top_sites "Fijar en sitios más visitados">
@@ -331,3 +331,7 @@
 <!-- Change German translation text for snackbar -->
 <!ENTITY cliqz_pinned_page_to_top_sites "Página añadida a sitios más visitados">
 <!ENTITY cliqz_unpinned_page_from_top_sites "Página eliminada de sitios más visitados">
+
+<!-- Url bar settings -->
+<!ENTITY ghostery_url_bar_default_text "Búsqueda fantasma">
+

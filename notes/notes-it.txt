@@ -1,3 +1,5 @@
-Questa versione fa ritornare il browser al futuro, e lo riporta a grandi velocità! Include un aggiornamento della nostra tecnologia di ad-blocking e molti altri miglioramenti. 
-
-Buona navigazione!
+È disponibile una nuova versione:
+* correzione dei bug che causavano l'arresto anomalo dell'app
+* metodo rapido per cancellare tutta la cronologia
+* modo semplice per tornare ai risultati della ricerca Ghost (premi il pulsante Indietro)
+* panoramica migliore per i risultati della ricerca Ghost grazie al nuovo design

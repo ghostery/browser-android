@@ -1,3 +1,5 @@
-The latest release makes the browser faster once again. It comes with a major update of our ad-blocking technology and several other improvements.
-
-언제나 즐거운 브라우징!
+새 버전 소개
+* 앱 충돌을 일으키는 버그 수정
+* 편리한 기록 전체 삭제 기능
+* Ghost Search 결과로 간편하게 돌아가기('뒤로' 버튼 누르기)
+* 새 디자인을 적용해 Ghost Search 결과 표시 방식 개선
