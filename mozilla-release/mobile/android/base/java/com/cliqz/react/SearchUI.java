@@ -2,7 +2,6 @@ package com.cliqz.react;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,8 +9,6 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.ReactContext;
 
-import org.mozilla.gecko.R;
-import org.mozilla.gecko.preferences.PreferenceManager;
 import org.mozilla.gecko.util.AppBackgroundManager;
 
 /**
@@ -26,6 +23,10 @@ public class SearchUI {
     public SearchUI() {}
 
     public void onCreate(Context context) {
+        if (mReactRootView != null) {
+            return;
+        }
+
         mBackgroundManager = AppBackgroundManager.getInstance(context);
 
         final SearchBackground mSearchBackground = SearchBackground.getInstance();
@@ -33,7 +34,6 @@ public class SearchUI {
 
         mReactRootView = new ReactRootView(context);
         mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
-
     }
 
     public void show() {
@@ -51,9 +51,13 @@ public class SearchUI {
 
     public void addToView(ViewGroup parent) {
         if (mReactRootView != null) {
-            mReactRootView.removeAllViews();
-            mReactRootView.setId(View.NO_ID);
             parent.addView(mReactRootView);
+        }
+    }
+
+    public void removeFromView(ViewGroup parent) {
+        if (mReactRootView != null) {
+            parent.removeView(mReactRootView);
         }
     }
 
@@ -68,6 +72,7 @@ public class SearchUI {
     public void onDestroy() {
         if (mReactRootView != null) {
             mReactRootView.unmountReactApplication();
+            mReactRootView = null;
         }
     }
 }
