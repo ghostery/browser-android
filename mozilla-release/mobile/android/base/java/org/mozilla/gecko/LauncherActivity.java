@@ -14,35 +14,38 @@ import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.util.Log;
 
-import org.mozilla.gecko.customtabs.CustomTabsActivity;
-import org.mozilla.gecko.db.BrowserContract;
-import org.mozilla.gecko.deeplink.DeepLinkContract;
 import org.mozilla.gecko.home.HomeConfig;
 import org.mozilla.gecko.mma.MmaDelegate;
+import org.mozilla.gecko.switchboard.SwitchBoard;
+import org.mozilla.gecko.util.FileUtils;
+import org.mozilla.gecko.webapps.WebAppActivity;
+import org.mozilla.gecko.webapps.WebAppIndexer;
+import org.mozilla.gecko.customtabs.CustomTabsActivity;
+import org.mozilla.gecko.db.BrowserContract;
 import org.mozilla.gecko.mozglue.SafeIntent;
 import org.mozilla.gecko.preferences.GeckoPreferences;
 import org.mozilla.gecko.tabqueue.TabQueueHelper;
 import org.mozilla.gecko.tabqueue.TabQueueService;
-import org.mozilla.gecko.webapps.WebAppActivity;
-import org.mozilla.gecko.webapps.WebAppIndexer;
 
 import static org.mozilla.gecko.BrowserApp.ACTIVITY_REQUEST_PREFERENCES;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.DEEP_LINK_SCHEME;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_BOOKMARK_LIST;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_DEFAULT_BROWSER;
-import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_FXA_SIGNIN;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_HISTORY_LIST;
+import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_HOME;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_ACCESSIBILITY;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_GENERAL;
-import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_HOME;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_NOTIFICATIONS;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_PRIAVACY;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_PREFERENCES_SEARCH;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_SAVE_AS_PDF;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_SIGN_UP;
 import static org.mozilla.gecko.deeplink.DeepLinkContract.SUMO_DEFAULT_BROWSER;
+import static org.mozilla.gecko.deeplink.DeepLinkContract.LINK_FXA_SIGNIN;
 import static org.mozilla.gecko.util.FileUtils.isContentUri;
+
+import org.mozilla.gecko.deeplink.DeepLinkContract;
 
 /**
  * Activity that receives incoming Intents and dispatches them to the appropriate activities (e.g. browser, custom tabs, web app).

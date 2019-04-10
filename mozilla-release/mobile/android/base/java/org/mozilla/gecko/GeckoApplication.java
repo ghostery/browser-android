@@ -11,7 +11,6 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -71,12 +70,17 @@ import org.mozilla.gecko.util.ThreadUtils;
 import org.mozilla.geckoview.GeckoRuntime;
 import org.mozilla.geckoview.GeckoRuntimeSettings;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Locale;
 import java.util.UUID;
 
 public class GeckoApplication extends Application
@@ -406,9 +410,46 @@ public class GeckoApplication extends Application
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(LOG_TAG, "Can't find " + getPackageName(), e);
         }
+        if (isMainProcess()) {
+            PreferenceManager.init(context);
+            ABManager.init(context);
+            MigrationManager.getInstance().migrate(context);
+            SearchBackground.initialize(this);
+        }
         /* Cliqz end */
 
         super.onCreate();
+    }
+
+    private static boolean isMainProcess() {
+        final int pid = android.os.Process.myPid();
+        final String cmdLinePath = String.format(Locale.US, "/proc/%d/cmdline", pid);
+        final File cmdLineFile = new File(cmdLinePath);
+        InputStreamReader isr =null;
+        BufferedReader br = null;
+        try {
+            isr = new InputStreamReader(new FileInputStream(cmdLineFile));
+            br = new BufferedReader(isr);
+            final String processName = br.readLine();
+            return !processName.contains(":");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            safeClose(br);
+            safeClose(isr);
+        }
+        return false;
+    }
+
+    private static void safeClose(Closeable closeable) {
+        if (closeable == null) {
+            return;
+        }
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
