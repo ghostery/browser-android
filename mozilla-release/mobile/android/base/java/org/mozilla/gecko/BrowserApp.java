@@ -1701,6 +1701,7 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
+        mSearchUI.removeFromView(mHomeScreenContainer);
         mSearchUI.onDestroy();
         /* Cliqz end */
 
