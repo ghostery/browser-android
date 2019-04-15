@@ -75,7 +75,9 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
 
     // Replace the Bug number below with your Bug that is conducting a DB upgrade, as to force a merge conflict with any
     // other patches that require a DB upgrade.
-    public static final int DATABASE_VERSION = 39; // Bug 1364644
+    /*Cliqz start*/
+    public static final int DATABASE_VERSION = 40;
+    /*Cliqz end*/
     public static final String DATABASE_NAME = "browser.db";
     /*Cliqz start*/
     public static final String GHOSTERY_DATABASE_NAME = "ghostery.db";
@@ -2158,6 +2160,20 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
         updateBookmarksTableAddSyncTrackerFields(db);
     }
 
+    /*Cliqz start*/
+    private void upgradeDatabaseFrom39to40(final SQLiteDatabase db) {
+        final File file = new File(getGhosteryDatabasePath());
+        final boolean ghosteryDbExists = file.exists();
+        if(ghosteryDbExists) {
+            db.setTransactionSuccessful();
+            db.endTransaction();//need to end transaction to attach the db
+            db.execSQL("ATTACH DATABASE '" + getGhosteryDatabasePath() + "' AS ghostery;");
+            db.beginTransaction();//continue the previous flow of the transaction
+            reMigrateBookmarks(db);
+        }
+    }
+    /*Cliqz end*/
+
     private void updateBookmarksTableAddSyncTrackerFields(final SQLiteDatabase db) {
         // Perform schema migration. Mark every record as "needs to be synced" by default.
         db.execSQL("ALTER TABLE " + TABLE_BOOKMARKS +
@@ -2424,6 +2440,11 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
                 case 39:
                     upgradeDatabaseFrom38to39(db);
                     break;
+                /*Cliqz start*/
+                case 40:
+                    upgradeDatabaseFrom39to40(db);
+                    break;
+                /*Cliqz End*/
             }
         }
 
@@ -2543,6 +2564,86 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
         return mContext.getDatabasePath(GHOSTERY_DATABASE_NAME).getPath();
     }
 
+    private void reMigrateBookmarks(SQLiteDatabase db) {
+        //create a migration folder, we redo the migration in this folder
+        final Cursor totalRowsCursor = db.rawQuery("SELECT max(_id)  FROM bookmarks", null);
+        int maxRowId = 0;
+        while(totalRowsCursor.moveToNext()) {
+            maxRowId = totalRowsCursor.getInt(0);
+        }
+        totalRowsCursor.close();
+        final ContentValues migrationFolderContentValues = new ContentValues();
+        //we offset it by 200 to be safe. There could be dangling pointers from old migration
+        //which could point to new entries if we don't offset
+        migrationFolderContentValues.put(Bookmarks.ID, maxRowId + 200);
+        migrationFolderContentValues.put(Bookmarks.TITLE, mContext.getString(R.string.bookmarks_restored));
+        migrationFolderContentValues.put(Bookmarks.TYPE, Bookmarks.TYPE_FOLDER);
+        migrationFolderContentValues.put(Bookmarks.PARENT, 1);
+        migrationFolderContentValues.put(Bookmarks.POSITION, Long.MIN_VALUE);
+        migrationFolderContentValues.put(Bookmarks.DATE_CREATED, System.currentTimeMillis());
+        migrationFolderContentValues.put(Bookmarks.DATE_MODIFIED, System.currentTimeMillis());
+        migrationFolderContentValues.put(Bookmarks.GUID, Utils.generateGuid());
+        migrationFolderContentValues.put(Bookmarks.IS_DELETED, 0);
+        migrationFolderContentValues.put(Bookmarks.SYNC_VERSION, 0);
+        migrationFolderContentValues.put(Bookmarks.LOCAL_VERSION, 1);
+        final long migrationFolderID = db.insert(Bookmarks.TABLE_NAME, null, migrationFolderContentValues);
+        final SparseIntArray folders = new SparseIntArray();
+        final Cursor rowCursor = db.rawQuery("SELECT * FROM ghostery.bookmarks ORDER BY _id ASC", null);
+        // If there are not rows, it is pointless to continue the migration
+        if (rowCursor.getCount() == 0) {
+            rowCursor.close();
+            FavoritesMigrationMetrics.folders(0, 0, 0);
+            return;
+        }
+        final Cursor maxIdCursor = db.rawQuery("SELECT MAX(_id) AS maxId FROM bookmarks", null);
+        final int idColumnIndex = rowCursor.getColumnIndex("_id");
+        final int urlColumnIndex = rowCursor.getColumnIndex("url");
+        final int titleColumnIndex = rowCursor.getColumnIndex("title");
+        final int parentIdColumnIndex = rowCursor.getColumnIndex("bookmark_folder_id");
+        final int dateColumnIndex = rowCursor.getColumnIndex("date");
+        int maxId = 0;
+        while(maxIdCursor.moveToNext()) {
+            maxId = maxIdCursor.getInt(0);
+        }
+        maxIdCursor.close();
+        int count = 0;
+        int rootCount = 0;
+        while(rowCursor.moveToNext()) {
+            final int id = rowCursor.getInt(idColumnIndex);
+            final String url = rowCursor.getString(urlColumnIndex);
+            final String title = rowCursor.getString(titleColumnIndex);
+            final int parentId = rowCursor.getInt(parentIdColumnIndex);
+            final long timeStamp = rowCursor.getLong(dateColumnIndex);
+            final ContentValues contentValues = new ContentValues();
+            final boolean isFolder = url == null;
+            contentValues.put(Bookmarks.ID, id + maxId);
+            contentValues.put(Bookmarks.TITLE, title);
+            contentValues.put(Bookmarks.URL, url);
+            contentValues.put(Bookmarks.TYPE, isFolder ? Bookmarks.TYPE_FOLDER : Bookmarks.TYPE_BOOKMARK);
+            // Firefox has already some entry added, so we adjust the parent id
+            contentValues.put(Bookmarks.PARENT, parentId == -1 ? migrationFolderID : parentId + maxId);
+            contentValues.put(Bookmarks.POSITION, Long.MIN_VALUE);
+            contentValues.put(Bookmarks.DATE_CREATED, timeStamp);
+            contentValues.put(Bookmarks.DATE_MODIFIED, timeStamp);
+            contentValues.put(Bookmarks.GUID, Utils.generateGuid());
+            contentValues.put(Bookmarks.IS_DELETED, 0);
+            contentValues.put(Bookmarks.SYNC_VERSION, 0);
+            contentValues.put(Bookmarks.LOCAL_VERSION, 1);
+            db.insert(Bookmarks.TABLE_NAME, null, contentValues);
+
+            if (isFolder) {
+                folders.append(id, parentId);
+                rootCount = parentId == -1 ? rootCount+1 : rootCount;
+            }
+            count++;
+        }
+        rowCursor.close();
+
+        // Anolysis here
+        final int maxDepth = calculateMaxDepth(folders);
+        FavoritesMigrationMetrics.folders(count, rootCount, maxDepth);
+    }
+
     private void migrateBookmarks(SQLiteDatabase db) {
         final SparseIntArray folders = new SparseIntArray();
         final Cursor rowCursor = db.rawQuery("SELECT * FROM ghostery.bookmarks ORDER BY _id ASC", null);
@@ -2573,6 +2674,7 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
             final long timeStamp = rowCursor.getLong(dateColumnIndex);
             final ContentValues contentValues = new ContentValues();
             final boolean isFolder = url == null;
+            contentValues.put(Bookmarks.ID, id + maxId);
             contentValues.put(Bookmarks.TITLE, title);
             contentValues.put(Bookmarks.URL, url);
             contentValues.put(Bookmarks.TYPE, isFolder ? Bookmarks.TYPE_FOLDER : Bookmarks.TYPE_BOOKMARK);
