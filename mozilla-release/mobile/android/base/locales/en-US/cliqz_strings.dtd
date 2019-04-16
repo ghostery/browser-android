@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "This will delete your history and cannot be undone.">
 <!ENTITY history_clear_dialog_positive_button "Delete">
 <!ENTITY history_clear_dialog_negative_button "Cancel">
+<!ENTITY bookmarks_restored "Recovered">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Want to customize this tab?">

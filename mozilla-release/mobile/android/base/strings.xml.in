@@ -91,6 +91,7 @@
   <string name="bookmark_already_added">&favorite_already_added;</string>
   <string name="bookmark_removed">&favorite_removed;</string>
   <string name="bookmark_updated">&favorite_updated;</string>
+  <string name="bookmarks_restored">&bookmarks_restored;</string>
   <!-- Cliqz end -->
   <string name="bookmark_options">&bookmark_options;</string>
   <string name="bookmark_save">&bookmark_save;</string>
