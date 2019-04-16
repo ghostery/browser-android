@@ -2564,18 +2564,32 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
         return mContext.getDatabasePath(GHOSTERY_DATABASE_NAME).getPath();
     }
 
+    //The idea is to create a new bookmark folder and redo the migration in that folder
     private void reMigrateBookmarks(SQLiteDatabase db) {
-        //create a migration folder, we redo the migration in this folder
+        //There could be dangling pointers from old migration which could point to future entries
+        //if we don't calculate the starting id of the new entries properly.
         final Cursor totalRowsCursor = db.rawQuery("SELECT max(_id)  FROM bookmarks", null);
         int maxRowId = 0;
         while(totalRowsCursor.moveToNext()) {
             maxRowId = totalRowsCursor.getInt(0);
         }
         totalRowsCursor.close();
+        final Cursor maxParentIDCursor = db.rawQuery("SELECT max(parent)  FROM bookmarks", null);
+        int maxParentId = 0;
+        while(maxParentIDCursor.moveToNext()) {
+            maxParentId = maxParentIDCursor.getInt(0);
+        }
+        maxParentIDCursor.close();
+        int migrationFolderId = 0;
+        if (maxRowId + 1 > maxParentId) {
+            //There are no dangling pointers pointing to the future, so its good to use maxRowsId + 1 as our starting id for the new migration
+            migrationFolderId = maxRowId + 1;
+        } else {
+            //There are dangling pointers pointing to the future, so we chose our starting id as one number ahead of this dangling pointer
+            migrationFolderId = maxParentId + 1;
+        }
         final ContentValues migrationFolderContentValues = new ContentValues();
-        //we offset it by 200 to be safe. There could be dangling pointers from old migration
-        //which could point to new entries if we don't offset
-        migrationFolderContentValues.put(Bookmarks.ID, maxRowId + 200);
+        migrationFolderContentValues.put(Bookmarks.ID, migrationFolderId);
         migrationFolderContentValues.put(Bookmarks.TITLE, mContext.getString(R.string.bookmarks_restored));
         migrationFolderContentValues.put(Bookmarks.TYPE, Bookmarks.TYPE_FOLDER);
         migrationFolderContentValues.put(Bookmarks.PARENT, 1);
@@ -2586,7 +2600,7 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
         migrationFolderContentValues.put(Bookmarks.IS_DELETED, 0);
         migrationFolderContentValues.put(Bookmarks.SYNC_VERSION, 0);
         migrationFolderContentValues.put(Bookmarks.LOCAL_VERSION, 1);
-        final long migrationFolderID = db.insert(Bookmarks.TABLE_NAME, null, migrationFolderContentValues);
+        db.insert(Bookmarks.TABLE_NAME, null, migrationFolderContentValues);
         final SparseIntArray folders = new SparseIntArray();
         final Cursor rowCursor = db.rawQuery("SELECT * FROM ghostery.bookmarks ORDER BY _id ASC", null);
         // If there are not rows, it is pointless to continue the migration
@@ -2595,17 +2609,11 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
             FavoritesMigrationMetrics.folders(0, 0, 0);
             return;
         }
-        final Cursor maxIdCursor = db.rawQuery("SELECT MAX(_id) AS maxId FROM bookmarks", null);
         final int idColumnIndex = rowCursor.getColumnIndex("_id");
         final int urlColumnIndex = rowCursor.getColumnIndex("url");
         final int titleColumnIndex = rowCursor.getColumnIndex("title");
         final int parentIdColumnIndex = rowCursor.getColumnIndex("bookmark_folder_id");
         final int dateColumnIndex = rowCursor.getColumnIndex("date");
-        int maxId = 0;
-        while(maxIdCursor.moveToNext()) {
-            maxId = maxIdCursor.getInt(0);
-        }
-        maxIdCursor.close();
         int count = 0;
         int rootCount = 0;
         while(rowCursor.moveToNext()) {
@@ -2616,12 +2624,13 @@ public class BrowserDatabaseHelper extends SQLiteOpenHelper {
             final long timeStamp = rowCursor.getLong(dateColumnIndex);
             final ContentValues contentValues = new ContentValues();
             final boolean isFolder = url == null;
-            contentValues.put(Bookmarks.ID, id + maxId);
+            //Every row id is offset by the id of the last entry in our db which is the id of the migration folder
+            contentValues.put(Bookmarks.ID, id + migrationFolderId);
             contentValues.put(Bookmarks.TITLE, title);
             contentValues.put(Bookmarks.URL, url);
             contentValues.put(Bookmarks.TYPE, isFolder ? Bookmarks.TYPE_FOLDER : Bookmarks.TYPE_BOOKMARK);
-            // Firefox has already some entry added, so we adjust the parent id
-            contentValues.put(Bookmarks.PARENT, parentId == -1 ? migrationFolderID : parentId + maxId);
+            //Bookmarks pointing to root folder will now point to the migration folder, and the rest are offset as above
+            contentValues.put(Bookmarks.PARENT, parentId == -1 ? migrationFolderId : parentId + migrationFolderId);
             contentValues.put(Bookmarks.POSITION, Long.MIN_VALUE);
             contentValues.put(Bookmarks.DATE_CREATED, timeStamp);
             contentValues.put(Bookmarks.DATE_MODIFIED, timeStamp);
