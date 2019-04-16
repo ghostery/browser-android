@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
@@ -30,10 +31,10 @@ public class SearchUI {
         mBackgroundManager = AppBackgroundManager.getInstance(context);
 
         final SearchBackground mSearchBackground = SearchBackground.getInstance();
-        mReactInstanceManager = mSearchBackground.mReactInstanceManager;
+        mSearchBackground.createView(context);
 
-        mReactRootView = new ReactRootView(context);
-        mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
+        mReactInstanceManager = mSearchBackground.mReactInstanceManager;
+        mReactRootView = mSearchBackground.mReactRootView;
     }
 
     public void show() {
@@ -71,7 +72,6 @@ public class SearchUI {
 
     public void onDestroy() {
         if (mReactRootView != null) {
-            mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
     }
