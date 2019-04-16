@@ -327,7 +327,7 @@ public class BrowserApp extends GeckoApp
     private SafeIntent safeStartingIntent;
     private Intent startingIntentAfterPip;
     private boolean isInAutomation;
-    private SearchUI mSearchUI = new SearchUI();
+    private final SearchUI searchUI = new SearchUI();
 
     // The types of guest mode dialogs we show.
     public static enum GuestModeDialog {
@@ -683,7 +683,7 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        if (keyCode == KeyEvent.KEYCODE_MENU && mSearchUI != null) {
+        if (keyCode == KeyEvent.KEYCODE_MENU && searchUI != null) {
             SearchBackground.getInstance().showDevOptionsDialog();
             return true;
         }
@@ -827,8 +827,8 @@ public class BrowserApp extends GeckoApp
 
         mHomeScreenContainer = (ViewGroup) findViewById(R.id.home_screen_container);
         /* Cliqz start */
-        mSearchUI.onCreate(this);
-        mSearchUI.addToView(mHomeScreenContainer);
+        searchUI.onCreate(this);
+        searchUI.addToView(mHomeScreenContainer);
 
         mBrowserSearchContainer = findViewById(R.id.search_container);
         mBrowserSearch = (BrowserSearch) getSupportFragmentManager().findFragmentByTag(BROWSER_SEARCH_TAG);
@@ -1245,7 +1245,7 @@ public class BrowserApp extends GeckoApp
         }
 
         /* Cliqz start */
-        mSearchUI.onResume(this);
+        searchUI.onResume(this);
         /* Cliqz end */
 
         if (!mHasResumed) {
@@ -1380,6 +1380,11 @@ public class BrowserApp extends GeckoApp
         if (mIsAbortingAppLaunch) {
             return;
         }
+
+        /* Cliqz start */
+        searchUI.removeFromView(mHomeScreenContainer);
+        searchUI.onStop();
+        /* Cliqz end */
 
         if (mPipController.isInPipMode()) {
             // If screen is locked we should exit PictureInPicture mode
@@ -1699,11 +1704,6 @@ public class BrowserApp extends GeckoApp
             super.onDestroy();
             return;
         }
-
-        /* Cliqz start */
-        mSearchUI.removeFromView(mHomeScreenContainer);
-        mSearchUI.onDestroy();
-        /* Cliqz end */
 
         if (mProgressView != null) {
             mProgressView.setDynamicToolbar(null);
@@ -3268,7 +3268,7 @@ public class BrowserApp extends GeckoApp
         mHomeScreenContainer.setVisibility(View.VISIBLE);
         /* Cliqz Start */
         com.cliqz.Telemetry.sendFreshTabShownTelemetry(mPreferenceManager);
-        mSearchUI.hide();
+        searchUI.hide();
         /* Cliqz End */
         mHomeScreen.load(getSupportLoaderManager(),
                         getSupportFragmentManager(),
@@ -3384,7 +3384,7 @@ public class BrowserApp extends GeckoApp
         // show Cliqz search cards if quick search enabled otherwise show firefox one.
         final boolean isQuickSearchEnabled = mPreferenceManager.isQuickSearchEnabled();
         if(isQuickSearchEnabled) {
-            mSearchUI.show();
+            searchUI.show();
         } else {
             if (mBrowserSearch.getUserVisibleHint()) {
                 return;
@@ -4640,7 +4640,7 @@ public class BrowserApp extends GeckoApp
     @Override
     public void onOnboardingScreensVisible() {
         mHomeScreenContainer.setVisibility(View.VISIBLE);
-        mSearchUI.hide();
+        searchUI.hide();
 
         if (HardwareUtils.isTablet()) {
             mTabStrip.setOnTabChangedListener(new BrowserApp.TabStripInterface.OnTabAddedOrRemovedListener() {
@@ -4673,7 +4673,7 @@ public class BrowserApp extends GeckoApp
 
 
     private void hidePanelSearch() {
-        mSearchUI.hide();
+        searchUI.hide();
     }
 
     public void toggleControlCenter() {

@@ -69,7 +69,7 @@ public class SearchUI {
         }
     }
 
-    public void onDestroy() {
+    public void onStop() {
         if (mReactRootView != null) {
             mReactRootView.unmountReactApplication();
             mReactRootView = null;
