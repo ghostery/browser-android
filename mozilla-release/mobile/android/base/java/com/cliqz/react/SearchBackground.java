@@ -4,7 +4,9 @@ import android.app.Application;
 import android.util.SparseArray;
 
 import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.CatalystInstance;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
@@ -12,6 +14,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.common.LifecycleState;
+import com.facebook.react.modules.appregistry.AppRegistry;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.shell.MainReactPackage;
 
@@ -19,6 +22,7 @@ import org.mozilla.gecko.BuildConfig;
 import org.mozilla.gecko.util.EventCallback;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import android.content.Context;
 
 /**
  * Copyright © Cliqz 2019
@@ -27,6 +31,7 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
     private static SearchBackground ourInstance;
     public final ReactInstanceManager mReactInstanceManager;
     private ReactContext mReactContext;
+    public ReactRootView mReactRootView;
     private final SparseArray<EventCallback> callbacks = new SparseArray<>();
     AtomicInteger idGenerator = new AtomicInteger(1);
 
@@ -46,10 +51,9 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
                 .addPackage(new BridgePackage())
                 .addPackage(new MainReactPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
-                .setInitialLifecycleState(LifecycleState.BEFORE_RESUME)
+                .setInitialLifecycleState(LifecycleState.BEFORE_CREATE)
                 .build();
         mReactInstanceManager.addReactInstanceEventListener(this);
-        mReactInstanceManager.createReactContextInBackground();
     }
 
     public void showDevOptionsDialog() {
@@ -183,6 +187,17 @@ public class SearchBackground implements ReactInstanceManager.ReactInstanceEvent
     @Override
     public void onReactContextInitialized(ReactContext context) {
         mReactContext = context;
+        createView(context);
+    }
+
+    /**
+     * View can be forced
+     */
+    public void createView(Context context) {
+        if (mReactRootView == null) {
+            mReactRootView = new ReactRootView(context);
+            mReactRootView.startReactApplication(mReactInstanceManager, "BrowserCoreApp", null);
+        }
     }
 
     private static ReadableMap getSearchSenderArgument() {
