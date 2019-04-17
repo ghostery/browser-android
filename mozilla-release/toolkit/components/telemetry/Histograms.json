@@ -14495,7 +14495,7 @@
     "expires_in_version": "never",
     "releaseChannelCollection": "opt-out",
     "kind": "categorical",
-    "labels": ["missing", "8.2.16", "8.2.17", "8.2.18", "8.2.19", "8.2.20", "8.2.21", "8.2.22", "8.2.23", "8.2.24", "8.2.25", "8.2.26", "8.2.27", "8.2.28", "8.2.29", "8.2.30"],
+    "labels": ["missing", "v8_2_16", "v8_2_17", "v8_2_18", "v8_2_19", "v8_2_20", "v8_2_21", "v8_2_22", "v8_2_23", "v8_2_24", "v8_2_25", "v8_2_26", "v8_2_27", "v8_2_28", "v8_2_29", "v8_2_30"],
     "description": "Cliqz addon version",
     "alert_emails": [],
     "bug_numbers": []
