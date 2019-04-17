@@ -531,7 +531,7 @@ var BrowserApp = {
       } catch (e) {
         // we have  a problem
       }
-      Telemetry.addData("CLIQZ_ADDON_VERSION", version);
+      Telemetry.addData("CLIQZ_ADDON_VERSION", `v${version.replace(/\./g, "_")}`);
     });
     /* Cliqz end */
 
