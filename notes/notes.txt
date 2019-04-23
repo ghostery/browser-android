@@ -1,4 +1,3 @@
-Here are the release notes, can you add this?
 Dear Ghostery users! A new version is ready:
 * browser starts faster
 * private search is smoother
