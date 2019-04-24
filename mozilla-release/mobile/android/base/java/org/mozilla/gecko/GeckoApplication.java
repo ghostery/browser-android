@@ -419,6 +419,10 @@ public class GeckoApplication extends Application
         /* Cliqz end */
 
         super.onCreate();
+
+        /* Cliqz start */
+        TLSProviderInstaller.install(context);
+        /* Cliqz end */
     }
 
     private static boolean isMainProcess() {
