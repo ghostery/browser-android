@@ -1102,6 +1102,7 @@
         <item name="android:textAlignment">center</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
     </style>
     <style name="Cliqz.Intro.Text.Content" parent="Cliqz.Intro.Text">
         <item name="android:textSize">@dimen/cliqz_intro_content_size</item>
