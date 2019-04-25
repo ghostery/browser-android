@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "這會刪除您的歷程記錄且無法復原。">
 <!ENTITY history_clear_dialog_positive_button "刪除">
 <!ENTITY history_clear_dialog_negative_button "取消">
+<!ENTITY bookmarks_restored "已復原">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "想要自定義此選項卡？">

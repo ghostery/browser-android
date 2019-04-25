@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "이 작업을 실행하면 기록이 삭제되며 복원할 수 없습니다.">
 <!ENTITY history_clear_dialog_positive_button "삭제 ">
 <!ENTITY history_clear_dialog_negative_button "취소 ">
+<!ENTITY bookmarks_restored "복원됨">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "이 탭을 사용자 지정하시겠습니까?">

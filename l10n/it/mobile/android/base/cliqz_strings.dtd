@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "La cronologia verrà cancellata e non sarà possibile annullare l\'operazione.">
 <!ENTITY history_clear_dialog_positive_button "Cancella">
 <!ENTITY history_clear_dialog_negative_button "Annulla">
+<!ENTITY bookmarks_restored "Recuperati">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Vuoi personalizzare questa scheda?">

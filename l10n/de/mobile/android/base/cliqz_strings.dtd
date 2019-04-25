@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "Damit wird die Chronik gelöscht und kann nicht wiederhergestellt werden.">
 <!ENTITY history_clear_dialog_positive_button "Löschen">
 <!ENTITY history_clear_dialog_negative_button "Abbrechen">
+<!ENTITY bookmarks_restored "Wiederhergestellt">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Diese Startseite anpassen?">

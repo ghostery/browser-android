@@ -1,5 +1,4 @@
-È disponibile una nuova versione:
-* correzione dei bug che causavano l'arresto anomalo dell'app
-* metodo rapido per cancellare tutta la cronologia
-* modo semplice per tornare ai risultati della ricerca Ghost (premi il pulsante Indietro)
-* panoramica migliore per i risultati della ricerca Ghost grazie al nuovo design
+Gentili utenti Ghostery, è disponibile una nuova versione:
+* il browser si avvia più velocemente
+* la ricerca privata è più semplice
+* tema Lite: cambia tema quando vuoi dalle impostazioni

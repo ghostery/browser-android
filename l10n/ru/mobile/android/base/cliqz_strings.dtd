@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "Это действие повлечет за собой удаление истории и его невозможно отменить.">
 <!ENTITY history_clear_dialog_positive_button "Удалить">
 <!ENTITY history_clear_dialog_negative_button "Отмена">
+<!ENTITY bookmarks_restored "Восстановленный">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Желаете настроить эту вкладку?">
