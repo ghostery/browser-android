@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "Esta ação excluirá seu histórico e não pode ser desfeita.">
 <!ENTITY history_clear_dialog_positive_button "Excluir">
 <!ENTITY history_clear_dialog_negative_button "Cancelar">
+<!ENTITY bookmarks_restored "Recuperados">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Quer personalizar esta aba?">

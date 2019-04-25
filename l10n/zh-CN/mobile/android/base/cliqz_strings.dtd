@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "这样将删除所有历史记录且无法恢复。">
 <!ENTITY history_clear_dialog_positive_button "删除">
 <!ENTITY history_clear_dialog_negative_button "取消">
+<!ENTITY bookmarks_restored "已恢复">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "想要自定义此标签页？">

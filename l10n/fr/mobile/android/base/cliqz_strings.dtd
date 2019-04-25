@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "Votre historique sera définitivement supprimé.">
 <!ENTITY history_clear_dialog_positive_button "Supprimer">
 <!ENTITY history_clear_dialog_negative_button "Annuler">
+<!ENTITY bookmarks_restored "Récupéré">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Personnaliser cet onglet ?">

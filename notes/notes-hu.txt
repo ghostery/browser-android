@@ -1,5 +1,4 @@
-Új verzió érhető el:
-*az alkalmazás összeomlását okozó hibák javítva
-*az összes előzmény törlése gyorsan
-*egyszerű visszatérés a Ghost Search eredményekhez (a Vissza gomb megnyomásával)
-*a Ghost Search eredmények jobb áttekinthetősége az új dizájnnak köszönhetően
+Kedves Ghostery felhasználók! Új verzió kész:
+* A böngésző gyorsabban indul el
+* a privát keresés egyenletesebb
+* Lite téma - a témát bármikor megváltoztathatja a beállítások menüben

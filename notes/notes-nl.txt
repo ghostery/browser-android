@@ -1,5 +1,4 @@
-Er is een nieuwe versie beschikbaar:
-* bugs verholpen die de app lieten crashen
-* snelle manier om alle geschiedenis te verwijderen
-* eenvoudige manier om terug te gaan naar de Ghost Search-resultaten (klik op vorige)
-* beter overzicht van de Ghost Search-resultaten dankzij een nieuw design
+Beste Ghostery-gebruikers! Er staat een nieuwe versie klaar:
+* browser wordt sneller geopend
+* privé zoeken gaat vlotter
+* Lite-thema: wissel op elk moment van thema in de instellingen

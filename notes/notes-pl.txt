@@ -1,5 +1,4 @@
-Dostępna jest nowa wersja:
-* naprawiono błędy powodujące awarię aplikacji
-* szybki sposób usunięcia całej historii
-* szybki sposób powrotu do wyników wyszukiwania Ghost Search (naciśnij przycisk wstecz)
-* lepszy podgląd wyników wyszukiwania Ghost Search dzięki nowemu wyglądowi
+Drodzy Użytkownicy Ghostery! Nowa wersja jest już gotowa:
+* przeglądarka uruchamia się szybciej
+* wyszukiwanie w trybie prywatnym działa płynniej
+* skórka Lite - przełącz na nią kiedy zechcesz w ustawieniach

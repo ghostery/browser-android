@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "履歴が削除されます。この操作を元に戻すことはできません。">
 <!ENTITY history_clear_dialog_positive_button "削除">
 <!ENTITY history_clear_dialog_negative_button "キャンセル">
+<!ENTITY bookmarks_restored "復元済み">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "このタブをカスタマイズしたいですか？">

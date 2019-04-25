@@ -1,5 +1,4 @@
-Hay una nueva versión disponible:
-* corrección de errores que provocaban que la aplicación se bloqueara
-* ahora se puede eliminar todo el historial más rápidamente
-* ahora es más fácil volver a los resultados de la Búsqueda Ghost (mediante el botón Atrás)
-* vista de resultados de Búsqueda Ghost mejorada gracias a un nuevo diseño
+¡Estimados usuarios de Ghostery! Tenemos una nueva versión:
+* El navegador se inicia más rápido
+* La búsqueda privada es más precisa
+* Tema Lite: cambia el tema en los ajustes en cualquier momento

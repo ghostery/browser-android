@@ -46,6 +46,7 @@
 <!ENTITY history_clear_dialog_message "Ezzel törli az előzményeket és a művelet nem vonható vissza.">
 <!ENTITY history_clear_dialog_positive_button "Törlés">
 <!ENTITY history_clear_dialog_negative_button "Mégsem">
+<!ENTITY bookmarks_restored "Helyreállított">
 
 <!-- Customize Start Tab Link/Snackbar -->
 <!ENTITY customize_new_tab_link_description "Szeretné testre szabni ezt a lapfület?">
