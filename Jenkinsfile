@@ -16,8 +16,8 @@ def matrix = [
         'target': 'arm-linux-androideabi',
         'test': false,
     ],
-    'ghostery-alpha':[
-        'bundleid': 'com.ghostery.android.alpha',
+    'ghostery-canary':[
+        'bundleid': 'com.ghostery.android.canary',
         'target': 'arm-linux-androideabi',
         'test': false,
     ],
