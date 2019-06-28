@@ -14,7 +14,7 @@ ac_add_options --disable-debug
 ac_add_options --with-android-sdk=$ANDROID_HOME
 ac_add_options --with-android-ndk=$ANDROID_NDK
 
-# Available Brands: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-alpha'
+# Available Brands: 'cliqz', 'cliqz-alpha', 'ghostery' & 'ghostery-canary'
 # Write build artifacts to:
 mk_add_options MOZ_OBJDIR=./objdir-frontend-android/$BRAND
 

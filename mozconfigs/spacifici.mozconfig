@@ -8,7 +8,7 @@ fi
 # Branding
 if [ -z "${CLIQZ_BRANDING}" ]
 then
-    CLIQZ_BRANDING="ghostery-alpha"
+    CLIQZ_BRANDING="ghostery-canary"
 fi
 ac_add_options --with-branding="mobile/android/branding/${CLIQZ_BRANDING}"
 
