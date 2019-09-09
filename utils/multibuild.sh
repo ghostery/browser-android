@@ -54,6 +54,12 @@ case "${CLIQZ_ARCH}" in
         ;;
     "i686-linux-android")
         ;;
+    "arm64")
+        CLIQZ_ARCH="aarch64-linux-android"
+        ;;
+    "x86_64")
+        CLIQZ_ARCH="x86_64-linux-android"
+        ;;
     *)
         >&2 echo "Unsopported arch ${CLIQZ_ARCH}"
         usage
