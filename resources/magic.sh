@@ -37,22 +37,39 @@ echo ""
 echo ""
 echo "*** Define the required Variables ***"
 echo ""
-if [[ S"${ANDROID_TARGET}" == S"arm-linux-androideabi" ]]; then
+case "${ANDROID_TARGET}" in
+    "arm-linux-androideabi")
     export TARGET_ARCH="arm"
-else
+    ;;
+    "aarch64-linux-android");
+    export TARGET_ARCH="arm64"
+    "x86_64-linux-android")
+    export TARGET_ARCH="x86_64"
+    ;;
+    *)
     export TARGET_ARCH="x86"
-fi
-if [[ S"${TARGET_ARCH}" == S"" ]]; then
-    export TARGET_ARCH="x86"
-fi
+    ;;
+esac
+
 if [[ S"${BRAND}" == S"" ]]; then
     export BRAND="ghostery"
 fi
-if [[ S"${TARGET_ARCH}" == S"x86" ]]; then
-    export ANDROID_TARGET="i686-linux-android"
-elif [[ S"${TARGET_ARCH}" == S"arm" ]]; then
+
+case "${TARGET_ARCH}" in
+    "arm")
     export ANDROID_TARGET="arm-linux-androideabi"
-fi
+    ;;
+    "arm64");
+    export ANDROID_TARGET="aarch64-linux-android"
+    ;;
+    "x86_64")
+    export ANDROID_TARGET="x86_64-linux-android"
+    ;;
+    *)
+    export ANDROID_TARGET="i686-linux-android"
+    ;;
+esac
+
 if [[ S"${CLIQZ_CHANNEL}" == S"" ]]; then
     export CLIQZ_CHANNEL="MA99"
 fi

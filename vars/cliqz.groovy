@@ -6,7 +6,22 @@ def buildBrowser(
         String buildType="ci",
         String workspace="."
     ) {
-    def arch = target.contains('arm') ? "arm" : "x86"
+    def arch = ""
+    switch (target) {
+        case ~/.*aarch64.*/:
+            arch = "arm64"
+            break
+        case ~/.*arm.*/:
+            arch = "arm"
+            break
+        case ~/.*x86_64.*/:
+            arch = "x86_64"
+            break
+        case ~/.*i686.*/:
+        default:
+            arch = "x86"
+            break
+    }
     def packLocale = ""
     def abcd = ""
     def channel = "MA99"
