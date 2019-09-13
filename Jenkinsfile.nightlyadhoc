@@ -7,10 +7,12 @@ properties([
         booleanParam(name: 'CLIQZ_ARM', defaultValue: false, description: 'Builds the Cliqz branded `arm` build.'),
         booleanParam(name: 'CLIQZ_X86', defaultValue: false, description: 'Builds the Cliqz branded `x86` build.'),
         booleanParam(name: 'GHOSTERY_ARM', defaultValue: true, description: 'Builds the Ghostery branded `arm` build.'),
+        booleanParam(name: 'GHOSTERY_ARM64', defaultValue: true, description: 'Builds the Ghostery branded `arm` build.'),
         booleanParam(name: 'GHOSTERY_X86', defaultValue: true, description: 'Builds the Ghostery branded `x86` build.'),
+        booleanParam(name: 'GHOSTERY_X86_64', defaultValue: true, description: 'Builds the Ghostery branded `x86` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_ARM', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `arm` build.'),
         booleanParam(name: 'CLIQZ_ALPHA_X86', defaultValue: false, description: 'Builds the Cliqz-Alpha branded `x86` build.'),
-        booleanParam(name: 'GHOSTERY_ALPHA_ARM', defaultValue: true, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
+        booleanParam(name: 'GHOSTERY_ALPHA_ARM', defaultValue: false, description: 'Builds the Ghostery-Alpha branded `arm` build.'),
         booleanParam(name: 'GHOSTERY_ALPHA_X86', defaultValue: false, description: 'Builds the Ghostery-Alpha branded `x86` build.')
     ])
 ])
@@ -37,12 +39,26 @@ def matrix = [
         'target': 'arm-linux-androideabi',
         'buildParam': params.GHOSTERY_ARM,
     ],
+    'Ghostery ARM64':[
+        'arch': 'arm64',
+        'brand': 'ghostery',
+        'channel': 'MA52',
+        'target': 'aarch64-linux-android',
+        'buildParam': params.GHOSTERY_ARM64,
+    ],
     'Ghostery X86':[
         'arch': 'x86',
         'brand': 'ghostery',
         'channel': 'MA52',
         'target': 'i686-linux-android',
         'buildParam': params.GHOSTERY_X86,
+    ],
+    'Ghostery X86_64':[
+        'arch': 'x86',
+        'brand': 'ghostery',
+        'channel': 'MA52',
+        'target': 'x86_64-linux-android',
+        'buildParam': params.GHOSTERY_X86_64,
     ],
     'Cliqz Alpha ARM':[
         'arch': 'arm',
@@ -136,7 +152,7 @@ def build(Map m){
                                 archiveArtifacts allowEmptyArchive: true, artifacts: "/app/build/${apk}"
                                 utils.s3Copy(
                                     "/app/build/${apk}",
-                                    "s3://repository.cliqz.com/dist/android/nightly/${BRANCH_NAME}/${brandname}",
+                                    "s3://repository.cliqz.com/dist/android/nightly/${brandname}",
                                     "${brandname}_${env.BUILD_NUMBER}_${getId()}",
                                     "${buildarch}",
                                     true
@@ -210,7 +226,7 @@ stage('Send email') {
                     brand = "${splitText[0]}"
                 }
                 bodytxt = """${bodytxt}
-                ${brand}${suffix} apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/${BRANCH_NAME}/${brand}/${brand}_${env.BUILD_NUMBER}_${id}${suffix}.apk
+                ${brand}${suffix} apk Uploaded to: http://repository.cliqz.com.s3.amazonaws.com/dist/android/nightly/${brand}/${brand}_${env.BUILD_NUMBER}_${id}${suffix}.apk
                 """
             }
         }
