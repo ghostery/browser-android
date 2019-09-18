@@ -1,4 +1,4 @@
-FROM spacifici/fennec:65.0
+FROM spacifici/fennec:65.0r2
 MAINTAINER Sharath G Pai <sharath@cliqz.com>
 ENV DEBIAN_FRONTEND noninteractive
 
