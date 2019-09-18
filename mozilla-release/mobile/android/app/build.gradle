@@ -263,7 +263,7 @@ dependencies {
     implementation "com.android.support:customtabs:$support_library_version"
     implementation "com.android.support:palette-v7:$support_library_version"
     // cliqz-start
-    implementation "com.facebook.react:react-native:0.56.1"
+    implementation "com.facebook.react:react-native:0.59.8"
     // cliqz-end
 
     // We always include support for multidexing even when we don't enable it at runtime.
@@ -524,6 +524,9 @@ configurations.all {
             /* Cliqz start */
             if (details.requested.name == 'android-jsc') {
                 details.useTarget group: details.requested.group, name: 'android-jsc-intl', version: 'r236355'
+            }
+            if (details.requested.name in ['support-v4', 'appcompat-v7']) {
+                details.useVersion "$support_library_version"
             }
             /* Cliqz end */
 
