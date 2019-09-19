@@ -1,8 +1,9 @@
 #!/usr/bin/env groovy
 
 def buildBrowser(
-        String target,
-        String brand,
+        String target="i686-linux-android",
+        int minSdk=16,
+        String brand="ghostery",
         String buildType="ci",
         String workspace="."
     ) {
@@ -50,6 +51,7 @@ def buildBrowser(
     channel = brand.contains('alpha') ? "MA99" : channel
     withEnv([
         "ANDROID_TARGET=${target}",
+        "ANDROID_MIN_SDK=${minSdk}",
         "BRAND=${brand}",
         "CLIQZ_CHANNEL=${channel}"
         ]){
