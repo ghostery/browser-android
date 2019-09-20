@@ -16,7 +16,7 @@ platform :android do
   desc "Create, Sign and Upload a build to alpha channel"
   lane :alpha do
     upload_to_play_store(
-      apk_paths: ["./arm.apk","./x86.apk"],
+      apk_paths: Dir["*.apk"],
       track:"alpha",
       skip_upload_metadata: true,
       skip_upload_images: true,

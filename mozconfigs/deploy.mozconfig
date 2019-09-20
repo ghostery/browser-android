@@ -7,6 +7,7 @@ export CLIQZ_TELEMETRY_REPORTING=1
 # Android Targets: 'i686-linux-android' or 'arm-linux-androideabi'
 ac_add_options --enable-application=mobile/android
 ac_add_options --target=$ANDROID_TARGET
+ac_add_options --with-android-min-sdk=$ANDROID_MIN_SDK
 ac_add_options --enable-optimize
 ac_add_options --disable-debug
 
