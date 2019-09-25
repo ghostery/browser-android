@@ -48,7 +48,7 @@ node('master') {
                 if (params.CLIQZ){
                     storeCert = '2939d2e1-dd9a-4097-adc2-430e3d67157a'
                 }
-                archiveArtifacts allowEmptyArchive: true, artifacts: "build/*.apk"
+                archiveArtifacts allowEmptyArchive: true, artifacts: "build/*"
                 utils.fastlaneRelease(
                     "${brand}",
                     'd746a1dd-e075-4844-869a-32116a496352',
