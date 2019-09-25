@@ -59,11 +59,11 @@ android {
         ndk {
             abiFilters mozconfig.substs.ANDROID_CPU_ARCH.toString()
         }
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
+        // Used by Robolectric based tests; see TestRunner.
         /* Cliqz end */
         applicationId mozconfig.substs.ANDROID_PACKAGE_NAME
-        testApplicationId 'org.mozilla.roboexample.test'
-        testInstrumentationRunner 'org.mozilla.gecko.FennecInstrumentationTestRunner'
-        // Used by Robolectric based tests; see TestRunner.
         buildConfigField 'String', 'BUILD_DIR', "\"${project.buildDir}\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -226,7 +226,11 @@ android {
         }
 
         androidTest {
-            java {
+            /* Cliqz Start :: Cliqz Android Tests */
+            java  {
+                srcDir "${topsrcdir}/mobile/android/tests/cliqz/java"
+            }
+            /*java {
                 srcDir "${topsrcdir}/mobile/android/tests/browser/robocop/src"
                 // Bug 1229149 tracks pushing this into a :services Gradle project.
                 srcDir "${topsrcdir}/mobile/android/services/src/androidTest/java"
@@ -238,6 +242,7 @@ android {
             assets {
                 srcDir "${topsrcdir}/mobile/android/tests/browser/robocop/assets"
             }
+            /o Cliqz End */
         }
     }
 
@@ -301,7 +306,9 @@ dependencies {
     implementation project(path: ':thirdparty')
 
     testImplementation 'junit:junit:4.12'
+    /* Cliqz Start o/
     testImplementation 'org.robolectric:robolectric:3.8'
+    /o Cliqz End */
     testImplementation 'org.simpleframework:simple-http:6.0.1'
     testImplementation 'org.mockito:mockito-core:1.10.19'
 
@@ -311,6 +318,9 @@ dependencies {
     /*Cliqz Start*/
     //Library for control center donut - chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+    //UIAutomator2 Dependencies
+    androidTestImplementation 'com.android.support.test:testing-support-lib:0.1'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
     /*Cliqz End*/
 
 }
@@ -623,3 +633,21 @@ if (mozconfig.substs.MOZ_JAVA_CODE_COVERAGE) {
         }
     }
 }
+/* Cliqz Start */
+// Grant permissions to disable Animations.
+task grantAnimationPermissions(type: Exec, dependsOn: 'installWithGeckoBinariesDebug') {
+    group = 'Verification tasks'
+    description = 'Grant permissions for testing.'
+    def appPackage = mozconfig.substs.ANDROID_PACKAGE_NAME
+    def androidHome = mozconfig.substs.ANDROID_SDK_ROOT
+    commandLine "$androidHome/platform-tools/adb shell pm grant $appPackage android.permission.SET_ANIMATION_SCALE".split(" ")
+}
+
+afterEvaluate {
+    tasks.each { task ->
+        if (task.name.contains('connectedWithGeckoBinariesDebugAndroidTest')) {
+            task.dependsOn grantAnimationPermissions
+        }
+    }
+}
+/* Cliqz End */

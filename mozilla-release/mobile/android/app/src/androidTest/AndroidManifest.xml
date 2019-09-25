@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Cliqz Start -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.mozilla.roboexample.test"
+    package="com.cliqz.mobile.test"
     android:sharedUserId="${MOZ_ANDROID_SHARED_ID}"
     android:versionCode="1"
     android:versionName="1.0" >
+    <!-- NOTE: Replaced package name. package="org.mozilla.roboexample.test" Cliqz End -->
 
     <uses-sdk android:minSdkVersion="${MOZ_ANDROID_MIN_SDK_VERSION}"
               android:targetSdkVersion="${ANDROID_TARGET_SDK}"/>
     <!-- TODO: re-instate maxSdkVersion. -->
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -18,8 +19,12 @@
         android:name="org.mozilla.gecko.FennecInstrumentationTestRunner"
         android:targetPackage="${ANDROID_PACKAGE_NAME}" />
 
+    <!-- Cliqz Start -+>
     <application
-        android:label="@string/app_name">
+        android:label="@string/app_name"> -->
+    <application
+        android:label="Instrumentation Test">
+    <!-- Cliqz End -->
 
         <uses-library android:name="android.test.runner" />
 
