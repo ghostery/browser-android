@@ -28,7 +28,6 @@ def buildBrowser(
     def channel = "MA99"
     def mozconfigFile = ""
     def apkFulllink = ""
-    def apkName = ""
     channel = brand.contains('cliqz') ? "MA0" : "MA5"
     switch (buildType) {
         case "release":
@@ -75,24 +74,23 @@ def buildBrowser(
             ./mach build
         """
         if(packLocale == "multi"){
-            withEnv(["WORKSPACE=${workspace}", "BRAND=${brand}"]){
-                sh '''#!/bin/bash -l
-                    set -x
-                    set -e
-                    echo "*** Build Language Packs ***"
-                    cd ${WORKSPACE}
-                    export MOZ_CHROME_MULTILOCALE=`ls -1 l10n|paste -s -d " "`
-                    cd mozilla-release
-                    rm -f objdir-frontend-android/${BRAND}/dist/bin/defaults/pref/mobile-l10n.js
-                    cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/${BRAND}/dist/bin/defaults/pref/mobile-l10n.js
-                    for AB_CD in $MOZ_CHROME_MULTILOCALE; do
-                        ./mach build chrome-$AB_CD
-                    done
-                    export AB_CD=multi
-                    ./mach package
-                    echo "*** DONE ***"
-                '''
-            }
+            sh """#!/bin/bash -l
+                set -x
+                set -e
+                echo "*** Build Language Packs ***"
+                cd ${workspace}
+                export MOZ_CHROME_MULTILOCALE=`ls -1 l10n|paste -s -d " "`
+                cd mozilla-release
+                rm -f objdir-frontend-android/${brand}/dist/bin/defaults/pref/mobile-l10n.js
+                cp mobile/android/installer/mobile-l10n.js objdir-frontend-android/${brand}/dist/bin/defaults/pref/mobile-l10n.js
+                for AB_CD in \$MOZ_CHROME_MULTILOCALE; do
+                    ./mach build chrome-\$AB_CD
+                done
+                export AB_CD=multi
+                ./mach package
+                ./mach buildsymbols
+                echo "*** DONE ***"
+            """
         } else {
             sh """#!/bin/bash -l
                 set -x
@@ -100,13 +98,14 @@ def buildBrowser(
                 cd ${workspace}
                 cd mozilla-release
                 ./mach package
+                ./mach buildsymbols
                 echo '*** DONE ***'
             """
         }
-        apkName = sh(returnStdout: true,
-            script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist && \
-            find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
-        apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist/${apkName}"
+        dbgsymFulllink = sh(returnStdout: true,
+            script: """find ${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist -name '*.crashreporter-symbols-full.zip'""").trim()
+        apkFulllink = sh(returnStdout: true,
+            script: """find ${workspace}/mozilla-release/objdir-frontend-android/${brand}/dist -name '*.apk' -not -name 'robo*' -not -name '*unsigned*'""").trim()
         if ((buildType == "nightly") || (buildType == "release")){
             sh """#!/bin/bash -l
                 set -x
@@ -117,18 +116,18 @@ def buildBrowser(
                 ./gradlew :app:assembleWithGeckoBinariesRelease
                 echo '*** DONE ***'
             """
-            apkName = sh(returnStdout: true,
-                script: """cd ${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release && \
-                find *.apk -not -name 'robo*' -not -name '*-unsigned-*'""").trim()
-            apkFulllink = "${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release/${apkName}"
+            apkFulllink = sh(returnStdout: true,
+                script: """find ${workspace}/mozilla-release/objdir-frontend-android/${brand}/gradle/build/mobile/android/app/outputs/apk/withGeckoBinaries/release -name '*.apk' -not -name 'robo*' -not -name '*unsigned*'""").trim()
         }
         sh """#!/bin/bash -l
             set -x
             set -e
-            echo '*** Copy APK File to Build folder ***'
             cd ${workspace}
             mkdir -p build
+            echo '*** Copy APK File to Build folder ***'
             cp ${apkFulllink} build/${brand}_${arch}.apk
+            echo '*** Copy Debug Symbols to Build folder ***'
+            cp ${dbgsymFulllink} build/${brand}_${arch}_symbols.zip
             echo '*** DONE !! Build: build/${brand}_${arch}.apk ***'
         """
         return "${brand}_${arch}.apk"
