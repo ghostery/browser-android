@@ -21,7 +21,8 @@ namespace mozilla {
 
 static DDMediaLogs* sMediaLogs;
 
-/* static */ void DecoderDoctorLogger::Init() {
+/* static */
+void DecoderDoctorLogger::Init() {
   MOZ_ASSERT(static_cast<LogState>(sLogState) == scDisabled);
   if (MOZ_LOG_TEST(sDecoderDoctorLoggerLog, LogLevel::Error) ||
       MOZ_LOG_TEST(sDecoderDoctorLoggerEndLog, LogLevel::Error)) {
@@ -53,8 +54,8 @@ struct DDLogDeleter {
 };
 static UniquePtr<DDLogDeleter> sDDLogDeleter;
 
-/* static */ void DecoderDoctorLogger::PanicInternal(const char* aReason,
-                                                     bool aDontBlock) {
+/* static */
+void DecoderDoctorLogger::PanicInternal(const char* aReason, bool aDontBlock) {
   for (;;) {
     const LogState state = static_cast<LogState>(sLogState);
     if (state == scEnabling && !aDontBlock) {
@@ -86,7 +87,13 @@ static UniquePtr<DDLogDeleter> sDDLogDeleter;
   }
 }
 
-/* static */ bool DecoderDoctorLogger::EnsureLogIsEnabled() {
+/* static */
+bool DecoderDoctorLogger::EnsureLogIsEnabled() {
+#ifdef RELEASE_OR_BETA
+  // Just refuse to enable DDLogger on release&beta because it makes it too easy
+  // to trigger an OOM. See bug 1571648.
+  return false;
+#else
   for (;;) {
     LogState state = static_cast<LogState>(sLogState);
     switch (state) {
@@ -135,11 +142,11 @@ static UniquePtr<DDLogDeleter> sDDLogDeleter;
     }
     // Not returned yet, loop around to examine the new situation.
   }
+#endif
 }
 
-/* static */ void DecoderDoctorLogger::EnableLogging() {
-  Unused << EnsureLogIsEnabled();
-}
+/* static */
+void DecoderDoctorLogger::EnableLogging() { Unused << EnsureLogIsEnabled(); }
 
 /* static */ RefPtr<DecoderDoctorLogger::LogMessagesPromise>
 DecoderDoctorLogger::RetrieveMessages(
@@ -152,11 +159,11 @@ DecoderDoctorLogger::RetrieveMessages(
   return sMediaLogs->RetrieveMessages(aMediaElement);
 }
 
-/* static */ void DecoderDoctorLogger::Log(const char* aSubjectTypeName,
-                                           const void* aSubjectPointer,
-                                           DDLogCategory aCategory,
-                                           const char* aLabel,
-                                           DDLogValue&& aValue) {
+/* static */
+void DecoderDoctorLogger::Log(const char* aSubjectTypeName,
+                              const void* aSubjectPointer,
+                              DDLogCategory aCategory, const char* aLabel,
+                              DDLogValue&& aValue) {
   if (IsDDLoggingEnabled()) {
     MOZ_ASSERT(sMediaLogs);
     sMediaLogs->Log(aSubjectTypeName, aSubjectPointer, aCategory, aLabel,

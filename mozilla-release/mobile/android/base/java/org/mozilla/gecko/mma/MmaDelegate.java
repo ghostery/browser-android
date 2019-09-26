@@ -11,11 +11,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
 
 import org.mozilla.gecko.AppConstants;
+import org.mozilla.gecko.BrowserApp;
 import org.mozilla.gecko.Experiments;
+import org.mozilla.gecko.GeckoSharedPrefs;
 import org.mozilla.gecko.MmaConstants;
 import org.mozilla.gecko.PrefsHelper;
 import org.mozilla.gecko.R;
@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class MmaDelegate {
 
@@ -43,6 +45,8 @@ public class MmaDelegate {
     public static final String SAVED_BOOKMARK = "E_Saved_Bookmark";
     public static final String OPENED_BOOKMARK = "E_Opened_Bookmark";
     public static final String INTERACT_WITH_SEARCH_URL_AREA = "E_Interact_With_Search_URL_Area";
+    public static final String INTERACT_WITH_SEARCH_WIDGET_URL_AREA = "E_Interact_With_Search_Widget";
+    public static final String ADDED_SEARCH_WIDGET = "E_Search_Widget_Added";
     public static final String SCREENSHOT = "E_Screenshot";
     public static final String SAVED_LOGIN_AND_PASSWORD = "E_Saved_Login_And_Password";
     public static final String RESUMED_FROM_BACKGROUND = "E_Resumed_From_Background";
@@ -50,6 +54,11 @@ public class MmaDelegate {
     public static final String DISMISS_ONBOARDING = "E_Dismiss_Onboarding";
     public static final String ONBOARDING_DEFAULT_VALUES = "E_Onboarding_With_Default_Values";
     public static final String ONBOARDING_REMOTE_VALUES = "E_Onboarding_With_Remote_Values";
+
+    public static final String USER_SIGNED_IN_TO_FXA = "E_User_Signed_In_To_FxA";
+    public static final String USER_SIGNED_UP_FOR_FXA = "E_User_Signed_Up_For_FxA";
+    public static final String USER_RECONNECTED_TO_FXA = "E_User_Reconnected_To_FxA";
+    public static final String USER_FINISHED_SYNC = "E_User_Finished_Sync";
 
     private static final String LAUNCH_BUT_NOT_DEFAULT_BROWSER = "E_Launch_But_Not_Default_Browser";
     private static final String LAUNCH_BROWSER = "E_Launch_Browser";
@@ -94,13 +103,18 @@ public class MmaDelegate {
         // we gather the information here then pass to mmaHelper.init()
         // Note that generateUserAttribute always return a non null HashMap.
         final Map<String, Object> attributes = gatherUserAttributes(activity);
-        final String deviceId = getDeviceId(activity);
+        String deviceId = getDeviceId(activity);
+        if (deviceId == null) {
+            deviceId = UUID.randomUUID().toString();
+            setDeviceId(activity, deviceId);
+        }
         mmaHelper.setDeviceId(deviceId);
         PrefsHelper.setPref(GeckoPreferences.PREFS_MMA_DEVICE_ID, deviceId);
+        mmaHelper.setToken(GeckoSharedPrefs.forApp(applicationContext).getString("gcm_token", ""));
         // above two config setup required to be invoked before mmaHelper.init.
         mmaHelper.init(activity, attributes);
 
-        if (!isDefaultBrowser(activity)) {
+        if (!PackageUtil.isDefaultBrowser(activity)) {
             mmaHelper.event(MmaDelegate.LAUNCH_BUT_NOT_DEFAULT_BROWSER);
         }
         mmaHelper.event(MmaDelegate.LAUNCH_BROWSER);
@@ -108,12 +122,7 @@ public class MmaDelegate {
         activityName = activity.getLocalClassName();
         notifyAboutPreviouslyInstalledPackages(activity);
 
-        ThreadUtils.postToUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mmaHelper.listenOnceForVariableChanges(remoteVariablesListener);
-            }
-        });
+        ThreadUtils.postToUiThread(() -> mmaHelper.listenOnceForVariableChanges(remoteVariablesListener));
     }
 
     /**
@@ -139,7 +148,7 @@ public class MmaDelegate {
         attributes.put(USER_ATT_FOCUS_INSTALLED, ContextUtils.isPackageInstalled(context, PACKAGE_NAME_FOCUS));
         attributes.put(USER_ATT_KLAR_INSTALLED, ContextUtils.isPackageInstalled(context, PACKAGE_NAME_KLAR));
         attributes.put(USER_ATT_POCKET_INSTALLED, ContextUtils.isPackageInstalled(context, PACKAGE_NAME_POCKET));
-        attributes.put(USER_ATT_DEFAULT_BROWSER, isDefaultBrowser(context));
+        attributes.put(USER_ATT_DEFAULT_BROWSER, PackageUtil.isDefaultBrowser(context));
         attributes.put(USER_ATT_SIGNED_IN, FirefoxAccounts.firefoxAccountsExist(context));
         attributes.put(USER_ATT_POCKET_TOP_SITES, ActivityStreamConfiguration.isPocketRecommendingTopSites(context));
 
@@ -152,7 +161,7 @@ public class MmaDelegate {
         }
 
         final SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-        final boolean isFennecDefaultBrowser = isDefaultBrowser(activity);
+        final boolean isFennecDefaultBrowser = PackageUtil.isDefaultBrowser(activity);
 
         // Only if this is not the first run of LeanPlum and we previously tracked default browser status
         // we can check for changes
@@ -264,11 +273,6 @@ public class MmaDelegate {
         return isMmaAvailable && !isInPrivateBrowsing;
     }
 
-    public static boolean isDefaultBrowser(Context context) {
-        final String defaultBrowserPackageName = PackageUtil.getDefaultBrowserPackage(context);
-        return (TextUtils.equals(defaultBrowserPackageName, context.getPackageName()));
-    }
-
     // Always use pass-in context. Do not use applicationContext here. applicationContext will be null if MmaDelegate.init() is not called.
     public static boolean handleGcmMessage(@NonNull Context context, String from, @NonNull Bundle bundle) {
         if (isMmaAllowed(context)) {
@@ -289,12 +293,21 @@ public class MmaDelegate {
         }
 
         final SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
-        String deviceId = prefs.getString(KEY_ANDROID_PREF_STRING_LEANPLUM_DEVICE_ID, null);
-        if (deviceId == null) {
-            deviceId = UUID.randomUUID().toString();
-            prefs.edit().putString(KEY_ANDROID_PREF_STRING_LEANPLUM_DEVICE_ID, deviceId).apply();
+        return prefs.getString(KEY_ANDROID_PREF_STRING_LEANPLUM_DEVICE_ID, null);
+    }
+
+    public static String getDeviceId(Context context) {
+        if (SwitchBoard.isInExperiment(context, Experiments.LEANPLUM_DEBUG)) {
+            return DEBUG_LEANPLUM_DEVICE_ID;
         }
-        return deviceId;
+
+        //MMA preferences are stored in the initialising activity's preferences, which in our case is BrowserApp.
+        return context.getSharedPreferences(BrowserApp.class.getName(), MODE_PRIVATE).getString(MmaDelegate.KEY_ANDROID_PREF_STRING_LEANPLUM_DEVICE_ID, null);
+    }
+
+    private static void setDeviceId(Activity activity, String deviceId) {
+        final SharedPreferences prefs = activity.getPreferences(Context.MODE_PRIVATE);
+        prefs.edit().putString(KEY_ANDROID_PREF_STRING_LEANPLUM_DEVICE_ID, deviceId).apply();
     }
 
     private static void registerInstalledPackagesReceiver(@NonNull final Activity activity) {

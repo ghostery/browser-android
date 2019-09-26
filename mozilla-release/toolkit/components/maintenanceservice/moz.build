@@ -10,7 +10,6 @@ SOURCES += [
     'maintenanceservice.cpp',
     'servicebase.cpp',
     'serviceinstall.cpp',
-    'usertoken.cpp',
     'workmonitor.cpp',
 ]
 
@@ -27,14 +26,13 @@ DEFINES['NS_NO_XPCOM'] = True
 
 # Pick up nsWindowsRestart.cpp
 LOCAL_INCLUDES += [
-    '/mfbt',
     '/toolkit/mozapps/update/common',
     '/toolkit/xre',
 ]
 
 USE_STATIC_LIBS = True
 
-if CONFIG['CC_TYPE'] in ('msvc', 'clang-cl'):
+if CONFIG['CC_TYPE'] == 'clang-cl':
     WIN32_EXE_LDFLAGS += ['-ENTRY:wmainCRTStartup']
 
 RCINCLUDE = 'maintenanceservice.rc'
@@ -45,12 +43,7 @@ OS_LIBS += [
     'comctl32',
     'ws2_32',
     'shell32',
-    'oleaut32',
-    'wbemuuid',
 ]
 
 with Files('**'):
     BUG_COMPONENT = ('Toolkit', 'Application Update')
-
-if CONFIG['CC_TYPE'] == 'clang-cl':
-    AllowCompilerWarnings()  # workaround for bug 1090497

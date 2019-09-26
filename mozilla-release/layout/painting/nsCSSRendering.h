@@ -38,13 +38,14 @@ class ImageContainer;
 class StackingContextHelper;
 class WebRenderParentCommand;
 class LayerManager;
+class RenderRootStateManager;
 }  // namespace layers
 
 namespace wr {
 class DisplayListBuilder;
 }  // namespace wr
 
-enum class PaintBorderFlags : uint8_t { SYNC_DECODE_IMAGES = 1 << 0 };
+enum class PaintBorderFlags : uint8_t { SyncDecodeImages = 1 << 0 };
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(PaintBorderFlags)
 
 }  // namespace mozilla
@@ -140,7 +141,7 @@ struct nsCSSRendering {
                              RectCornerRadii& aOutRadii);
   static nsRect GetShadowRect(const nsRect& aFrameArea, bool aNativeTheme,
                               nsIFrame* aForFrame);
-  static mozilla::gfx::Color GetShadowColor(nsCSSShadowItem* aShadow,
+  static mozilla::gfx::Color GetShadowColor(const mozilla::StyleSimpleShadow&,
                                             nsIFrame* aFrame, float aOpacity);
   // Returns if the frame has a themed frame.
   // aMaybeHasBorderRadius will return false if we can early detect
@@ -165,45 +166,68 @@ struct nsCSSRendering {
   static ImgDrawResult PaintBorder(
       nsPresContext* aPresContext, gfxContext& aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle, mozilla::PaintBorderFlags aFlags,
+      mozilla::ComputedStyle* aStyle, mozilla::PaintBorderFlags aFlags,
       Sides aSkipSides = Sides());
 
   /**
    * Like PaintBorder, but taking an nsStyleBorder argument instead of
-   * getting it from aComputedStyle. aSkipSides says which sides to skip
+   * getting it from aStyle. aSkipSides says which sides to skip
    * when rendering, the default is to skip none.
    */
   static ImgDrawResult PaintBorderWithStyleBorder(
       nsPresContext* aPresContext, gfxContext& aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aComputedStyle,
+      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aStyle,
       mozilla::PaintBorderFlags aFlags, Sides aSkipSides = Sides());
 
   static mozilla::Maybe<nsCSSBorderRenderer> CreateBorderRenderer(
       nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
       const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle, bool* aOutBorderIsEmpty,
+      mozilla::ComputedStyle* aStyle, bool* aOutBorderIsEmpty,
       Sides aSkipSides = Sides());
 
   static mozilla::Maybe<nsCSSBorderRenderer>
   CreateBorderRendererWithStyleBorder(
       nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
       const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aComputedStyle,
+      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aStyle,
+      bool* aOutBorderIsEmpty, Sides aSkipSides = Sides());
+
+  static mozilla::Maybe<nsCSSBorderRenderer>
+  CreateNullBorderRendererWithStyleBorder(
+      nsPresContext* aPresContext, DrawTarget* aDrawTarget, nsIFrame* aForFrame,
+      const nsRect& aDirtyRect, const nsRect& aBorderArea,
+      const nsStyleBorder& aBorderStyle, mozilla::ComputedStyle* aStyle,
       bool* aOutBorderIsEmpty, Sides aSkipSides = Sides());
 
   static mozilla::Maybe<nsCSSBorderRenderer> CreateBorderRendererForOutline(
       nsPresContext* aPresContext, gfxContext* aRenderingContext,
       nsIFrame* aForFrame, const nsRect& aDirtyRect, const nsRect& aBorderArea,
-      mozilla::ComputedStyle* aComputedStyle);
+      mozilla::ComputedStyle* aStyle);
 
   static ImgDrawResult CreateWebRenderCommandsForBorder(
       nsDisplayItem* aItem, nsIFrame* aForFrame, const nsRect& aBorderArea,
       mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager,
+      mozilla::layers::RenderRootStateManager* aManager,
       nsDisplayListBuilder* aDisplayListBuilder);
+
+  static void CreateWebRenderCommandsForNullBorder(
+      nsDisplayItem* aItem, nsIFrame* aForFrame, const nsRect& aBorderArea,
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const mozilla::layers::StackingContextHelper& aSc,
+      const nsStyleBorder& aStyleBorder);
+
+  static ImgDrawResult CreateWebRenderCommandsForBorderWithStyleBorder(
+      nsDisplayItem* aItem, nsIFrame* aForFrame, const nsRect& aBorderArea,
+      mozilla::wr::DisplayListBuilder& aBuilder,
+      mozilla::wr::IpcResourceUpdateQueue& aResources,
+      const mozilla::layers::StackingContextHelper& aSc,
+      mozilla::layers::RenderRootStateManager* aManager,
+      nsDisplayListBuilder* aDisplayListBuilder,
+      const nsStyleBorder& aStyleBorder);
 
   /**
    * Render the outline for an element using css rendering rules
@@ -212,7 +236,7 @@ struct nsCSSRendering {
   static void PaintOutline(nsPresContext* aPresContext,
                            gfxContext& aRenderingContext, nsIFrame* aForFrame,
                            const nsRect& aDirtyRect, const nsRect& aBorderArea,
-                           mozilla::ComputedStyle* aComputedStyle);
+                           mozilla::ComputedStyle* aStyle);
 
   /**
    * Render keyboard focus on an element.
@@ -234,7 +258,7 @@ struct nsCSSRendering {
    * aIntrinsicSize is the size of the source gradient.
    */
   static void PaintGradient(nsPresContext* aPresContext, gfxContext& aContext,
-                            nsStyleGradient* aGradient,
+                            const mozilla::StyleGradient& aGradient,
                             const nsRect& aDirtyRect, const nsRect& aDest,
                             const nsRect& aFill, const nsSize& aRepeatSize,
                             const mozilla::CSSIntRect& aSrc,
@@ -288,7 +312,9 @@ struct nsCSSRendering {
   static nsIFrame* FindCanvasBackgroundFrame(nsIFrame* aForFrame,
                                              nsIFrame* aRootElementFrame) {
     MOZ_ASSERT(IsCanvasFrame(aForFrame), "not a canvas frame");
-    if (aRootElementFrame) return FindBackgroundStyleFrame(aRootElementFrame);
+    if (aRootElementFrame) {
+      return FindBackgroundStyleFrame(aRootElementFrame);
+    }
 
     // This should always give transparent, so we'll fill it in with the
     // default color if needed.  This seems to happen a bit while a page is
@@ -317,7 +343,7 @@ struct nsCSSRendering {
    * Determine the background color to draw taking into account print settings.
    */
   static nscolor DetermineBackgroundColor(
-      nsPresContext* aPresContext, mozilla::ComputedStyle* aComputedStyle,
+      nsPresContext* aPresContext, mozilla::ComputedStyle* aStyle,
       nsIFrame* aFrame, bool& aDrawBackgroundImage, bool& aDrawBackgroundColor);
 
   static nsRect ComputeImageLayerPositioningArea(
@@ -474,13 +500,13 @@ struct nsCSSRendering {
       const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem);
+      mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem);
 
   static ImgDrawResult BuildWebRenderDisplayItemsForStyleImageLayerWithSC(
       const PaintBGParams& aParams, mozilla::wr::DisplayListBuilder& aBuilder,
       mozilla::wr::IpcResourceUpdateQueue& aResources,
       const mozilla::layers::StackingContextHelper& aSc,
-      mozilla::layers::WebRenderLayerManager* aManager, nsDisplayItem* aItem,
+      mozilla::layers::RenderRootStateManager* aManager, nsDisplayItem* aItem,
       mozilla::ComputedStyle* mBackgroundSC, const nsStyleBorder& aBorder);
 
   /**
@@ -547,6 +573,12 @@ struct nsCSSRendering {
     // for a vertical textrun, width will actually be a physical height;
     // and conversely, height will be a physical width.
     Size lineSize;
+    // The default height [thickness] of the line given by the font metrics.
+    // This is used for obtaining the correct offset for the decoration line
+    // when CSS specifies a unique thickness for a text-decoration,
+    // since the offset given by the font is derived from the font metric's
+    // assumed line height
+    Float defaultLineThickness = 0.0f;
     // The ascent of the text.
     Float ascent = 0.0f;
     // The offset of the decoration line from the baseline of the text
@@ -562,10 +594,9 @@ struct nsCSSRendering {
     // strikeout line and overline too.
     Float descentLimit = -1.0f;
     // Which line will be painted. The value can be
-    // NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE or
-    // NS_STYLE_TEXT_DECORATION_LINE_OVERLINE or
-    // NS_STYLE_TEXT_DECORATION_LINE_LINE_THROUGH.
-    uint8_t decoration = NS_STYLE_TEXT_DECORATION_LINE_UNDERLINE;
+    // UNDERLINE or OVERLINE or LINE_THROUGH.
+    mozilla::StyleTextDecorationLine decoration =
+        mozilla::StyleTextDecorationLine_UNDERLINE;
     // The style of the decoration line such as
     // NS_STYLE_TEXT_DECORATION_STYLE_*.
     uint8_t style = NS_STYLE_TEXT_DECORATION_STYLE_NONE;

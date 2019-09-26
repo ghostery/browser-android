@@ -8,7 +8,7 @@
 #include "nsError.h"
 
 #ifdef XP_WIN
-#include <windows.h>
+#  include <windows.h>
 typedef WCHAR NS_tchar;
 #else
 typedef char NS_tchar;
@@ -20,9 +20,9 @@ nsresult GetInstallHash(const char16_t* installPath, const char* vendor,
 
 #ifdef XP_WIN
 enum class SetPermissionsOf {
-  BaseDir,
   BaseDirIfNotExists,
   AllFilesAndDirs,
+  FilesAndDirsWithBadPerms,
 };
 // This function does two things. It retrieves the update directory and it sets
 // the permissions of the directory and, optionally, its contents.

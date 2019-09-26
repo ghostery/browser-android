@@ -18,8 +18,49 @@
       # This is done by taskgraph.
       versions: ["<{version.major_number}.0"]
       locales:
-          - ar
-          - az
+          - be
+          - cs
+          - cy
+          - da
+          - de
+          - en-CA
+          - en-GB
+          - en-US
+          - es-AR
+          - es-ES
+          - es-MX
+          - fr
+          - fy-NL
+          - hu
+          - ia
+          - id
+          - it
+          - ka
+          - lt
+          - nl
+          - nn-NO
+          - pl
+          - pt-BR
+          - ru
+          - sk
+          - sl
+          - sv-SE
+          - tr
+          - vi
+          - zh-CN
+          - zh-TW
+- type: show-url
+  # yamllint disable-line rule:line-length
+  url: "https://www.mozilla.org/%LOCALE%/{product}/{version.major_number}.0beta/whatsnew/?oldversion=%OLD_VERSION%"
+  conditions:
+      blob-types: [wnp]
+      release-types: [beta, release-rc]
+      products: [firefox]
+      update-channel: beta
+      # e.g.: ["<61.0"]. {version.major_number} reflects the current version.
+      # This is done by taskgraph.
+      versions: ["<{version.major_number}.0"]
+      locales:
           - be
           - cak
           - cs
@@ -34,24 +75,16 @@
           - es-CL
           - es-ES
           - es-MX
-          - et
           - fr
           - fy-NL
-          - gl
           - gn
-          - gu-IN
-          - hi-IN
           - hsb
           - hu
           - ia
           - id
           - it
           - ka
-          - ko
           - lij
-          - lt
-          - ms
-          - nb-NO
           - nl
           - nn-NO
           - pl
@@ -64,7 +97,59 @@
           - sl
           - sq
           - sv-SE
-          - th
+          - tr
+          - uk
+          - vi
+          - zh-CN
+          - zh-TW
+- type: show-url
+  # yamllint disable-line rule:line-length
+  url: "https://www.mozilla.org/%LOCALE%/{product}/{version.major_number}.0a2/whatsnew/?oldversion=%OLD_VERSION%"
+  conditions:
+      blob-types: [wnp]
+      release-types: [beta]
+      products: [firefox]
+      update-channel: aurora
+      # e.g.: ["<61.0"]. {version.major_number} reflects the current version.
+      # This is done by taskgraph.
+      versions: ["<{version.major_number}.0"]
+      locales:
+          - be
+          - cak
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - en-CA
+          - en-GB
+          - en-US
+          - es-AR
+          - es-CL
+          - es-ES
+          - es-MX
+          - fr
+          - fy-NL
+          - gn
+          - hsb
+          - hu
+          - ia
+          - id
+          - it
+          - ka
+          - lij
+          - nl
+          - nn-NO
+          - pl
+          - pt-BR
+          - pt-PT
+          - rm
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sv-SE
           - tr
           - uk
           - vi

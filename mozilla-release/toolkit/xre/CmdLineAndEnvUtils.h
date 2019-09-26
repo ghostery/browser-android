@@ -10,20 +10,21 @@
 // NB: This code may be used outside of xul and thus must not depend on XPCOM
 
 #if defined(MOZILLA_INTERNAL_API)
-#include "prenv.h"
-#include "prprf.h"
-#include <string.h>
+#  include "prenv.h"
+#  include "prprf.h"
+#  include <string.h>
 #elif defined(XP_WIN)
-#include <stdlib.h>
+#  include <stdlib.h>
 #endif
 
 #if defined(XP_WIN)
-#include "mozilla/Move.h"
-#include "mozilla/UniquePtr.h"
-#include "mozilla/Vector.h"
+#  include "mozilla/Move.h"
+#  include "mozilla/UniquePtr.h"
+#  include "mozilla/Vector.h"
+#  include "mozilla/WinHeaderOnlyUtils.h"
 
-#include <wchar.h>
-#include <windows.h>
+#  include <wchar.h>
+#  include <windows.h>
 #endif  // defined(XP_WIN)
 
 #include "mozilla/MemoryChecking.h"
@@ -31,6 +32,11 @@
 
 #include <ctype.h>
 #include <stdint.h>
+
+#ifndef NS_NO_XPCOM
+#  include "nsIFile.h"
+#  include "mozilla/AlreadyAddRefed.h"
+#endif
 
 // Undo X11/X.h's definition of None
 #undef None
@@ -82,7 +88,7 @@ inline bool strimatch(const wchar_t* lowerstr, const wchar_t* mixedstr) {
   return internal::strimatch(&towlower, lowerstr, mixedstr);
 }
 
-enum class FlagLiteral { osint, safemode };
+enum class FlagLiteral { osint, safemode, url };
 
 template <typename CharT, FlagLiteral Literal>
 inline const CharT* GetLiteral();
@@ -100,11 +106,12 @@ inline const CharT* GetLiteral();
 
 DECLARE_FLAG_LITERAL(osint, "osint")
 DECLARE_FLAG_LITERAL(safemode, "safe-mode")
+DECLARE_FLAG_LITERAL(url, "url")
 
 enum class CheckArgFlag : uint32_t {
   None = 0,
-  CheckOSInt = (1 << 0),  // Retrun ARG_BAD if osint arg is also present.
-  RemoveArg = (1 << 1)    // Remove the argument from the argv array.
+  // (1 << 0) Used to be CheckOSInt
+  RemoveArg = (1 << 1)  // Remove the argument from the argv array.
 };
 
 MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(CheckArgFlag)
@@ -123,7 +130,8 @@ MOZ_MAKE_ENUM_CLASS_BITWISE_OPERATORS(CheckArgFlag)
  */
 template <typename CharT>
 inline ArgResult CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg,
-                          const CharT** aParam, CheckArgFlag aFlags) {
+                          const CharT** aParam = nullptr,
+                          CheckArgFlag aFlags = CheckArgFlag::RemoveArg) {
   MOZ_ASSERT(aArgv && aArg);
 
   CharT** curarg = aArgv + 1;  // skip argv[0]
@@ -181,19 +189,72 @@ inline ArgResult CheckArg(int& aArgc, CharT** aArgv, const CharT* aArg,
     ++curarg;
   }
 
-  if ((aFlags & CheckArgFlag::CheckOSInt) && ar == ARG_FOUND) {
-    ArgResult arOSInt =
-        CheckArg(aArgc, aArgv, GetLiteral<CharT, FlagLiteral::osint>(),
-                 static_cast<const CharT**>(nullptr), CheckArgFlag::None);
-    if (arOSInt == ARG_FOUND) {
-      ar = ARG_BAD;
-#if defined(MOZILLA_INTERNAL_API)
-      PR_fprintf(PR_STDERR, "Error: argument --osint is invalid\n");
-#endif  // defined(MOZILLA_INTERNAL_API)
+  return ar;
+}
+
+template <typename CharT>
+inline void EnsureCommandlineSafe(int& aArgc, CharT** aArgv) {
+  // We expect either no -osint, or the full commandline to be:
+  // app -osint -url foo
+  // If this varies, we abort to avoid abuse of other commandline handlers
+  // from apps that do a poor job escaping links they give to the OS.
+
+  const CharT* osintLit = GetLiteral<CharT, FlagLiteral::osint>();
+
+  if (CheckArg(aArgc, aArgv, osintLit, static_cast<const CharT**>(nullptr),
+               CheckArgFlag::None) == ARG_FOUND) {
+    // There should be 4 items left (app name + -osint + -url + param)
+    if (aArgc != 4) {
+      exit(127);
+    }
+
+    // The first should be osint.
+    CharT* arg = aArgv[1];
+    if (*arg != '-'
+#ifdef XP_WIN
+        && *arg != '/'
+#endif
+    ) {
+      exit(127);
+    }
+    ++arg;
+    if (*arg == '-') {
+      ++arg;
+    }
+    if (!strimatch(osintLit, arg)) {
+      exit(127);
+    }
+    // Strip it:
+    RemoveArg(aArgc, aArgv + 1);
+
+    // Now only the -url bit should be left:
+    arg = aArgv[1];
+    if (*arg != '-'
+#ifdef XP_WIN
+        && *arg != '/'
+#endif
+    ) {
+      exit(127);
+    }
+    ++arg;
+    if (*arg == '-') {
+      ++arg;
+    }
+    if (!strimatch(GetLiteral<CharT, FlagLiteral::url>(), arg)) {
+      exit(127);
+    }
+    // The param after url shouldn't be another switch:
+    arg = aArgv[2];
+    if (*arg == '-'
+#ifdef XP_WIN
+        || *arg == '/'
+#endif
+    ) {
+      exit(127);
     }
   }
-
-  return ar;
+  // Either no osint, so nothing to do, or we ensured nothing nefarious was
+  // passed.
 }
 
 #if defined(XP_WIN)
@@ -296,14 +357,27 @@ inline wchar_t* ArgToString(wchar_t* d, const wchar_t* s) {
 
 /**
  * Creates a command line from a list of arguments.
+ *
+ * @param argc Number of elements in |argv|
+ * @param argv Array of arguments
+ * @param aArgcExtra Number of elements in |aArgvExtra|
+ * @param aArgvExtra Optional array of arguments to be appended to the resulting
+ *                   command line after those provided by |argv|.
  */
-inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv) {
+inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv,
+                                            int aArgcExtra = 0,
+                                            wchar_t** aArgvExtra = nullptr) {
   int i;
   int len = 0;
 
-  // The + 1 of the last argument handles the allocation for null termination
+  // The + 1 for each argument reserves space for either a ' ' or the null
+  // terminator, depending on the position of the argument.
   for (i = 0; i < argc; ++i) {
     len += internal::ArgStrLen(argv[i]) + 1;
+  }
+
+  for (i = 0; i < aArgcExtra; ++i) {
+    len += internal::ArgStrLen(aArgvExtra[i]) + 1;
   }
 
   // Protect against callers that pass 0 arguments
@@ -316,10 +390,20 @@ inline UniquePtr<wchar_t[]> MakeCommandLine(int argc, wchar_t** argv) {
     return s;
   }
 
+  int totalArgc = argc + aArgcExtra;
+
   wchar_t* c = s.get();
   for (i = 0; i < argc; ++i) {
     c = internal::ArgToString(c, argv[i]);
-    if (i + 1 != argc) {
+    if (i + 1 != totalArgc) {
+      *c = ' ';
+      ++c;
+    }
+  }
+
+  for (i = 0; i < aArgcExtra; ++i) {
+    c = internal::ArgToString(c, aArgvExtra[i]);
+    if (i + 1 != aArgcExtra) {
       *c = ' ';
       ++c;
     }
@@ -335,32 +419,8 @@ inline bool SetArgv0ToFullBinaryPath(wchar_t* aArgv[]) {
     return false;
   }
 
-  DWORD bufLen = MAX_PATH;
-  mozilla::UniquePtr<wchar_t[]> buf;
-  DWORD retLen;
-
-  while (true) {
-    buf = mozilla::MakeUnique<wchar_t[]>(bufLen);
-    retLen = ::GetModuleFileNameW(nullptr, buf.get(), bufLen);
-    if (!retLen) {
-      return false;
-    }
-
-    if (retLen == bufLen && ::GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-      bufLen *= 2;
-      continue;
-    }
-
-    break;
-  }
-
-  // Upon success, retLen *excludes* the null character
-  ++retLen;
-
-  // Since we're likely to have a bunch of unused space in buf, let's reallocate
-  // a string to the actual size of the file name.
-  auto newArgv_0 = mozilla::MakeUnique<wchar_t[]>(retLen);
-  if (wcscpy_s(newArgv_0.get(), retLen, buf.get())) {
+  UniquePtr<wchar_t[]> newArgv_0(GetFullBinaryPath());
+  if (!newArgv_0) {
     return false;
   }
 
@@ -388,7 +448,7 @@ MOZ_NEVER_INLINE inline void SaveToEnv(const char* aEnvString) {
   // copy)
   _putenv(aEnvString);
 #else
-#error "Not implemented for this configuration"
+#  error "Not implemented for this configuration"
 #endif
 }
 
@@ -401,9 +461,13 @@ inline bool EnvHasValue(const char* aVarName) {
   const char* val = getenv(aVarName);
   return val && *val;
 #else
-#error "Not implemented for this configuration"
+#  error "Not implemented for this configuration"
 #endif
 }
+
+#ifndef NS_NO_XPCOM
+already_AddRefed<nsIFile> GetFileFromEnv(const char* name);
+#endif
 
 }  // namespace mozilla
 
